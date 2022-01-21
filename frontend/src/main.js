@@ -6,8 +6,10 @@ import store from "./store";
 import vuetify from "./plugins/vuetify";
 import axios from "axios";
 
-// axios.defaults.baseURL = 'http://localhost:3000';
-axios.defaults.baseURL = "http://138.68.184.102";
+axios.defaults.baseURL = 
+      process.env.NODE_ENV === 'production'
+        ? `${process.env.HOSTNAME}/graphql`
+        : 'http://localhost:3000/graphql';
 axios.defaults.withCredentials = true;
 
 Vue.config.productionTip = false;
