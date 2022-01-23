@@ -12,6 +12,7 @@
     "axios": "^0.21.1",
     "caniuse-lite": "^1.0.30001291",
     "core-js": "^3.6.5",
+    "cptable-fixed-xlsx-style": "^0.8.20",
     "css-loader": "^5.0.1",
     "dataloader": "^2.0.0",
     "dotenv": "^8.2.0",
@@ -26,8 +27,7 @@
     "vue-router": "^3.2.0",
     "vuetify": "^2.5.14",
     "vuex": "^3.4.0",
-    "xlsx": "^0.17.0",
-    "xlsx-style": "^0.8.13"
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {
     "@mdi/font": "^5.9.55",

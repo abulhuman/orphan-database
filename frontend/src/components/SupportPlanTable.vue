@@ -840,7 +840,8 @@
 <script>
 import axios from 'axios';
 import XLSX from 'xlsx';
-import XLSXStyle from 'xlsx-style';
+import XLSXStyle from 'cptable-fixed-xlsx-style';
+// import XLSXStyle from 'xlsx-style';
 import { saveAs } from 'file-saver';
 
 export default {
@@ -1457,7 +1458,8 @@ export default {
         // replace this with getProjectByProjectId when the function is finished
         const project = this.projects.filter(
           (project) => project.id !== this.projectId
-        )[0];
+        );
+        console.log(this.projectId);
 
         const donor = this.donors.filter(
           (donor) => donor.nameInitials === this.supportPlanDonor
