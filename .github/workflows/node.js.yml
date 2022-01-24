@@ -2,7 +2,7 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
@@ -22,18 +22,15 @@ jobs:
           npm i
           cd ../frontend
           echo "VUE_APP_NODE_ENV=${{ secrets.NODE_ENV }}" > .env
-          echo "HOSTNAME=${{ secrets.HOSTNAME }}" >> .env
+          echo "VUE_APP_HOSTNAME=${{ secrets.HOSTNAME }}" >> .env
           echo "VUE_APP_NODE_ENV=${{ secrets.NODE_ENV }}" > .env.production
           echo "VUE_APP_HOSTNAME=${{ secrets.HOSTNAME }}" >> .env.production
-          # rm package-lock.json
-          # sudo apt remove -y nodejs
-          # sudo apt install -y nodejs
-          # sudo npm i -g node-sass@6.0.1
           npm i
           npm run build
           cd ../backend
           npm run db:push
           cd ../
-          pm2 restart 0
-          pm2 save
+          pm2 kill
+          pm2 start backend/src/server.js
+          pm2 save --force
           sudo service nginx restart
