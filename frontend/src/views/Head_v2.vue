@@ -3735,6 +3735,7 @@ export default {
         this.SET_SNACKBAR_TEXT(
           `You have successfully created ${region.name} region.`
         );
+        this.initializeRegionTable();
       }
     },
     regionCancel() {
@@ -3755,6 +3756,7 @@ export default {
         this.SET_SNACKBAR_TEXT(
           `You have successfully created ${zone.name} zone.`
         );
+        this.initializeZoneTable();
       }
     },
     zoneCancel() {
@@ -3776,6 +3778,7 @@ export default {
         this.SET_SNACKBAR_TEXT(
           `You have successfully created ${district.name} district.`
         );
+        this.initializeDistrictTable();
       }
     },
     districtCancel() {
@@ -3800,6 +3803,7 @@ export default {
         this.SET_SNACKBAR_TEXT(
           `You have successfully created ${village.name} village.`
         );
+        this.initializeVillageTable();
       }
     },
     villageCancel() {
@@ -4263,7 +4267,6 @@ export default {
     },
     toogleRegionsTable() {
       if (this.showRegionTable === false) {
-        this.initializeRegionTable();
         this.regionTableLoading = false;
       } else {
         this.regionTableLoading = true;
@@ -4279,7 +4282,6 @@ export default {
     },
     toogleDistrictTable() {
       if (this.showDistrictTable === false) {
-        this.initializeDistrictTable();
         this.districtTableLoading = false;
       } else {
         this.districtTableLoading = true;
@@ -4295,7 +4297,6 @@ export default {
     },
     toogleZoneTable() {
       if (this.showZoneTable === false) {
-        this.initializeZoneTable();
         this.zoneTableLoading = false;
       } else {
         this.zoneTableLoading = true;
@@ -4311,7 +4312,6 @@ export default {
     },
     toogleVillageTable() {
       if (this.showVillageTable === false) {
-        this.initializeVillageTable();
         this.villageTableLoading = false;
       } else {
         this.villageTableLoading = true;
