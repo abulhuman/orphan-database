@@ -3743,14 +3743,14 @@ export default {
         if (this.fatherDeathCertificateFile) {
           const fatherDeathCertificateFormData = new FormData();
           fatherDeathCertificateFormData.append(
-            "fatherDeathCertificate",
+            "document",
             this.fatherDeathCertificateFile,
             this.fatherDeathCertificateFile.name
           );
 
           fatherUrl["deathCertificateUrl"] = await axios
             .post(
-              `/public/images/fatherDeathCertificate/`,
+              `/document/`,
               fatherDeathCertificateFormData
             )
             .then((res) => res.data)
@@ -3823,14 +3823,14 @@ export default {
         if (this.confirmationLetterFile) {
           const guardianConfirmationLetterFormData = new FormData();
           guardianConfirmationLetterFormData.append(
-            "guardianConfirmationLetter",
+            "document",
             this.confirmationLetterFile,
             this.confirmationLetterFile.name
           );
 
           guardianUrls["confirmationLetterUrl"] = await axios
             .post(
-              `/public/images/guardianConfirmationLetter/`,
+              `/document/`,
               guardianConfirmationLetterFormData
             )
             .then((res) => res.data)
@@ -3840,14 +3840,14 @@ export default {
         if (this.legalConfirmationLetterFile) {
           const guardianLegalConfirmationLetterFormData = new FormData();
           guardianLegalConfirmationLetterFormData.append(
-            "guardianLegalConfirmationLetter",
+            "document",
             this.legalConfirmationLetterFile,
             this.legalConfirmationLetterFile.name
           );
 
           guardianUrls["legalConfirmationLetterUrl"] = await axios
             .post(
-              `/public/images/guardianLegalConfirmationLetter/`,
+              `/document/`,
               guardianLegalConfirmationLetterFormData
             )
             .then((res) => res.data)
@@ -3857,13 +3857,13 @@ export default {
         if (this.guardianIdCardFile) {
           const guardianIdCardFormData = new FormData();
           guardianIdCardFormData.append(
-            "guardianIDCard",
+            "document",
             this.guardianIdCardFile,
             this.guardianIdCardFile.name
           );
 
           guardianUrls["iDCardUrl"] = await axios
-            .post(`/public/images/guardianIDCard/`, guardianIdCardFormData)
+            .post(`/document/`, guardianIdCardFormData)
             .then((res) => res.data)
             .catch((err) => console.warn(err));
         }
@@ -3900,14 +3900,14 @@ export default {
         if (this.orphanBirthCertificateFile) {
           const orphanBirthCertificateFormData = new FormData();
           orphanBirthCertificateFormData.append(
-            "orphanBirthCertificate",
+            "document",
             this.orphanBirthCertificateFile,
             this.orphanBirthCertificateFile.name
           );
 
           orphanUrls["birthCertificateUrl"] = await axios
             .post(
-              `/public/images/orphanBirthCertificate/`,
+              `/document/`,
               orphanBirthCertificateFormData
             )
             .then((res) => res.data)
@@ -3917,13 +3917,13 @@ export default {
         if (this.orphanIdCardFile) {
           const orphanIdCardFormData = new FormData();
           orphanIdCardFormData.append(
-            "orphanIdCard",
+            "document",
             this.orphanIdCardFile,
             this.orphanIdCardFile.name
           );
 
           orphanUrls["idCardUrl"] = await axios
-            .post(`/public/images/orphanIdCard/`, orphanIdCardFormData)
+            .post(`/document/`, orphanIdCardFormData)
             .then((res) => res.data)
             .catch((err) => console.warn(err));
         }
@@ -3931,13 +3931,13 @@ export default {
         if (this.orphanPassportFile) {
           const orphanPassportFormData = new FormData();
           orphanPassportFormData.append(
-            "orphanPassport",
+            "document",
             this.orphanPassportFile,
             this.orphanPassportFile.name
           );
 
           orphanUrls["passportUrl"] = await axios
-            .post(`/public/images/orphanPassport/`, orphanPassportFormData)
+            .post(`/document/`, orphanPassportFormData)
             .then((res) => res.data)
             .catch((err) => console.warn(err));
         }
@@ -3945,14 +3945,14 @@ export default {
         if (this.originalThankyouLetterFile) {
           const originalThankyouLetterFormData = new FormData();
           originalThankyouLetterFormData.append(
-            "orphanOriginalThankyouLetter",
+            "document",
             this.originalThankyouLetterFile,
             this.originalThankyouLetterFile.name
           );
 
           orphanUrls["originalThankyouLetterUrl"] = await axios
             .post(
-              `/public/images/orphanOriginalThankyouLetter/`,
+              `/document/`,
               originalThankyouLetterFormData
             )
             .then((res) => res.data)

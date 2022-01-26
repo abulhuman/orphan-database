@@ -3518,13 +3518,13 @@ export default {
 
         const projectProposalFormData = new FormData();
         projectProposalFormData.append(
-          'projectDocument',
+          'document',
           this.projectProposalFile,
           this.projectProposalFile.name
         );
 
         const projectProposalUrl = await axios
-          .post(`/public/images/projectDocument/`, projectProposalFormData)
+          .post(`/document/`, projectProposalFormData)
           .then((res) => res.data)
           .catch((err) => console.warn(err));
 

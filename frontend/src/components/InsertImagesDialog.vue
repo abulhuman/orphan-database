@@ -171,13 +171,13 @@ export default {
         // ! prep images before send
         const portraitImageFormData = new FormData();
         portraitImageFormData.append(
-          "orphanPhotosPhotoPortrait",
+          "image",
           this.portraitImage,
           this.portraitImage.name
         );
         const longImageFormData = new FormData();
         longImageFormData.append(
-          "orphanPhotosPhotoLong",
+          "image",
           this.longImage,
           this.longImage.name
         );
@@ -185,11 +185,11 @@ export default {
         (async () => {
           try {
             const portraitRes = await axios.post(
-              `/public/images/orphanPhotosPhotoPortrait`,
+              `/img/`,
               portraitImageFormData
             );
             const longRes = await axios.post(
-              `/public/images/orphanPhotosPhotoLong`,
+              `/img/`,
               longImageFormData
             );
             // ! create DB record with the urls

@@ -348,7 +348,7 @@ export default {
         const reportCardFormData = new FormData();
         if (this.reportCard) {
           reportCardFormData.append(
-            "educationalRecordReportCard",
+            "document",
             this.reportCard,
             this.reportCard.name
           );
@@ -356,7 +356,7 @@ export default {
         (async () => {
           try {
             const reportCardRes = await axios.post(
-              "/public/images/educationalRecordReportCard",
+              "/document/",
               reportCardFormData
             );
 
