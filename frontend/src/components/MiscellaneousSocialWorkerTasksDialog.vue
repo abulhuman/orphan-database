@@ -346,14 +346,14 @@ export default {
       if (this.$refs.thankyouLetterForm.validate()) {
         const thankyouLetterFormData = new FormData();
         thankyouLetterFormData.append(
-          "orphanOriginalThankyouLetter",
+          "document",
           this.thankyouLetter,
           this.thankyouLetter.name
         );
         (async () => {
           try {
             const thankyouLetterRes = await axios.post(
-              "/public/images/orphanOriginalThankyouLetter",
+              "/document/",
               thankyouLetterFormData
             );
             (async () => {
@@ -419,14 +419,14 @@ export default {
       if (this.$refs.healthRecordForm.validate()) {
         const healthRecordFormData = new FormData();
         healthRecordFormData.append(
-          "healthRecordMedicalCertificate",
+          "document",
           this.healthRecord,
           this.healthRecord.name
         );
         (async () => {
           try {
             const healthRecordRes = await axios.post(
-              "/public/images/healthRecordMedicalCertificate",
+              "/document/",
               healthRecordFormData
             );
             (async () => {

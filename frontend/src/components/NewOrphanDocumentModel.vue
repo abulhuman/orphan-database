@@ -610,13 +610,13 @@ export default {
 
         documents.orphanBirthCertificateFormData = new FormData();
         documents.orphanBirthCertificateFormData.append(
-          "orphanBirthCertificate",
+          "document",
           this.birthCertificateFile,
           this.birthCertificateFile.name
         );
         this.orphan.birthCertificateUrl = await axios
           .post(
-            `/public/images/orphanBirthCertificate/`,
+            `/document/`,
             documents.orphanBirthCertificateFormData
           )
           .then((res) => res.data)
@@ -624,28 +624,28 @@ export default {
 
         documents.fatherDeathCertificateFormData = new FormData();
         documents.fatherDeathCertificateFormData.append(
-          "fatherDeathCertificate",
+          "document",
           this.fatherDeathCertificateFile,
           this.fatherDeathCertificateFile.name
         );
 
         documents.guardianIdFormData = new FormData();
         documents.guardianIdFormData.append(
-          "guardianIDCard",
+          "document",
           this.guardianIdFile,
           this.guardianIdFile.name
         );
 
         documents.guardianConfirmationLetterFormData = new FormData();
         documents.guardianConfirmationLetterFormData.append(
-          "guardianConfirmationLetter",
+          "document",
           this.guardianConfirmationLetterFile,
           this.guardianConfirmationLetterFile.name
         );
 
         documents.guardianLegalConfirmationLetterFormData = new FormData();
         documents.guardianLegalConfirmationLetterFormData.append(
-          "guardianLegalConfirmationLetter",
+          "document",
           this.guardianLegalConfirmationLetterFile,
           this.guardianLegalConfirmationLetterFile.name
         );
@@ -653,7 +653,7 @@ export default {
         if (this.portraitPhotoFile) {
           documents.orphanPortraitPhotoFormData = new FormData();
           documents.orphanPortraitPhotoFormData.append(
-            "orphanPhotosPhotoPortrait",
+            "image",
             this.portraitPhotoFile,
             this.portraitPhotoFile.name
           );
@@ -662,7 +662,7 @@ export default {
         if (this.orphanIdFile) {
           documents.orphanIdFormData = new FormData();
           documents.orphanIdFormData.append(
-            "orphanIdCard",
+            "document",
             this.orphanIdFile,
             this.orphanIdFile.name
           );
@@ -671,7 +671,7 @@ export default {
         if (this.orphanPassportFile) {
           documents.orphanPassportFormData = new FormData();
           documents.orphanPassportFormData.append(
-            "orphanPassport",
+            "document",
             this.orphanPassportFile,
             this.orphanPassportFile.name
           );
@@ -686,277 +686,7 @@ export default {
       }
     },
 
-    // async documentDialogSaveOld() {
-    //   this.formHasErrors = false;
-    //   if (this.$refs.documentForm.validate()) {
-    //     const birthCertificateFormData = new FormData();
-    //     birthCertificateFormData.append(
-    //       "orphanBirthCertificate",
-    //       this.birthCertificateFile,
-    //       this.birthCertificateFile.name
-    //     );
-
-    //     const fatherDeathCertificateFormData = new FormData();
-    //     fatherDeathCertificateFormData.append(
-    //       "fatherDeathCertificate",
-    //       this.fatherDeathCertificateFile,
-    //       this.fatherDeathCertificateFile.name
-    //     );
-    //     const guardianIdFormData = new FormData();
-    //     guardianIdFormData.append(
-    //       "guardianIDCard",
-    //       this.guardianIdFile,
-    //       this.guardianIdFile.name
-    //     );
-    //     const guardianConfirmationLetterFormData = new FormData();
-    //     guardianConfirmationLetterFormData.append(
-    //       "guardianConfirmationLetter",
-    //       this.guardianConfirmationLetterFile,
-    //       this.guardianConfirmationLetterFile.name
-    //     );
-    //     const guardianLegalConfirmationLetterFormData = new FormData();
-    //     guardianLegalConfirmationLetterFormData.append(
-    //       "guardianLegalConfirmationLetter",
-    //       this.guardianLegalConfirmationLetterFile,
-    //       this.guardianLegalConfirmationLetterFile.name
-    //     );
-
-    //     this.orphan = Object.assign(this.orphan ?? {}, this.updatedOrphan);
-
-    //     this.orphan.dateOfBirth = this.isoDateFormatter(
-    //       this.orphan.dateOfBirth
-    //     );
-
-    //     this.orphan.father = Object.assign(
-    //       this.orphan.father ?? {},
-    //       this.updatedOrphan?.father
-    //     );
-
-    //     this.orphan.mother = Object.assign(
-    //       this.orphan.mother ?? {},
-    //       this.updatedOrphan?.mother
-    //     );
-
-    //     this.orphan.House_property = Object.assign(
-    //       this.orphan.House_property ?? {},
-    //       this.updatedOrphan?.House_property
-    //     );
-
-    //     this.orphan.educationalRecord = Object.assign(
-    //       this.orphan.educationalRecord ?? {},
-    //       this.updatedOrphan?.educationalRecord
-    //     );
-
-    //     this.orphan.guardian = Object.assign(
-    //       this.orphan.guardian ?? {},
-    //       this.updatedOrphan?.guardian
-    //     );
-
-    //     this.orphan.father.dateOfDeath = this.isoDateFormatter(
-    //       this.orphan.father.dateOfDeath
-    //     );
-    //     this.orphan.father.dateOfBirth = this.isoDateFormatter(
-    //       this.orphan.father.dateOfBirth
-    //     );
-
-    //     this.orphan.father.deathCertificateUrl = await axios
-    //       .post(
-    //         `/public/images/fatherDeathCertificate/`,
-    //         fatherDeathCertificateFormData
-    //       )
-    //       .then((res) => res.data)
-    //       .catch((err) => console.warn(err));
-
-    //     const father = await this.getOrphanFather(
-    //       this.orphan.father.firstName,
-    //       this.orphan.father.lastName,
-    //       this.orphan.father.dateOfDeath,
-    //       this.orphan.father.causeOfDeath,
-    //       this.orphan.father.dateOfBirth,
-    //       this.orphan.father.deathCertificateUrl
-    //     );
-
-    //     const educationalRecord = await this.getOrphanEducationalRecord(
-    //       this.orphan.educationalRecord.enrollmentStatus,
-    //       this.orphan.educationalRecord.schoolName,
-    //       this.orphan.educationalRecord.typeOfSchool,
-    //       this.orphan.educationalRecord.year,
-    //       this.orphan.educationalRecord.level,
-    //       this.orphan.educationalRecord.reason
-    //     );
-
-    //     this.orphan.mother.dateOfBirth = this.isoDateFormatter(
-    //       this.orphan.mother.dateOfBirth
-    //     );
-    //     this.orphan.mother.dateOfDeath = this.isoDateFormatter(
-    //       this.orphan.mother.dateOfDeath
-    //     );
-
-    //     const mother = await this.getOrphanMother(
-    //       this.orphan.mother.firstName,
-    //       this.orphan.mother.middleName,
-    //       this.orphan.mother.lastName,
-    //       this.orphan.mother.vitalStatus,
-    //       this.orphan.mother.dateOfBirth,
-    //       this.orphan.mother.dateOfDeath,
-    //       this.orphan.mother.causeOfDeath,
-    //       this.orphan.mother.maritalStatus,
-    //       this.orphan.mother.mobileNumber,
-    //       this.orphan.mother.monthlyExpense
-    //     );
-
-    //     this.orphan.guardian.dateOfBirth = this.isoDateFormatter(
-    //       this.orphan.guardian.dateOfBirth
-    //     );
-
-    //     this.orphan.guardian.idCardUrl = await axios
-    //       .post(`/public/images/guardianIDCard/`, guardianIdFormData)
-    //       .then((res) => res.data)
-    //       .catch((err) => console.warn(err));
-
-    //     this.orphan.guardian.confirmationLetterUrl = await axios
-    //       .post(
-    //         `/public/images/guardianConfirmationLetter/`,
-    //         guardianConfirmationLetterFormData
-    //       )
-    //       .then((res) => res.data)
-    //       .catch((err) => console.warn(err));
-
-    //     this.orphan.guardian.legalConfirmationLetterUrl = await axios
-    //       .post(
-    //         `/public/images/guardianLegalConfirmationLetter/`,
-    //         guardianLegalConfirmationLetterFormData
-    //       )
-    //       .then((res) => res.data)
-    //       .catch((err) => console.warn(err));
-
-    //     const guardian = await this.getOrphanGuardian(
-    //       this.orphan.guardian.firstName,
-    //       this.orphan.guardian.middleName,
-    //       this.orphan.guardian.lastName,
-    //       this.orphan.guardian.dateOfBirth,
-    //       this.orphan.guardian.gender,
-    //       this.orphan.guardian.relationToOrphan,
-    //       this.orphan.guardian.nationality,
-    //       this.orphan.guardian.mobileNumber,
-    //       this.orphan.guardian.telephoneNumber,
-    //       this.orphan.guardian.email,
-    //       this.orphan.guardian.idCardUrl,
-    //       this.orphan.guardian.confirmationLetterUrl,
-    //       this.orphan.guardian.legalConfirmationLetterUrl
-    //     );
-
-    //     const houseProperty = await this.getHouseProperty(
-    //       this.orphan.House_property.housingSituation,
-    //       this.orphan.House_property.otherProperty
-    //     );
-
-    //     this.orphan.birthCertificateUrl = await axios
-    //       .post(
-    //         `/public/images/orphanBirthCertificate/`,
-    //         birthCertificateFormData
-    //       )
-    //       .then((res) => res.data)
-    //       .catch((err) => console.warn(err));
-
-    //     if (this.orphanIdFile) {
-    //       const orphanIdFormData = new FormData();
-    //       orphanIdFormData.append(
-    //         "orphanIdCard",
-    //         this.orphanIdFile,
-    //         this.orphanIdFile.name
-    //       );
-    //       this.orphan.idCardUrl = await axios
-    //         .post(`/public/images/orphanIdCard/`, orphanIdFormData)
-    //         .then((res) => res.data)
-    //         .catch((err) => console.warn(err));
-    //     }
-
-    //     if (this.orphanPassportFile) {
-    //       const orphanPassportFormData = new FormData();
-    //       orphanPassportFormData.append(
-    //         "orphanPassport",
-    //         this.orphanPassportFile,
-    //         this.orphanPassportFile.name
-    //       );
-    //       this.orphan.passportUrl = await axios
-    //         .post(`/public/images/orphanPassport/`, orphanPassportFormData)
-    //         .then((res) => res.data)
-    //         .catch((err) => console.warn(err));
-    //     }
-
-    //     const registeredOrphan = await this.registerOrphan(
-    //       this.orphan.firstName,
-    //       this.orphan.gender,
-    //       this.orphan.placeOfBirth,
-    //       this.orphan.dateOfBirth,
-    //       this.orphan.spokenLanguages,
-    //       this.orphan.hobbies,
-    //       this.orphan.religion,
-    //       this.orphan.healthDescription || "N/A",
-    //       this.orphan.psychologicalStatus,
-    //       this.orphan.idCardUrl || "idCardUrlPlaceHolder",
-    //       this.orphan.passportUrl || "passportUrlPlaceHolder",
-    //       this.orphan.birthCertificateUrl,
-    //       father.id,
-    //       educationalRecord.id,
-    //       guardian.id,
-    //       mother.id,
-    //       houseProperty.id,
-    //       parseInt(this.orphanVillageId)
-    //     );
-
-    //     const status = await this.createSponsorshipStatus(registeredOrphan.id);
-
-    //     console.log("Status", status);
-
-    //     if (this.portraitPhotoFile) {
-    //       const portraitPhotoFormData = new FormData();
-    //       portraitPhotoFormData.append(
-    //         "orphanPhotosPhotoPortrait",
-    //         this.portraitPhotoFile,
-    //         this.portraitPhotoFile.name
-    //       );
-
-    //       axios
-    //         .post(
-    //           `/public/images/orphanPhotosPhotoPortrait/`,
-    //           portraitPhotoFormData
-    //         )
-    //         .then((res) => {
-    //           axios
-    //             .post(`/graphql/`, {
-    //               query: `mutation createOrphanPhotos(
-    //                   $photoPortraitUrl: String!
-    //                   $orphanId: ID
-    //                   ) {
-    //                     createOrphanPhotos(
-    //                       photoPortraitUrl: $photoPortraitUrl
-    //                       orphanId: $orphanId
-    //                       ) { id }
-    //                   }`,
-    //               variables: {
-    //                 photoPortraitUrl: res.data,
-    //                 orphanId: registeredOrphan.id,
-    //               },
-    //             })
-    //             .then((res) => res.data.data.createOrphanPhotos)
-    //             .catch((err) => console.warn(err));
-    //         })
-    //         .catch((err) => console.warn(err));
-    //     }
-
-    //     this.$emit("registrationDone", {
-    //       documentForm: this.$refs.documentForm,
-    //       newOrphanId: registeredOrphan.id,
-    //     });
-    //     this.documentDialogClose();
-    //   } else {
-    //     this.formHasErrors = true;
-    //   }
-    // },
-
-    documentDialogCancel() {
+        documentDialogCancel() {
       this.documentDialogReset();
       this.documentDialogClose();
     },

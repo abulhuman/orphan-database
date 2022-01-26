@@ -321,7 +321,7 @@ export default {
 
       this.orphan.birthCertificateUrl = await axios
         .post(
-          `/public/images/orphanBirthCertificate/`,
+          `/document/`,
           documents.orphanBirthCertificateFormData
         )
         .then((res) => res.data)
@@ -329,20 +329,20 @@ export default {
 
       this.orphan.photoPortraitUrl = await axios
         .post(
-          `/public/images/orphanPhotosPhotoPortrait/`,
+          `/img/`,
           documents.orphanPortraitPhotoFormData
         )
         .then((res) => res.data)
         .catch((err) => console.warn(err));
 
       this.orphan.idCardUrl = await axios
-        .post(`/public/images/orphanIdCard/`, documents.orphanIdFormData)
+        .post(`/document/`, documents.orphanIdFormData)
         .then((res) => res.data)
         .catch((err) => console.warn(err));
 
       this.orphan.passportUrl = await axios
         .post(
-          `/public/images/orphanPassport/`,
+          `/document/`,
           documents.orphanPassportFormData
         )
         .then((res) => res.data)
@@ -350,20 +350,20 @@ export default {
 
       this.orphan.father.deathCertificateUrl = await axios
         .post(
-          `/public/images/fatherDeathCertificate/`,
+          `/document/`,
           documents.fatherDeathCertificateFormData
         )
         .then((res) => res.data)
         .catch((err) => console.warn(err));
 
       this.orphan.guardian.idCardUrl = await axios
-        .post(`/public/images/guardianIDCard/`, documents.guardianIdFormData)
+        .post(`/document/`, documents.guardianIdFormData)
         .then((res) => res.data)
         .catch((err) => console.warn(err));
 
       this.orphan.guardian.confirmationLetterUrl = await axios
         .post(
-          `/public/images/guardianConfirmationLetter/`,
+          `/document/`,
           documents.guardianConfirmationLetterFormData
         )
         .then((res) => res.data)
@@ -371,7 +371,7 @@ export default {
 
       this.orphan.guardian.legalConfirmationLetterUrl = await axios
         .post(
-          `/public/images/guardianLegalConfirmationLetter/`,
+          `/document/`,
           documents.guardianLegalConfirmationLetterFormData
         )
         .then((res) => res.data)
