@@ -194,8 +194,9 @@
                     <v-col cols="12" md="12" sm="12">
                       <v-responsive max-width="" class="mx-10 mb-n4">
                         <v-file-input
+                          ref="proposalInputRef"
                           v-model="projectProposalFile"
-                          accept=".pdf,.doc"
+                          accept=".pdf,.doc,.docx"
                           label="Project proposal"
                           :rules="requiredRule"
                           @change="toggleProjectProposalInput($event)"
@@ -216,28 +217,38 @@
                             </v-tooltip>
 
                             <!-- preview image popup -->
-                            <v-dialog v-model="projectProposalDialog">
-                              <v-container>
-                                <v-row>
-                                  <!-- <v-col>what</v-col> -->
-                                  <v-spacer></v-spacer>
-                                  <v-col class="mr-n12" sm="1">
-                                    <v-icon
-                                      dark
-                                      @click="toggleProjectProposalDialog"
-                                    >
-                                      mdi-close
-                                    </v-icon>
-                                  </v-col>
-                                </v-row>
+                            <v-dialog
+                              v-model="projectProposalDialog"
+                              max-width="80%"
+                            >
+                              <v-row style="width: 100%;">
+                                <!-- <v-col>what</v-col> -->
+                                <v-spacer></v-spacer>
+                                <v-col class="my-3" sm="1">
+                                  <v-icon
+                                    dark
+                                    @click="toggleProjectProposalDialog"
+                                    right
+                                    class="text-center ma-0"
+                                  >
+                                    mdi-close
+                                  </v-icon>
+                                </v-col>
+                              </v-row>
 
-                                <v-img
+                              <iframe
+                                style="height: 82vh; width: 99%; text-align: center;"
+                                :src="projectProposalPreview"
+                                allowfullscreen
+                                alt="Project Proposal Document"
+                              />
+
+                              <!-- <v-img
                                   height="82vh"
                                   :src="projectProposalPreview"
                                   contain
                                   alt="Project Proposal Document"
-                                ></v-img>
-                              </v-container>
+                                ></v-img> -->
                             </v-dialog>
                           </template>
                         </v-file-input>
@@ -3106,11 +3117,14 @@ export default {
       return `${item.name}`;
     },
     toggleProjectProposalInput() {
+      console.log(this.projectProposalFile);
+      // pdf == application/pdf
+      // doc == application/msword
+      // docx == application/vnd.openxmlformats-officedocument.wordprocessingml.document
       if (this.projectProposalFile) {
         this.projectProposalPreview = URL.createObjectURL(
           this.projectProposalFile
         );
-        console.log('Preview', this.projectProposalPreview);
       }
     },
     // menu save and cancel
