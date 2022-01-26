@@ -2400,9 +2400,9 @@ export default {
     this.initializeHead();
     this.initializeAccountMaintainenceLists();
     // table
-    // this.initializeDistrictTable();
-    // this.initializeRegionTable();
-    // this.initializeZoneTable();
+    this.initializeDistrictTable();
+    this.initializeRegionTable();
+    this.initializeZoneTable();
     this.initializeVillageTable();
     this.initializeCoordinatorSelect();
     this.initializeRegionSelect();
@@ -3665,6 +3665,7 @@ export default {
         this.SET_SNACKBAR_TEXT(
           `You have successfully created a ${this.infoDialogOwner} account.`
         );
+        this.initializeCoordinatorSelect();
       }
     },
     coordinatorCancel() {
