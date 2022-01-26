@@ -186,6 +186,7 @@
                             offsetY: true
                           }"
                           :rules="requiredRule"
+                          multiple
                           label="Coordinator*"
                         ></v-select>
                       </v-responsive>
@@ -3512,18 +3513,26 @@ export default {
           villages.map((village) => village.id)
         )[0];
 
-        const coordinators = this.coordinatorsOptions
-          .filter((coordinator) => {
-            return (
-              coordinator.firstName +
-                ' ' +
-                coordinator.middleName +
-                ' ' +
-                coordinator.lastName ===
-              this.projectCoordinator
-            );
-          })
-          .map((coordinator) => coordinator.id);
+        console.log('hi', this.projectCoordinator);
+
+        const coordinators = [];
+
+        for (let coordinatorOption of this.projectCoordinator) {
+          const temp = this.coordinatorsOptions
+            .filter((coordinator) => {
+              return (
+                coordinator.firstName +
+                  ' ' +
+                  coordinator.middleName +
+                  ' ' +
+                  coordinator.lastName ===
+                coordinatorOption
+              );
+            })
+            .map((coordinator) => coordinator.id);
+
+          if (temp[0]) coordinators.push(temp[0]);
+        }
 
         console.log(coordinators);
 
@@ -3553,6 +3562,9 @@ export default {
           parseFloat(this.projectAdministrativeCost),
           coordinators
         );
+
+        console.log(project);
+        console.log(projectProposalUrl);
 
         await this.createProjectDocuments(
           projectProposalUrl,
