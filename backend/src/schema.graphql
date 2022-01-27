@@ -1483,9 +1483,9 @@ input MotherCreateInput {
   dateOfBirth: DateTime!
   dateOfDeath: DateTime
   causeOfDeath: String
-  mobileNumber: String!
+  mobileNumber: String
   maritalStatus: motherMaritalStatus
-  monthlyExpense: Float!
+  monthlyExpense: Float
 }
 
 input GuardianCreateInput {
