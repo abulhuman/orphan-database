@@ -633,8 +633,8 @@ async function getVillagesByCoordinatorId(
     return await prisma.village.findMany({
       where: {
         projects: {
-          every: {
-            coordinators: { every: { id: { equals: parseInt(coordinatorId) } } }
+          some: {
+            coordinators: { some: { id: { equals: parseInt(coordinatorId) } } }
           }
         }
       }
@@ -697,7 +697,7 @@ async function getProjectsByCoordinatorId(
     return await prisma.project.findMany({
       where: {
         coordinators: {
-          every: {
+          some: {
             id: { equals: parseInt(coordinatorId) }
           }
         }
