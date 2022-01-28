@@ -1722,6 +1722,7 @@ async function login(_parent, { email, password }, { req, prisma }, _info) {
 }
 
 function logout(_parent, _args, { req }, _info) {
+  if (!getUser(req).userId) return;
   return new Promise((res) =>
     req.session.destroy((err) => {
       if (err) {

@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
 const { ApolloServer, ApolloError, UserInputError } = require('apollo-server-express');
 const {
   ApolloServerPluginLandingPageDisabled,
@@ -112,10 +113,17 @@ async function startApolloServer() {
       resave: false,
       saveUninitialized: false,
       cookie: {
-        httpOnly: false,
         secure: process.env.NODE_ENV === 'production',
         maxAge: 4.32e7 // 12 hours
-      }
+      },
+      store: new PrismaSessionStore(
+        prisma,
+        {
+          checkPeriod: 2 * 60 * 1000,  //ms
+          dbRecordIdIsSessionId: true,
+          dbRecordIdFunction: undefined,
+        }
+      )
     })
   );
 
