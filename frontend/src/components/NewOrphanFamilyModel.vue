@@ -198,15 +198,16 @@
                 :items="motherVitalStatusOptions"
                 :menu-props="{
                   bottom: true,
-                  offsetY: true,
+                  offsetY: true
                 }"
                 :rules="[rules.required]"
                 label="Vital Status*"
               ></v-select>
             </v-responsive>
           </v-col>
-          <!-- Mother Martial Status field -->
+          <!-- Mother Alive -->
           <template v-if="selectedOrphan.motherVitalStatus === 'Alive'">
+            <!-- Mother Martial Status field -->
             <v-col cols="12" sm="6" md="4" class="mt-n6">
               <v-responsive max-width="" class="">
                 <v-select
@@ -214,17 +215,42 @@
                   :items="motherMaritalStatusOptions"
                   :menu-props="{
                     bottom: true,
-                    offsetY: true,
+                    offsetY: true
                   }"
                   label="Marital Status"
                 ></v-select>
               </v-responsive>
             </v-col>
+            <!-- Mother mobile number field -->
+            <v-col cols="12" sm="6" md="3" class="mt-n5">
+              <v-responsive max-width="" class="">
+                <v-text-field
+                  v-model="orphan.mother.mobileNumber"
+                  placeholder="09XXXXXXXX*"
+                  :rules="[rules.required, rules.mobileNumber]"
+                  label="Mobile Phone"
+                >
+                </v-text-field>
+              </v-responsive>
+            </v-col>
+            <!-- Mother monthly expense field -->
+            <v-col cols="12" sm="6" md="3" lg="2" class="mt-n5">
+              <v-responsive max-width="" class="">
+                <v-text-field
+                  v-model="orphan.mother.monthlyExpense"
+                  label="Monthly Expense"
+                  type="number"
+                  :rules="[rules.required]"
+                  hint="monthly expense in birr"
+                ></v-text-field>
+              </v-responsive>
+            </v-col>
           </template>
-          <!-- Mother Date of Death field -->
+          <!-- Mother Passed Away-->
           <template
             v-else-if="selectedOrphan.motherVitalStatus === 'Passed Away'"
           >
+            <!-- Mother Date of Death field -->
             <v-col cols="12" sm="6" md="4" class="mt-n6">
               <v-responsive max-width="" class="">
                 <v-menu
@@ -266,6 +292,17 @@
                 </v-menu>
               </v-responsive>
             </v-col>
+            <!-- Mother Cause of Death field-->
+            <v-col cols="12" sm="6" md="6" class="mt-n5">
+              <v-responsive max-width="" class="">
+                <v-text-field
+                  v-model="orphan.mother.causeOfDeath"
+                  label="Cause of Death*"
+                  :rules="[rules.required]"
+                >
+                </v-text-field>
+              </v-responsive>
+            </v-col>
           </template>
         </template>
         <!-- House and Property Info -->
@@ -281,44 +318,11 @@
               :items="orphanHousingSituationOptions"
               :menu-props="{
                 bottom: true,
-                offsetY: true,
+                offsetY: true
               }"
               :rules="[rules.required]"
               label="Housing Situation*"
             ></v-select>
-            <!-- <v-responsive max-width="" class="">
-                      <v-combobox
-                        v-model="orphanHousingSituationSelect"
-                        :items="orphanHousingSituationOptions"
-                        :menu-props="{
-                          bottom: true,
-                          offsetY: true,
-                        }"
-                        label="Housing Situation"
-                        multiple
-                        chips
-                      >
-                        <template
-                          v-slot:selection="{ attrs, item, select, selected }"
-                        >
-                          <v-chip
-                            v-bind="attrs"
-                            :input-value="selected"
-                            close
-                            @click:close="
-                              removeOrphanHousingSituationSelect(
-                                attrs,
-                                item,
-                                select,
-                                selected
-                              )
-                            "
-                          >
-                            <strong>{{ item }}</strong> </v-chip
-                          >,
-                        </template>
-                      </v-combobox>
-                    </v-responsive> -->
           </v-col>
           <!-- Other Properties -->
           <v-col cols="12" sm="12" md="12" class="mt-n5">
@@ -341,14 +345,14 @@
 export default {
   props: {
     updatedOrphan: {
-      type: Object,
+      type: Object
     },
     save: {
-      type: Boolean,
+      type: Boolean
     },
     cancel: {
-      type: Boolean,
-    },
+      type: Boolean
+    }
   },
   data() {
     return {
@@ -362,7 +366,7 @@ export default {
         father: {
           dateOfBirth: null,
           dateOfDeath: null,
-          causeOfDeath: null,
+          causeOfDeath: null
         },
         mother: {
           firstName: null,
@@ -371,23 +375,30 @@ export default {
           dateOfBirth: null,
           vitalStatus: null,
           maritalStatus: null,
+          mobileNumber: undefined,
+          monthlyExpense: undefined,
           dateOfDeath: null,
+          causeOfDeath: null
         },
         House_property: {
           housingSituation: null,
-          otherProperty: null,
-        },
+          otherProperty: null
+        }
       },
       selectedOrphan: {
         motherVitalStatus: null,
-        motherMaritalStatus: null,
+        motherMaritalStatus: null
       },
       rules: {
-        required: (value) => !!value || "Required.",
+        required: (value) => !!value || 'Required.',
         name: (value) => {
           const namePattern = /(^[A-z][A-Z-a-z/'.,/]+)[A-z]\s*$/g;
-          return namePattern.test(value) || "Invalid name";
+          return namePattern.test(value) || 'Invalid name';
         },
+        mobileNumber: (value) => {
+          const mobilePattern = /^09[0-9]{8}$/g;
+          return mobilePattern.test(value) || 'Invalid Number';
+        }
       },
       fatherDateOfBirthMenu: false,
       fatherDateOfDeathMenu: false,
@@ -397,15 +408,15 @@ export default {
       motherDateOfBirthMenu: false,
       motherDateOfDeathMenu: false,
       motherDateOfDeath: null,
-      motherVitalStatusOptions: ["Alive", "Passed Away"],
-      motherMaritalStatusOptions: ["Widow", "Married"],
+      motherVitalStatusOptions: ['Alive', 'Passed Away'],
+      motherMaritalStatusOptions: ['Widow', 'Married'],
       orphanHousingSituationOptions: [
-        "Privately Owned",
-        "Rental",
-        "With Relative",
-        "Dependent",
-        "Other",
-      ],
+        'Privately Owned',
+        'Rental',
+        'With Relative',
+        'Dependent',
+        'Other'
+      ]
     };
   },
   created() {},
@@ -418,7 +429,7 @@ export default {
     },
     orphanFamilyCancel: function() {
       return this.cancel;
-    },
+    }
   },
   watch: {
     orphanFamilySave(val) {
@@ -428,26 +439,26 @@ export default {
       if (val) this.familyDialogCancel();
     },
     validFamilyForm(val) {
-      this.$emit("familyError", val);
+      this.$emit('familyError', val);
     },
     fatherDateOfBirthMenu(val) {
       // Changes the active picker from the default "DATE" to "YEAR"
       val &&
         setTimeout(
-          () => (this.$refs.fatherDateOfBirthPicker.activePicker = "YEAR")
+          () => (this.$refs.fatherDateOfBirthPicker.activePicker = 'YEAR')
         );
     },
     fatherDateOfDeathMenu(val) {
       val &&
         setTimeout(
-          () => (this.$refs.fatherDateOfDeathPicker.activePicker = "YEAR")
+          () => (this.$refs.fatherDateOfDeathPicker.activePicker = 'YEAR')
         );
     },
     motherDateOfBirthMenu(val) {
       // Changes the active picker from the default "DATE" to "YEAR"
       val &&
         setTimeout(
-          () => (this.$refs.motherDateOfBirthPicker.activePicker = "YEAR")
+          () => (this.$refs.motherDateOfBirthPicker.activePicker = 'YEAR')
         );
     },
 
@@ -455,9 +466,9 @@ export default {
       // Changes the active picker from the default "DATE" to "YEAR"
       val &&
         setTimeout(
-          () => (this.$refs.motherDateOfDeathPicker.activePicker = "YEAR")
+          () => (this.$refs.motherDateOfDeathPicker.activePicker = 'YEAR')
         );
-    },
+    }
   },
   methods: {
     // test() {console.log("updatedOrphanFamily", this.updatedOrphan)},
@@ -487,7 +498,7 @@ export default {
       console.log(this.orphanHousingSituationSelect);
       console.log(attrs);
       this.orphanHousingSituationSelect = [
-        ...this.orphanHousingSituationSelect,
+        ...this.orphanHousingSituationSelect
       ];
     },
 
@@ -516,24 +527,26 @@ export default {
         this.orphan.father.dateOfDeath = this.fatherDateOfDeath;
 
         this.orphan.mother.vitalStatus = this.selectedOrphan.motherVitalStatus
-          .split(" ")[0]
+          .split(' ')[0]
           .toString()
           .toLowerCase();
-        if (this.orphan.mother.vitalStatus === "passed") {
+        if (this.orphan.mother.vitalStatus === 'passed') {
           this.orphan.mother.dateOfDeath = this.motherDateOfDeath;
           this.orphan.mother.maritalStatus = null;
-          this.orphan.mother.mobileNumber = null;
-          this.orphan.mother.monthlyExpense = null;
+          this.orphan.mother.mobileNumber = undefined;
+          this.orphan.mother.monthlyExpense = undefined;
         } else {
+          // Mother Alive
           this.orphan.mother.maritalStatus = this.selectedOrphan.motherMaritalStatus?.toLowerCase();
+          this.orphan.mother.monthlyExpense = parseFloat(
+            this.orphan.mother.monthlyExpense
+          );
           this.orphan.mother.dateOfDeath = null;
-          // This will have to be changed after discussion
-          this.orphan.mother.mobileNumber = "0974671463";
-          this.orphan.mother.monthlyExpense = parseFloat(987.76);
+          this.orphan.mother.causeOfDeath = null;
         }
 
-        this.$emit("familyDone", this.orphan);
-        this.$emit("familyRefs", this.$refs.familyForm);
+        this.$emit('familyDone', this.orphan);
+        this.$emit('familyRefs', this.$refs.familyForm);
         this.familyDialogClose();
       } else if (!this.$refs.familyForm.validate()) {
         this.formHasErrors = true;
@@ -543,7 +556,7 @@ export default {
     familyDialogCancel() {
       this.familyDialogReset();
       this.familyDialogClose();
-    },
-  },
+    }
+  }
 };
 </script>
