@@ -230,7 +230,7 @@
     <v-dialog v-model="createPaymentDialog" width="54%">
       <v-card>
         <v-card-title class="justify-center">
-          Create Payment for "This paymentInterval"
+          Create Payment
         </v-card-title>
 
         <v-card-text>
@@ -554,6 +554,7 @@
                   <v-card-title class="justify-center">
                     Assign Social Worker for the Sponsored Orphans
                   </v-card-title>
+                  <!-- socialWorker field -->
                   <v-form
                     ref="assignSocialWorkerForm"
                     v-model="validAssignSocialWorkerForm"
@@ -1150,6 +1151,12 @@ export default {
                           firstName
                           lastName
                         }
+                        guardian {
+                          id
+                          firstName
+                          middleName
+                          lastName
+                        }
                         dateOfBirth
                         gender
                         accountNumber
@@ -1457,9 +1464,10 @@ export default {
       ) {
         // replace this with getProjectByProjectId when the function is finished
         const project = this.projects.filter(
-          (project) => project.id !== this.projectId
-        );
-        console.log(this.projectId);
+          (project) => project.id === this.projectId
+        )[0];
+
+        console.log('project', project);
 
         const donor = this.donors.filter(
           (donor) => donor.nameInitials === this.supportPlanDonor
@@ -1479,7 +1487,7 @@ export default {
           (orphan) => orphan.id
         );
 
-        const supportPlan = await this.createSupportPlan(
+        const registeredSupportPlan = await this.createSupportPlan(
           name,
           parseFloat(this.supportPlanAdminFeePercent),
           String(this.supportPlanPaymentInterval),
@@ -1490,7 +1498,16 @@ export default {
           orphanIds
         );
 
-        this.supportPlans.push(supportPlan);
+        for (const orphan of registeredSupportPlan.orphans) {
+          const sponsorshipStatus = await this.createSponsorshipStatus(
+            orphan.id,
+            'processing'
+          );
+          console.log('SponsorshipStatus: ', sponsorshipStatus);
+        }
+
+        // this.supportPlans.push(supportPlan);
+        this.initialize();
 
         this.$refs.createSupportPlanForm.reset();
         this.createSupportPlanDialog = false;
@@ -1766,6 +1783,7 @@ export default {
             this.villageIds.indexOf(individualPayment.orphan.village.id) === -1
           ) {
             this.villageIds.push(individualPayment.orphan.village.id);
+            // social workers for later social worker selction after orphan is sponsered
             this.socialWorkers.push(
               individualPayment.orphan.village.socialWorker
             );
@@ -1798,8 +1816,6 @@ export default {
 
           this.totalAndSummationConflictMsg = `There is ${totalAndSummationDifference} fc missing from the total amount`;
         }
-
-        console.log('something went wrong');
       }
     },
 
@@ -2071,6 +2087,11 @@ export default {
                     grossPaymentInDomesticCurrency
                     adminFeeInDomesticCurrency
                     netPaymentInDomesticCurrency
+                    supportPlan {
+                      orphans {
+                        id
+                      }
+                    }
                   }
                 }`,
           variables
@@ -2113,7 +2134,7 @@ export default {
               paymentInPrimaryForeignCurrency * primaryExchangeRate;
           } else {
             primaryExchangeRate =
-              this.primaryExchangeRate / this.paymentInSecondaryFC;
+              this.paymentInSecondaryFC / this.paymentInPrimaryFC;
 
             paymentInSecondaryForeignCurrency = this.paymentInSecondaryFC;
             secondaryForeignCurrency = this.secondaryFC;
@@ -2147,6 +2168,14 @@ export default {
           parseFloat(netPaymentInDomesticCurrency),
           supportPlanId
         );
+
+        for (const orphan of payment.supportPlan.orphans) {
+          const sponsorshipStatus = await this.createSponsorshipStatus(
+            orphan.id,
+            'pending'
+          );
+          console.log('sponsorshipStatus', sponsorshipStatus);
+        }
 
         this.supportPlanPayments.push(payment);
         this.$refs.createPaymentForm.reset();
@@ -2234,6 +2263,8 @@ export default {
             this.selectedPayment.id
           );
 
+          console.log('updatedIndividualPayment: ', updatedIndividualPayment);
+
           const sponsorshipStatus = await this.createSponsorshipStatus(
             individualPayment.orphan.id,
             'active'
@@ -2254,8 +2285,6 @@ export default {
             `assignedSocialWorker`,
             assignedSocialWorker.socialWorker
           );
-
-          console.log(updatedIndividualPayment);
         }
 
         this.assignSocialWorkerClose();
