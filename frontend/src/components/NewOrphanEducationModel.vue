@@ -276,10 +276,6 @@ export default {
         new Date().getFullYear() -
         new Date(this.updatedOrphan?.dateOfBirth).getFullYear();
 
-      console.log(typeof age);
-      console.log(typeof this.orphanEducationLevel);
-      console.log(typeof val);
-
       if (val !== null) {
         if (age === 4) {
           if (
@@ -417,7 +413,6 @@ export default {
     },
 
     educationDialogNext() {
-      console.log('hello');
       this.formHasErrors = false;
 
       if (this.$refs.educationForm.validate()) {

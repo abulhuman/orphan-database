@@ -41,6 +41,7 @@
           <new-orphan-personal-model
             :save="savePersonalData"
             @personalDone="addPersonalInfo($event)"
+            @personalRefs="addPersonalRef($event)"
             @personalError="handlePersonalError($event)"
           />
 
@@ -60,6 +61,7 @@
             :save="saveEducationalData"
             :updatedOrphan="orphan"
             @educationDone="addEducationalInfo($event)"
+            @educationRefs="addEducationalRef($event)"
             @educationalError="handleEducationalError($event)"
           />
 
@@ -81,6 +83,7 @@
           <new-orphan-guardian-model
             :save="saveGuardianData"
             @guardianDone="addGuardianInfo($event)"
+            @guardianRefs="addGuardianRef($event)"
             @guardianError="handleGuardianError($event)"
           />
 
@@ -102,6 +105,7 @@
           <new-orphan-family-model
             :save="saveFamilyData"
             @familyDone="addFamilyInfo($event)"
+            @familyRefs="addFamilyRef($event)"
             @familyError="handleFamilyError($event)"
           />
 
@@ -123,6 +127,7 @@
           <new-orphan-document-model
             :save="saveDocumentData"
             @documentDone="addDocumentInfo($event)"
+            @documentRefs="addDocumentRef($event)"
             @documentError="handleDocumentError($event)"
           />
 
@@ -145,6 +150,7 @@
 
 <script>
 import axios from 'axios';
+import { mapMutations } from 'vuex';
 import NewOrphanPersonalModel from './NewOrphanPersonalModel.vue';
 import NewOrphanEducationModel from './NewOrphanEducationModel.vue';
 import NewOrphanGuardianModel from './NewOrphanGuardianModel.vue';
@@ -174,14 +180,19 @@ export default {
       // registrationSteps: 5,
       orphan: null,
       savePersonalData: false,
+      personalRef: null,
       personalFormError: false,
       saveEducationalData: false,
+      educationalRef: null,
       educationalFormError: false,
       saveGuardianData: false,
+      guardianRef: null,
       guardianFormError: false,
       saveFamilyData: false,
+      familyRef: null,
       familyFormError: false,
       saveDocumentData: false,
+      documentRef: null,
       documentFormError: false
     };
   },
@@ -202,6 +213,12 @@ export default {
   },
 
   methods: {
+    ...mapMutations([
+      'SET_SNACKBAR',
+      'SET_SNACKBAR_COLOR',
+      'SET_SNACKBAR_TEXT'
+    ]),
+
     savePersonalInfo() {
       this.savePersonalData = true;
     },
@@ -213,6 +230,9 @@ export default {
       // changes the steeper to the next
       this.currentRegistrationPosition = 2;
       console.log('personalDone', updatedOrphan);
+    },
+    addPersonalRef(personalRef) {
+      this.persoanlRef = personalRef;
     },
     handlePersonalError(error) {
       this.personalFormError = error;
@@ -242,6 +262,9 @@ export default {
       this.currentRegistrationPosition = 3;
       console.log('educationalDone', updatedOrphan);
     },
+    addEducationalRef(educationalRef) {
+      this.educationalRef = educationalRef;
+    },
     handleEducationalError(error) {
       this.educationalFormError = error;
     },
@@ -267,6 +290,9 @@ export default {
       // this has to point to the next steeper not the previous
       this.currentRegistrationPosition = 4;
       console.log('guardianDone', updatedOrphan);
+    },
+    addGuardianRef(guardianRef) {
+      this.guardianRef = guardianRef;
     },
     handleGuardianError(error) {
       this.guardianFormError = error;
@@ -302,6 +328,9 @@ export default {
       this.currentRegistrationPosition = 5;
       console.log('familyDone', updatedOrphan);
     },
+    addFamilyRef(familyRef) {
+      this.familyRef = familyRef;
+    },
     handleFamilyError(error) {
       this.familyFormError = error;
     },
@@ -320,18 +349,12 @@ export default {
       // assings orphan document data from the document form to the orphan object
 
       this.orphan.birthCertificateUrl = await axios
-        .post(
-          `/document/`,
-          documents.orphanBirthCertificateFormData
-        )
+        .post(`/document/`, documents.orphanBirthCertificateFormData)
         .then((res) => res.data)
         .catch((err) => console.warn(err));
 
       this.orphan.photoPortraitUrl = await axios
-        .post(
-          `/img/`,
-          documents.orphanPortraitPhotoFormData
-        )
+        .post(`/img/`, documents.orphanPortraitPhotoFormData)
         .then((res) => res.data)
         .catch((err) => console.warn(err));
 
@@ -341,18 +364,12 @@ export default {
         .catch((err) => console.warn(err));
 
       this.orphan.passportUrl = await axios
-        .post(
-          `/document/`,
-          documents.orphanPassportFormData
-        )
+        .post(`/document/`, documents.orphanPassportFormData)
         .then((res) => res.data)
         .catch((err) => console.warn(err));
 
       this.orphan.father.deathCertificateUrl = await axios
-        .post(
-          `/document/`,
-          documents.fatherDeathCertificateFormData
-        )
+        .post(`/document/`, documents.fatherDeathCertificateFormData)
         .then((res) => res.data)
         .catch((err) => console.warn(err));
 
@@ -362,18 +379,12 @@ export default {
         .catch((err) => console.warn(err));
 
       this.orphan.guardian.confirmationLetterUrl = await axios
-        .post(
-          `/document/`,
-          documents.guardianConfirmationLetterFormData
-        )
+        .post(`/document/`, documents.guardianConfirmationLetterFormData)
         .then((res) => res.data)
         .catch((err) => console.warn(err));
 
       this.orphan.guardian.legalConfirmationLetterUrl = await axios
-        .post(
-          `/document/`,
-          documents.guardianLegalConfirmationLetterFormData
-        )
+        .post(`/document/`, documents.guardianLegalConfirmationLetterFormData)
         .then((res) => res.data)
         .catch((err) => console.warn(err));
 
@@ -428,12 +439,30 @@ export default {
       );
 
       console.log('Registered Orphan', registeredOrphan);
-      // const status = await this.createSponsorshipStatus(registeredOrphan.id);
 
-      // console.log("Status", status);object
+      await this.createSponsorshipStatus(registeredOrphan.id);
+
+      this.SET_SNACKBAR_COLOR('success');
+      this.SET_SNACKBAR_TEXT(
+        `Orphan ${registeredOrphan.firstName} ${registeredOrphan.father.firstName} created successfully!`
+      );
+      this.SET_SNACKBAR(true);
+
+      // reset all the dialogs
+      this.persoanlRef.reset();
+      this.educationalRef.reset();
+      this.familyRef.reset();
+      this.guardianRef.reset();
+      this.documentRef.reset();
+
+      // close the dialog
+      this.dialog = false;
+
       // this variables change enables for the proper functioning of the document continue button
       this.saveDocumentData = false;
-      console.log('documentDone', documents);
+    },
+    addDocumentRef(documentRef) {
+      this.documentRef = documentRef;
     },
     handleDocumentError(error) {
       this.documentFormError = error;
@@ -531,6 +560,10 @@ export default {
                     villageId: $villageId,
                   ) {
                     id
+                    firstName
+                    father {
+                      firstName
+                    }
                   }
                 }`,
           variables: {
@@ -567,7 +600,7 @@ export default {
           query: `mutation createSponsorshipStatus(
                   $status: sponsorshipStatus
                   $date: DateTime!
-                  $orphanId: ID
+                  $orphanId: ID!
                 ) {
                   createSponsorshipStatus(status: $status, date: $date, orphanId: $orphanId) {
                     id
