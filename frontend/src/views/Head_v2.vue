@@ -2491,8 +2491,6 @@ export default {
   },
   watch: {
     socialWorkerBirthDateMenu(val) {
-      // console.log(this.$refs.picker);
-      // console.log(
       //   val && setTimeout(() => (this.$refs.picker.activePicker = "YEAR"))
       // );
       // Changes the active picker from the default "DATE" to "YEAR"
@@ -2505,8 +2503,6 @@ export default {
           (region) => region.name === val
         );
         const regionId = parseInt(region[0].id);
-        console.log('regionId', regionId);
-        console.log('zoneOptions', this.zoneOptions);
         this.zoneOptions = this.zoneOptions.filter((zone) => {
           if (zone.region !== null) {
             return parseInt(zone.region.id) === regionId;
@@ -2537,7 +2533,6 @@ export default {
       }
     },
     socialWorkerVillages(val) {
-      console.log('villages', val);
       if (val.length !== 0) {
         this.socialWorkerDistrictDisabled = true;
         this.socialWorkerVillageDisabled = false;
@@ -2766,7 +2761,6 @@ export default {
       })();
     },
     socialWorkerBirthdateSave(date) {
-      // console.log(this.$refs.menu);
       this.$refs.menu.save(date);
     },
     showProjectRegistration() {
@@ -3114,7 +3108,6 @@ export default {
       return `${item.name}`;
     },
     toggleProjectProposalInput() {
-      console.log(this.projectProposalFile);
       // pdf == application/pdf
       // doc == application/msword
       // docx == application/vnd.openxmlformats-officedocument.wordprocessingml.document
@@ -3509,8 +3502,6 @@ export default {
           villages.map((village) => village.id)
         )[0];
 
-        console.log('hi', this.projectCoordinator);
-
         const coordinators = [];
 
         for (let coordinatorOption of this.projectCoordinator) {
@@ -3529,8 +3520,6 @@ export default {
 
           if (temp[0]) coordinators.push(temp[0]);
         }
-
-        console.log(coordinators);
 
         // const coordinatorId = parseInt(coordinator[0].id);
         // const projectProposalUrl = 'qwertyuiop';
@@ -3558,9 +3547,6 @@ export default {
           parseFloat(this.projectAdministrativeCost),
           coordinators
         );
-
-        console.log(project);
-        console.log(projectProposalUrl);
 
         await this.createProjectDocuments(
           projectProposalUrl,
@@ -3660,7 +3646,6 @@ export default {
     },
 
     async coordinatorSave() {
-      // console.log(this.$refs.coordinatorForm.$children[0]);
       if (this.$refs.coordinatorForm.validate()) {
         const names = this.coordinatorName.split(' ');
         const firstName = names[0];
@@ -3675,7 +3660,6 @@ export default {
         const userId = parseInt(user.id);
         // const coordinator =
         await this.createCoordinator(firstName, middleName, lastName, userId);
-        // console.log("coordinator", coordinator);
         this.infoDialogOwner = 'Coordinator';
         this.infoDialogOwnerName = `${firstName} ${middleName} ${lastName}`;
         this.infoDialogOwnerEmail = this.coordinatorEmail;
@@ -3857,14 +3841,10 @@ export default {
         );
         const districtIds = district.map((val) => parseInt(val.id));
 
-        console.log('district', district[0]);
-
         let villages = [];
         if (district.length !== 0) {
-          console.log('hi');
           villages = [...district[0].villages];
         } else {
-          console.log('HI');
           villages = this.socialWorkerVillageOptions.filter((village) => {
             for (const vlg of this.socialWorkerVillages) {
               return vlg === village.name;
@@ -3872,12 +3852,7 @@ export default {
           });
         }
 
-        console.log('villages', villages);
-
         const villageIds = villages.map((val) => val.id);
-
-        console.log(this.socialWorkerVillages);
-        console.log('villageIds', villageIds);
 
         await this.createSocialWorker(
           firstName,
@@ -3951,12 +3926,11 @@ export default {
     },
     initializeRegionTable() {
       if (this.regionTable.length > 0) this.regionTable.length = 0;
-      return (
-        axios
-          .post(
-            '/graphql/',
-            {
-              query: `query {
+      return axios
+        .post(
+          '/graphql/',
+          {
+            query: `query {
                   allRegions {
                     id
                     name
@@ -3968,27 +3942,25 @@ export default {
                     }
                   }
                 }`
-            }
-            // {
-            //   withCredentials: true,
-            // }
-          )
-          // .then((res) => console.log(res))
-          .then((res) => {
-            if (res.data.errors?.length)
-              throw new Error(res.data.errors[0].message.message);
-            return res.data.data.allRegions;
-          })
-          .then((res) => this.regionTable.push(...res))
-          .catch((err) => {
-            this.SET_SNACKBAR(true);
-            this.SET_SNACKBAR_COLOR('error');
-            this.SET_SNACKBAR_TEXT(
-              'Server error. Reload the page and try again.'
-            );
-            console.error(err);
-          })
-      );
+          }
+          // {
+          //   withCredentials: true,
+          // }
+        )
+        .then((res) => {
+          if (res.data.errors?.length)
+            throw new Error(res.data.errors[0].message.message);
+          return res.data.data.allRegions;
+        })
+        .then((res) => this.regionTable.push(...res))
+        .catch((err) => {
+          this.SET_SNACKBAR(true);
+          this.SET_SNACKBAR_COLOR('error');
+          this.SET_SNACKBAR_TEXT(
+            'Server error. Reload the page and try again.'
+          );
+          console.error(err);
+        });
     },
     initializeZoneTable() {
       if (this.zoneTable.length > 0) this.zoneTable.length = 0;
@@ -4024,10 +3996,9 @@ export default {
     },
     initializeVillageTable() {
       if (this.villageTable.length > 0) this.villageTable.length = 0;
-      return (
-        axios
-          .post('/graphql', {
-            query: `query {
+      return axios
+        .post('/graphql', {
+          query: `query {
                   allVillages {
                     id
                     name
@@ -4045,23 +4016,21 @@ export default {
                     }
                   }
                 }`
-          })
-          // .then(res => console.log("villages", res))
-          .then((res) => {
-            if (res.data.errors?.length)
-              throw new Error(res.data.errors[0].message.message);
-            return res.data.data.allVillages;
-          })
-          .then((res) => this.villageTable.push(...res))
-          .catch((err) => {
-            this.SET_SNACKBAR(true);
-            this.SET_SNACKBAR_COLOR('error');
-            this.SET_SNACKBAR_TEXT(
-              'Server error. Reload the page and try again.'
-            );
-            console.error(err);
-          })
-      );
+        })
+        .then((res) => {
+          if (res.data.errors?.length)
+            throw new Error(res.data.errors[0].message.message);
+          return res.data.data.allVillages;
+        })
+        .then((res) => this.villageTable.push(...res))
+        .catch((err) => {
+          this.SET_SNACKBAR(true);
+          this.SET_SNACKBAR_COLOR('error');
+          this.SET_SNACKBAR_TEXT(
+            'Server error. Reload the page and try again.'
+          );
+          console.error(err);
+        });
     },
 
     // district table
@@ -4147,7 +4116,6 @@ export default {
     // custom search function based on selected columns
     // TODO: do MultipleFilter
     searchRegionTableFilter(value, search, item) {
-      console.log(value);
       if (search.length > 0) {
         if (this.regionTableFilterValue.length > 0) {
           for (const filterVal of this.regionTableFilterValue) {
@@ -4180,7 +4148,6 @@ export default {
       }
     },
     searchZoneTableFilter(value, search, item) {
-      console.log(item);
       if (search.length > 0) {
         if (this.zoneTableFilterValue.length > 0) {
           for (const filterVal of this.zoneTableFilterValue) {
@@ -4213,7 +4180,6 @@ export default {
       }
     },
     searchDistrictTableFilter(value, search, item) {
-      console.log('Value: ' + value);
       if (search.length > 0) {
         if (this.districtTableFilterValue.length > 0) {
           for (const filterVal of this.districtTableFilterValue) {
@@ -4260,8 +4226,6 @@ export default {
       }
     },
     searchVillageTableFilter(value, search, item) {
-      console.log(item);
-      // console.log(this.filterValue);
       if (search.length > 0) {
         if (this.villageTableFilterValue.length > 0) {
           for (const filterVal of this.villageTableFilterValue) {
