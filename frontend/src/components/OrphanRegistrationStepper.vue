@@ -440,8 +440,6 @@ export default {
 
       console.log('Registered Orphan', registeredOrphan);
 
-      await this.createSponsorshipStatus(registeredOrphan.id);
-
       this.SET_SNACKBAR_COLOR('success');
       this.SET_SNACKBAR_TEXT(
         `Orphan ${registeredOrphan.firstName} ${registeredOrphan.father.firstName} created successfully!`
@@ -593,33 +591,6 @@ export default {
         .then((res) => res.data.data.createOrphanWithBaselineData)
         .catch((err) => console.warn(err));
     },
-
-    async createSponsorshipStatus(orphanId) {
-      return await axios
-        .post('/graphql', {
-          query: `mutation createSponsorshipStatus(
-                  $status: sponsorshipStatus
-                  $date: DateTime!
-                  $orphanId: ID!
-                ) {
-                  createSponsorshipStatus(status: $status, date: $date, orphanId: $orphanId) {
-                    id
-                    status
-                    date
-                    orphan {
-                      id
-                    }
-                  }
-                }`,
-          variables: {
-            status: 'new',
-            date: new Date().toISOString(),
-            orphanId: orphanId
-          }
-        })
-        .then((res) => res.data.data.createSponsorshipStatus)
-        .catch((err) => console.warn(err));
-    }
   }
 };
 </script>

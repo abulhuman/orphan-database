@@ -242,7 +242,6 @@ try {
       (req, res) => {
         if (req.file) {
           const fileURL = url.pathToFileURL(req.file.path);
-          console.log(fileURL);
           res.send(fileURL.toString().slice(fileURL.toString().indexOf('img')));
           // if (req.file.mimetype === 'application/pdf') {
           //   convertImage(req.file.path, req.file.destination).then((data) =>
@@ -259,13 +258,7 @@ try {
       (req, res) => {
         if (req.file) {
           const fileURL = url.pathToFileURL(req.file.path);
-          console.log(fileURL);
           res.send(fileURL.toString().slice(fileURL.toString().indexOf('document')));
-          // if (req.file.mimetype === 'application/pdf') {
-          //   convertImage(req.file.path, req.file.destination).then((data) =>
-          //     res.send(data)
-          //   );
-          // } else res.send(req.file.path);
         } else return res.send('Document not attached');
       }
     );

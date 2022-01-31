@@ -3572,6 +3572,12 @@ export default {
           project.id
         );
 
+        this.SET_SNACKBAR_TEXT(
+          `Successfully created project - ${project.number}.`
+        );
+        this.SET_SNACKBAR_COLOR('success');
+        this.SET_SNACKBAR('true');
+
         this.$refs.createProjectForm.reset();
         this.createProjectDialog = false;
       }
