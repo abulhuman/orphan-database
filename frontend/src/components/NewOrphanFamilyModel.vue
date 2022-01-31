@@ -471,35 +471,18 @@ export default {
     }
   },
   methods: {
-    // test() {console.log("updatedOrphanFamily", this.updatedOrphan)},
     // dialog
     fatherDateOfBirthSave(date) {
-      // console.log(this.$refs.menu);
       this.$refs.fatherDateOfBirthMenu.save(date);
     },
     fatherDateOfDeathSave(date) {
-      // console.log(this.$refs.menu);
       this.$refs.fatherDateOfDeathMenu.save(date);
     },
     motherDateOfBirthSave(date) {
-      // console.log(this.$refs.menu);
       this.$refs.motherDateOfBirthMenu.save(date);
     },
     motherDateOfDeathSave(date) {
-      // console.log(this.$refs.menu);
       this.$refs.motherDateOfDeathMenu.save(date);
-    },
-    // combobox methods
-    removeOrphanHousingSituationSelect(attrs, item) {
-      this.orphanHousingSituationSelect.splice(
-        this.orphanHousingSituationSelect.indexOf(item),
-        1
-      );
-      console.log(this.orphanHousingSituationSelect);
-      console.log(attrs);
-      this.orphanHousingSituationSelect = [
-        ...this.orphanHousingSituationSelect
-      ];
     },
 
     familyDialogClose() {
