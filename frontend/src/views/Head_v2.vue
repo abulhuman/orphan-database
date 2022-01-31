@@ -2520,24 +2520,20 @@ export default {
       if (val !== null) {
         this.socialWorkerVillageDisabled = true;
         this.socialWorkerDistrictDisabled = false;
-
-        const district = this.districts.filter(
-          (district) => district.name === val
-        );
-
-        if (district !== undefined) {
-          // make this thing happen when the menu is triggered
-          this.socialWorkerVillageOptions = this.villageTable.filter(
-            (village) => {
-              // remove one negative to make it village without districts
-              return !!village.district;
-              // return !!village;
-            }
-          );
-        }
       } else {
         // this.socialWorkerDistrictDisabled = true;
         this.socialWorkerVillageDisabled = false;
+      }
+    },
+    showSocialWorker(val) {
+      if (val) {
+        // make this thing happen when the menu is triggered
+        this.socialWorkerVillageOptions = this.villageTable.filter(
+          (village) => {
+            // remove one negative to make it village without districts
+            return !village.district;
+          }
+        );
       }
     },
     socialWorkerVillages(val) {
@@ -3861,14 +3857,27 @@ export default {
         );
         const districtIds = district.map((val) => parseInt(val.id));
 
-        const villages = this.socialWorkerVillageOptions.filter((village) => {
-          for (const vlg of this.socialWorkerVillages) {
-            return vlg === village.name;
-          }
-        });
+        console.log('district', district[0]);
+
+        let villages = [];
+        if (district.length !== 0) {
+          console.log('hi');
+          villages = [...district[0].villages];
+        } else {
+          console.log('HI');
+          villages = this.socialWorkerVillageOptions.filter((village) => {
+            for (const vlg of this.socialWorkerVillages) {
+              return vlg === village.name;
+            }
+          });
+        }
+
+        console.log('villages', villages);
+
         const villageIds = villages.map((val) => val.id);
+
         console.log(this.socialWorkerVillages);
-        console.log(villageIds);
+        console.log('villageIds', villageIds);
 
         await this.createSocialWorker(
           firstName,
