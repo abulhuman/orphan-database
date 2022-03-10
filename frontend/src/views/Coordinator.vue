@@ -5,9 +5,11 @@
       :dialog="showVillagesSelectionDialog"
       :newOrphanView="newOrphanDialog"
       :changeStatusDialogValue="showStatusChangeSelectionDialog"
+      :changeOrphanListValue="showOrphans"
       @toggleNewOrphanDialog="toggleNewOrphanDialog($event)"
       @toggleSupportPlanComponent="toggleSupportPlanTable($event)"
       @toggleChangeStatusDialog="toggleChangeStatus($event)"
+      @toogleChangeOrphanListValue="toggleOrphanList($event)"
     />
     <!-- village select Dialog -->
     <v-dialog v-model="showVillagesSelectionDialog" width="30%" persistent>
@@ -819,6 +821,9 @@ export default {
     },
     toggleChangeStatus(val) {
       this.showStatusChangeSelectionDialog = val;
+    },
+    toggleOrphanList(val) {
+      this.showOrphans = val;
     },
     // #
     // goToOrphansTable() {

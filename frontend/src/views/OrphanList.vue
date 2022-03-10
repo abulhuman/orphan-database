@@ -198,7 +198,7 @@
                           {{ displayOrphanRegistrationDate(item) }}
                         </template>
                         <template v-slot:item.details="{ item }">
-                          <orphan-detail :details="item" user="coordinator"/>
+                          <orphan-detail :details="item" user="coordinator" />
                         </template>
                       </v-data-table>
                       <!-- becomes visble when full name is edited -->
@@ -1016,9 +1016,9 @@
 </style>
 
 <script>
-import axios from "axios";
+import axios from 'axios';
 // import NewOrphanRegistrationModel from "@/components/NewOrphanRegistrationModel.vue";
-import OrphanDetail from "@/components/OrphanDetail.vue";
+import OrphanDetail from '@/components/OrphanDetail.vue';
 
 export default {
   // name: "OrphanList",
@@ -1026,89 +1026,89 @@ export default {
     orphanIds: {
       type: Object,
       required: false,
-      default: () => [],
+      default: () => []
     }
   },
   components: {
     // NewOrphanRegistrationModel,
-    OrphanDetail,
+    OrphanDetail
   },
 
   data() {
     return {
-      newSearch: "", // used for newFilter
-      processingSearch: "", // used for processingFilter
-      pendingSearch: "", // used for pendingFilter
-      activeSearch: "", // used for activeFilter
-      graduatedSearch: "", // used for graduatedFilter
+      newSearch: '', // used for newFilter
+      processingSearch: '', // used for processingFilter
+      pendingSearch: '', // used for pendingFilter
+      activeSearch: '', // used for activeFilter
+      graduatedSearch: '', // used for graduatedFilter
       drawer: false, // constroles the sidebar
       // test fields *****************
       benched: 0,
       snack: false,
-      snackColor: "",
-      snackText: "",
-      max25chars: (v) => v.length <= 25 || "Input too long!",
+      snackColor: '',
+      snackText: '',
+      max25chars: (v) => v.length <= 25 || 'Input too long!',
       // *****************************
       orphanDetails: {
-        id: 0,
+        id: 0
         // showOrphanDetail: false,
       },
       detailDialog: false,
       orphanDateOfBirth: null,
       orphanDateOfBirthMenu: false,
-      genderOptions: ["Male", "Female"],
+      genderOptions: ['Male', 'Female'],
       orphanIndex: 14,
       orphanItems: {
-        orphanName: "",
-        fatherName: "",
-        grandFatherName: "",
-        gender: "",
-        placeOfBirth: "",
-        religion: "",
-        spokenLanguages: "",
-        psychologicalStatus: "",
-        enrollmentStatus: "",
-        educationLevel: "",
-        educationYearState: "",
-        schoolType: "",
-        schoolName: "",
-        reasonForDropout: "",
-        reasonForUnenrolled: "",
-        hobbies: "",
-        fatherCauseOfDeath: "",
-        motherFirstName: "",
-        motherMiddleName: "",
-        motherLastName: "",
-        motherVitalStatus: "",
-        motherMaritalStatus: "",
-        housingSituation: "",
-        otherProperties: "",
+        orphanName: '',
+        fatherName: '',
+        grandFatherName: '',
+        gender: '',
+        placeOfBirth: '',
+        religion: '',
+        spokenLanguages: '',
+        psychologicalStatus: '',
+        enrollmentStatus: '',
+        educationLevel: '',
+        educationYearState: '',
+        schoolType: '',
+        schoolName: '',
+        reasonForDropout: '',
+        reasonForUnenrolled: '',
+        hobbies: '',
+        fatherCauseOfDeath: '',
+        motherFirstName: '',
+        motherMiddleName: '',
+        motherLastName: '',
+        motherVitalStatus: '',
+        motherMaritalStatus: '',
+        housingSituation: '',
+        otherProperties: ''
       },
-      orphanHealthDescription: "",
+      orphanHealthDescription: '',
 
       // ********************************
 
-      orphanEnrollmentStatusSelect: "",
-      orphanEnrollmentStatusOptions: ["Enrolled", "Drop-Out", "Un-Enrolled"],
-      orphanSchoolTypeSelect: "",
-      orphanSchoolTypeOptions: ["Public", "Private"],
-      orphanEducationLevelSelect: "",
+      orphanEnrollmentStatusSelect: '',
+      orphanEnrollmentStatusOptions: ['Enrolled', 'Drop-Out', 'Un-Enrolled'],
+      orphanSchoolTypeSelect: '',
+      orphanSchoolTypeOptions: ['Public', 'Private'],
+      orphanEducationLevelSelect: '',
       orphanEducationLevelOptions: [
-        "Preschool/Religious Education",
-        "Kinderguarden",
-        "Primary/Elementary",
-        "Junior",
-        "Highschool",
-        "Undergraduate",
-        "Postgraduate",
+        'Preschool/Religious Education',
+        'Kinderguarden',
+        'Primary/Elementary',
+        'Junior',
+        'Highschool',
+        'Undergraduate',
+        'Postgraduate'
       ],
-      orphanEducationYearStateSelect: "",
+      orphanEducationYearStateSelect: '',
       orphanEducationYearStateOptions: [],
-      orphanSchoolName: "",
-      orphanReasonForDropout: "",
-      orphanReasonForUnenrolled: "",
-      enrollmentStatusDisplay: "",
-      orphanHobbies: "",
+      orphanSchoolName: '',
+      orphanReasonForDropout: '',
+      orphanReasonForUnenrolled: '',
+      enrollmentStatusDisplay: '',
+      orphanHobbies: '',
       educationCertificateDialog: false,
 
       // ********************************
@@ -1117,76 +1117,76 @@ export default {
       fatherDateOfBirthMenu: false,
       fatherDateOfDeathDate: null,
       fatherDateOfDeathMenu: false,
-      motherFirstName: "",
-      motherMiddleName: "",
-      motherLastName: "",
+      motherFirstName: '',
+      motherMiddleName: '',
+      motherLastName: '',
       motherDateOfBirthDate: null,
       motherDateOfBirthMenu: false,
-      motherVitalStatusSelect: "",
-      motherVitalStatusOptions: ["Alive", "Passed Away"],
-      motherMaritalStatusSelect: "",
-      motherMaritalStatusOptions: ["Widow", "Married"],
+      motherVitalStatusSelect: '',
+      motherVitalStatusOptions: ['Alive', 'Passed Away'],
+      motherMaritalStatusSelect: '',
+      motherMaritalStatusOptions: ['Widow', 'Married'],
       orphanHousingSituationSelect: [],
       orphanHousingSituationOptions: [
-        "Privately Owned",
-        "Rental",
-        "With Relative",
-        "Dependent",
+        'Privately Owned',
+        'Rental',
+        'With Relative',
+        'Dependent'
       ],
       fatherDeathCertificateDialog: false,
       birthCertificateDialog: false,
       // ********************************
       rules: {
-        required: (value) => !!value || "Required.",
+        required: (value) => !!value || 'Required.'
       },
       orphanShow: false,
-      orphanSelectBtnLable: "Select Orphans",
+      orphanSelectBtnLable: 'Select Orphans',
       orphanPanel: [],
       selectedOrphans: [],
       showDonorSelectionDialog: false,
-      selectedOrphanDonor: "",
+      selectedOrphanDonor: '',
       selectedOrphanDonorOptions: [],
       validDonorChoice: false,
       // used in filter selection items
       newFilterItems: [
-        "Id",
-        "Full Name",
-        "Age",
-        "Gender",
-        "Sponsorship Status",
-        "Selected Donor",
+        'Id',
+        'Full Name',
+        'Age',
+        'Gender',
+        'Sponsorship Status',
+        'Selected Donor'
       ],
       processingFilterItems: [
-        "Id",
-        "Full Name",
-        "Age",
-        "Gender",
-        "Sponsorship Status",
-        "Selected Donor",
+        'Id',
+        'Full Name',
+        'Age',
+        'Gender',
+        'Sponsorship Status',
+        'Selected Donor'
       ],
       pendingFilterItems: [
-        "Id",
-        "Full Name",
-        "Age",
-        "Gender",
-        "Sponsorship Status",
-        "Sponsoring Donor",
+        'Id',
+        'Full Name',
+        'Age',
+        'Gender',
+        'Sponsorship Status',
+        'Sponsoring Donor'
       ],
       activeFilterItems: [
-        "Id",
-        "Full Name",
-        "Age",
-        "Gender",
-        "Sponsorship Status",
-        "Sponsored Date",
+        'Id',
+        'Full Name',
+        'Age',
+        'Gender',
+        'Sponsorship Status',
+        'Sponsored Date'
       ],
       graduatedFilterItems: [
-        "Id",
-        "Full Name",
-        "Age",
-        "Gender",
-        "Sponsorship Status",
-        "Graduated Date",
+        'Id',
+        'Full Name',
+        'Age',
+        'Gender',
+        'Sponsorship Status',
+        'Graduated Date'
       ],
       newFilterValue: [],
       processingFilterValue: [],
@@ -1196,30 +1196,30 @@ export default {
       // used for filter selection
       // table headers if that wasn't clear enough LOL
       headers: [
-        { text: "Id", value: "id" },
+        { text: 'Id', value: 'id' },
         {
-          text: "Full Name",
-          align: "start",
-          value: "fullName",
+          text: 'Full Name',
+          align: 'start',
+          value: 'fullName'
         },
         {
-          text: "Age",
-          value: "age",
+          text: 'Age',
+          value: 'age'
         },
         {
-          text: "Gender",
-          value: "gender",
+          text: 'Gender',
+          value: 'gender'
         },
         {
-          text: "Sponsorship Status",
-          value: "sponsorshipStatus",
+          text: 'Sponsorship Status',
+          value: 'sponsorshipStatus'
         },
-        { text: "Sponsored Date", value: "sponsoredDate" },
+        { text: 'Sponsored Date', value: 'sponsoredDate' },
         {
-          text: "Details",
-          value: "details",
-          sortable: false,
-        },
+          text: 'Details',
+          value: 'details',
+          sortable: false
+        }
       ],
       // table rows/items
       orphans: [],
@@ -1227,7 +1227,7 @@ export default {
       processingOrphans: [],
       pendingOrphans: [],
       activeOrphans: [],
-      graduatedOrphans: [],
+      graduatedOrphans: []
     };
   },
   created() {
@@ -1240,7 +1240,7 @@ export default {
     },
     length() {
       return 7000;
-    },
+    }
     // used in new orphan dialog
   },
   watch: {
@@ -1249,184 +1249,292 @@ export default {
         return (
           orphan.sponsorshipStatuses[
             orphan.sponsorshipStatuses.length - 1
-          ].status.toLowerCase() === "new"
+          ].status.toLowerCase() === 'new'
         );
       });
       this.processingOrphans = this.orphans.filter((orphan) => {
         return (
           orphan.sponsorshipStatuses[
             orphan.sponsorshipStatuses.length - 1
-          ].status.toLowerCase() === "processing"
+          ].status.toLowerCase() === 'processing'
         );
       });
       this.pendingOrphans = this.orphans.filter((orphan) => {
         return (
           orphan.sponsorshipStatuses[
             orphan.sponsorshipStatuses.length - 1
-          ].status.toLowerCase() === "pending"
+          ].status.toLowerCase() === 'pending'
         );
       });
       this.activeOrphans = this.orphans.filter((orphan) => {
         return (
           orphan.sponsorshipStatuses[
             orphan.sponsorshipStatuses.length - 1
-          ].status.toLowerCase() === "active"
+          ].status.toLowerCase() === 'active'
         );
       });
       this.graduatedOrphans = this.orphans.filter((orphan) => {
         return (
           orphan.sponsorshipStatuses[
             orphan.sponsorshipStatuses.length - 1
-          ].status.toLowerCase() === "graduated"
+          ].status.toLowerCase() === 'graduated'
         );
       });
     },
     // ***************************************
     // set the Grade/Year based on Education Level
     orphanEducationLevelSelect() {
-      if (this.orphanEducationLevelSelect === "Preschool/Religious Education") {
-        this.orphanEducationYearStateOptions = ["first", "second", "third"];
-      } else if (this.orphanEducationLevelSelect === "Kinderguarden") {
+      if (this.orphanEducationLevelSelect === 'Preschool/Religious Education') {
+        this.orphanEducationYearStateOptions = ['first', 'second', 'third'];
+      } else if (this.orphanEducationLevelSelect === 'Kinderguarden') {
         this.orphanEducationYearStateOptions = [
-          "Preparatory",
-          "Nursery",
-          "LKG",
-          "UKG",
+          'Preparatory',
+          'Nursery',
+          'LKG',
+          'UKG'
         ];
-      } else if (this.orphanEducationLevelSelect === "Primary/Elementary") {
+      } else if (this.orphanEducationLevelSelect === 'Primary/Elementary') {
         this.orphanEducationYearStateOptions = [1, 2, 3, 4, 5, 6];
-      } else if (this.orphanEducationLevelSelect === "Junior") {
+      } else if (this.orphanEducationLevelSelect === 'Junior') {
         this.orphanEducationYearStateOptions = [7, 8];
-      } else if (this.orphanEducationLevelSelect === "Highschool") {
+      } else if (this.orphanEducationLevelSelect === 'Highschool') {
         this.orphanEducationYearStateOptions = [9, 10, 11, 12];
       } else if (
-        this.orphanEducationLevelSelect === "Undergraduate" ||
-        this.orphanEducationLevelSelect === "Postgraduate"
+        this.orphanEducationLevelSelect === 'Undergraduate' ||
+        this.orphanEducationLevelSelect === 'Postgraduate'
       ) {
         this.orphanEducationYearStateOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
       }
-    },
+    }
     // ***************************************
   },
   methods: {
     initialize() {
-      if (this.orphanIds !== null) {
-        for (const id of this.orphanIds.ids) {
-          axios
-            .post("/graphql/", {
-              query: `query orphan($id: ID!) {
-                        orphan(id: $id) {
-                          id
-                          created_at
-                          firstName
-                          father {
-                            id
-                            firstName
-                            lastName
-                            dateOfDeath
-                            dateOfBirth
-                            causeOfDeath
-                            deathCertificateUrl
-                          }
-                          gender
-                          dateOfBirth
-                          placeOfBirth
-                          religion
-                          spokenLanguages
-                          accountNumber
-                          gradeAgeMismatchReason
-                          psychologicalStatus
-                          healthDescription
-                          education {
-                            id
-                            enrollmentStatus
-                            level
-                            year
-                            schoolName
-                            typeOfSchool
-                            reason
-                            educationalRecords {
-                              yearDivision
-                              quarter
-                              semester
-                              numberOfSubjects
-                              totalMark
-                              average
-                              semesterGPA
-                              cumulativeGPA
-                              reportCardUrl
-                            }
-                          }
-                          hobbies
-                          house_property {
-                            id
-                            housingSituation
-                            otherProperty
-                          }
-                          sponsorshipStatuses {
-                            id
-                            status
-                            date
-                          }
-                          guardian {
-                            id
-                            firstName
-                            middleName
-                            lastName
-                            gender
-                            email
-                            mobileNumber
-                            nationality
-                            telephoneNumber
-                            dateOfBirth
-                            relationToOrphan
-                            iDCardUrl
-                            confirmationLetterUrl
-                            legalConfirmationLetterUrl
-                          }
-                          mother {
-                            id
-                            firstName
-                            middleName
-                            lastName
-                            dateOfBirth
-                            dateOfDeath
-                            causeOfDeath
-                            vitalStatus
-                            maritalStatus
-                            mobileNumber
-                          }
-                          sponsorshipStatuses {
-                            status
-                            date
-                          }
-                          donor {
-                            id
-                            nameInitials
-                          }
-                          village {
-                            id
-                            name
-                          }
-                          socialWorker {
-                            id
-                            firstName
-                            middleName
-                            lastName
-                            gender
-                            dateOfBirth
-                            mobileNumber
-                          }
-                        }
-                      }`,
-              variables: {
-                id: id,
-              },
-            })
-            .then((res) => this.orphans.push(res.data.data.orphan))
-            .catch((err) => console.warn(err));
-        }
-      }
+      axios
+        .post('/graphql/', {
+          query: `query {
+                    allOrphans {
+                      id
+                      created_at
+                      firstName
+                      father {
+                        id
+                        firstName
+                        lastName
+                        dateOfDeath
+                        dateOfBirth
+                        causeOfDeath
+                        deathCertificateUrl
+                      }
+                      gender
+                      dateOfBirth
+                      placeOfBirth
+                      religion
+                      spokenLanguages
+                      accountNumber
+                      gradeAgeMismatchReason
+                      educationalRecords {
+                        id
+                        enrollmentStatus
+                        level
+                        year
+                        schoolName
+                        typeOfSchool
+                        reason
+                        yearDivision
+                        quarter
+                        semester
+                        numberOfSubjects
+                        totalMark
+                        average
+                        rank
+                        semesterGPA
+                        cumulativeGPA
+                        reportCardUrl
+                      }
+                      hobbies
+                      house_property {
+                        id
+                        housingSituation
+                        otherProperty
+                      }
+                      sponsorshipStatuses {
+                        id
+                        status
+                        date
+                      }
+                      guardian {
+                        id
+                        firstName
+                        middleName
+                        lastName
+                        gender
+                        email
+                        mobileNumber
+                        nationality
+                        telephoneNumber
+                        dateOfBirth
+                        relationToOrphan
+                        idCardUrl
+                        confirmationLetterUrl
+                        legalConfirmationLetterUrl
+                      }
+                      mother {
+                        id
+                        firstName
+                        middleName
+                        lastName
+                        dateOfBirth
+                        dateOfDeath
+                        causeOfDeath
+                        vitalStatus
+                        maritalStatus
+                        mobileNumber
+                      }
+                      sponsorshipStatuses {
+                        status
+                        date
+                      }
+                      donors {
+                        id
+                        nameInitials
+                      }
+                      village {
+                        id
+                        name
+                      }
+                      socialWorker {
+                        id
+                        firstName
+                        middleName
+                        lastName
+                        gender
+                        dateOfBirth
+                        mobileNumber
+                      }
+                    }
+                  }`
+        })
+        .then((res) => (this.orphans = res.data.data.allOrphans))
+        .catch((err) => console.warn(err));
+
+      // if (this.orphanIds !== null) {
+      //   for (const id of this.orphanIds.ids) {
+      //     axios
+      //       .post("/graphql/", {
+      //         query: `query orphan($id: ID!) {
+      //                   orphan(id: $id) {
+      //                     id
+      //                     created_at
+      //                     firstName
+      //                     father {
+      //                       id
+      //                       firstName
+      //                       lastName
+      //                       dateOfDeath
+      //                       dateOfBirth
+      //                       causeOfDeath
+      //                       deathCertificateUrl
+      //                     }
+      //                     gender
+      //                     dateOfBirth
+      //                     placeOfBirth
+      //                     religion
+      //                     spokenLanguages
+      //                     accountNumber
+      //                     gradeAgeMismatchReason
+      //                     psychologicalStatus
+      //                     healthDescription
+      //                     education {
+      //                       id
+      //                       enrollmentStatus
+      //                       level
+      //                       year
+      //                       schoolName
+      //                       typeOfSchool
+      //                       reason
+      //                       educationalRecords {
+      //                         yearDivision
+      //                         quarter
+      //                         semester
+      //                         numberOfSubjects
+      //                         totalMark
+      //                         average
+      //                         semesterGPA
+      //                         cumulativeGPA
+      //                         reportCardUrl
+      //                       }
+      //                     }
+      //                     hobbies
+      //                     house_property {
+      //                       id
+      //                       housingSituation
+      //                       otherProperty
+      //                     }
+      //                     sponsorshipStatuses {
+      //                       id
+      //                       status
+      //                       date
+      //                     }
+      //                     guardian {
+      //                       id
+      //                       firstName
+      //                       middleName
+      //                       lastName
+      //                       gender
+      //                       email
+      //                       mobileNumber
+      //                       nationality
+      //                       telephoneNumber
+      //                       dateOfBirth
+      //                       relationToOrphan
+      //                       iDCardUrl
+      //                       confirmationLetterUrl
+      //                       legalConfirmationLetterUrl
+      //                     }
+      //                     mother {
+      //                       id
+      //                       firstName
+      //                       middleName
+      //                       lastName
+      //                       dateOfBirth
+      //                       dateOfDeath
+      //                       causeOfDeath
+      //                       vitalStatus
+      //                       maritalStatus
+      //                       mobileNumber
+      //                     }
+      //                     sponsorshipStatuses {
+      //                       status
+      //                       date
+      //                     }
+      //                     donor {
+      //                       id
+      //                       nameInitials
+      //                     }
+      //                     village {
+      //                       id
+      //                       name
+      //                     }
+      //                     socialWorker {
+      //                       id
+      //                       firstName
+      //                       middleName
+      //                       lastName
+      //                       gender
+      //                       dateOfBirth
+      //                       mobileNumber
+      //                     }
+      //                   }
+      //                 }`,
+      //         variables: {
+      //           id: id,
+      //         },
+      //       })
+      //       .then((res) => this.orphans.push(res.data.data.orphan))
+      //       .catch((err) => console.warn(err));
+      //   }
+      // }
     },
     updateOrphanList() {
       this.orphans = [];
@@ -1500,7 +1608,7 @@ export default {
         } else {
           return (
             this.fullName(item) != null &&
-            typeof this.fullName(item) === "string" &&
+            typeof this.fullName(item) === 'string' &&
             this.fullName(item)
               .toString()
               .toLowerCase()
@@ -1535,9 +1643,9 @@ export default {
     calcSponsoredDate(item) {
       const options = {
         // weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
       };
       return new Date(
         Date.parse(
@@ -1550,9 +1658,9 @@ export default {
     calcGraduatedDate(item) {
       const options = {
         // weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
       };
       return new Date(
         Date.parse(
@@ -1563,7 +1671,7 @@ export default {
       ).toLocaleDateString(undefined, options);
     },
     goToCoordinatorTable() {
-      this.$emit("onBack", false);
+      this.$emit('onBack', false);
     },
     cancelOrphanChoice() {
       this.orphanShow = false;
@@ -1574,7 +1682,7 @@ export default {
     chooseOrphans() {
       if (this.$refs.donorSelect.validate()) {
         this.orphanShow = true;
-        this.orphanSelectBtnLable = "Send Orphans";
+        this.orphanSelectBtnLable = 'Send Orphans';
         this.orphanPanel = 0;
         this.donorChoiceClose();
       } else {
@@ -1589,7 +1697,7 @@ export default {
     },
     createSponsorshipStatus(orphanId, status) {
       return axios
-        .post("/graphql", {
+        .post('/graphql', {
           query: `mutation createSponsorshipStatus(
                   $status: sponsorshipStatus
                   $date: DateTime!
@@ -1607,8 +1715,8 @@ export default {
           variables: {
             status: status,
             date: new Date().toISOString(),
-            orphanId: orphanId,
-          },
+            orphanId: orphanId
+          }
         })
         .then((res) => res.data.data.createSponsorshipStatus)
         .catch((err) => console.warn(err));
@@ -1616,7 +1724,7 @@ export default {
     async selectOrphans() {
       if (!this.orphanShow || this.orphanPanel === null) {
         this.selectedOrphanDonorOptions = await axios
-          .post("/graphql/", {
+          .post('/graphql/', {
             query: `query coordinator($id: ID!) {
                       coordinator(id: $id) {
                         donors {
@@ -1626,8 +1734,8 @@ export default {
                       }
                     }`,
             variables: {
-              id: this.$route.params.id,
-            },
+              id: this.$route.params.id
+            }
           })
           .then((res) => res.data.data.coordinator)
           .then((coordinator) => coordinator.donors)
@@ -1636,7 +1744,7 @@ export default {
         this.selectedOrphans = [];
       } else {
         this.showDonorSelectionDialog = false;
-        this.orphanSelectBtnLable = "Select Orphans";
+        this.orphanSelectBtnLable = 'Select Orphans';
         this.orphanPanel = null;
 
         let donor = this.selectedOrphanDonorOptions.filter(
@@ -1648,7 +1756,7 @@ export default {
         );
 
         let recievedOrphanIds = await axios
-          .post("/graphql/", {
+          .post('/graphql/', {
             query: `mutation($id: ID!, $orphans: [ID]) {
                   updateDonor(id: $id, orphans: $orphans) {
                     id
@@ -1660,54 +1768,53 @@ export default {
                 }`,
             variables: {
               id: selectedDonorId,
-              orphans: selectedOrphanIds,
-            },
+              orphans: selectedOrphanIds
+            }
           })
           // change sponsoreship status
           .then((res) => res.data.data.updateDonor)
           .then(() => {
             for (const orphanId of selectedOrphanIds) {
-              this.createSponsorshipStatus(orphanId, "processing")
+              this.createSponsorshipStatus(orphanId, 'processing')
                 .then((sponsorshipStatuse) => {
-                  console.log("SponsoreStatus:", sponsorshipStatuse);
+                  console.log('SponsoreStatus:', sponsorshipStatuse);
                 })
                 .catch((err) => console.warn(err));
             }
           })
           .catch((err) => console.warn(err));
-        console.log("recievedOrphanIds", recievedOrphanIds);
+        console.log('recievedOrphanIds', recievedOrphanIds);
         this.selectedOrphans = [];
       }
     },
     changeSponsoredDateHeaderOfNew() {
-      return "Registred Date";
+      return 'Registred Date';
     },
     changeSponsoredDateHeaderOfPendingAndProcessing() {
-      return "Sponsoring Donor";
+      return 'Sponsoring Donor';
     },
     changeSponsoredDateHeaderOfGraduated() {
-      return "Graduated Date";
+      return 'Graduated Date';
     },
     displayOrphanRegistrationDate(item) {
       const options = {
         // weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
       };
-      return new Date(Date.parse(item.created_at.toString())).toLocaleDateString(
-        undefined,
-        options
-      );
+      return new Date(
+        Date.parse(item.created_at.toString())
+      ).toLocaleDateString(undefined, options);
     },
     displaySponsoringOrphanDonor(item) {
-      return item.donor ? item.donor.nameInitials : "";
+      return item.donor ? item.donor.nameInitials : '';
     },
     // new showDetal
     showDetail(item) {
       this.orphanDetails.id = item.id;
       this.orphanDetails.showOrphanDetail = true;
-      console.log("orphanDetals:", this.orphanDetails);
+      console.log('orphanDetals:', this.orphanDetails);
     },
     // *********************************
     orphanDateOfBirthSave(date) {
@@ -1722,12 +1829,12 @@ export default {
         1
       );
       console.log(
-        "orphanHousingSituationSelect",
+        'orphanHousingSituationSelect',
         this.orphanHousingSituationSelect
       );
-      console.log("attrs", attrs);
+      console.log('attrs', attrs);
       this.orphanHousingSituationSelect = [
-        ...this.orphanHousingSituationSelect,
+        ...this.orphanHousingSituationSelect
       ];
     },
     // **********************************
@@ -1785,8 +1892,8 @@ export default {
       // subtracts current date and that one
       // console.log(current.getUTCFullYear() - dateOfBirth.getUTCFullYear());
 
-      console.log("orphans", this.orphans);
-    },
-  },
+      console.log('orphans', this.orphans);
+    }
+  }
 };
 </script>
