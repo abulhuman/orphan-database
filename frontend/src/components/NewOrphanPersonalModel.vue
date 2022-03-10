@@ -223,14 +223,14 @@
 export default {
   props: {
     registrationDone: {
-      type: Object,
+      type: Object
     },
     save: {
-      type: Boolean,
+      type: Boolean
     },
     cancel: {
-      type: Boolean,
-    },
+      type: Boolean
+    }
   },
   data() {
     return {
@@ -249,85 +249,107 @@ export default {
         healthDescription: null,
         father: {
           firstName: null,
-          lastName: null,
-        },
+          lastName: null
+        }
       },
       selectedOrphan: {
         gender: null,
-        psychologicalStatus: null,
+        psychologicalStatus: null
       },
       rules: {
-        required: (value) => !!value || "Required.",
+        required: (value) => !!value || 'Required.',
         name: (value) => {
-          const namePattern = /(^[A-z][A-Z-a-z/'.,/]+)[A-z]\s*$/g;
-          return namePattern.test(value) || "Invalid name";
-        },
+          const namePattern = /(^[A-z][A-Z-a-z/'.,/]+)[A-z]\s*$/g
+          return namePattern.test(value) || 'Invalid name'
+        }
       },
       orphanDateOfBirthMenu: false,
       orphanReligionOptions: [
-        "Christianity",
-        "Islam",
-        "Judaism",
-        "Buddhism",
-        "Hinduism",
-        "Other",
+        {
+          text: 'Christian',
+          value: 'Christianity'
+        },
+        {
+          text: 'Muslim',
+          value: 'Islam'
+        },
+        {
+          text: 'Christian',
+          value: 'Christianity'
+        },
+        {
+          text: 'Jewish',
+          value: 'Judaism'
+        },
+        {
+          text: 'Budhist',
+          value: 'Buddhism'
+        },
+        {
+          text: 'Hindu',
+          value: 'Hinduism'
+        },
+        {
+          text: 'Other',
+          value: 'Other'
+        }
       ],
       orphanPsychologicalStatusOptions: [
-        "Normal",
-        "Isolated",
-        "Stressed",
-        "Unsociable",
-        "Overly Sociable",
+        'Normal',
+        'Isolated',
+        'Stressed',
+        'Unsociable',
+        'Overly Sociable'
       ],
-      genderOptions: ["Male", "Female"],
-    };
+      genderOptions: ['Male', 'Female']
+    }
   },
   mounted() {},
   computed: {
     orphanSave: function() {
-      return this.save;
+      return this.save
     },
     orphanCancel: function() {
-      return this.cancel;
-    },
+      return this.cancel
+    }
   },
   watch: {
     orphanSave(val) {
-      if (val) this.orphanDialogNext();
+      if (val) this.orphanDialogNext()
     },
     orphanCancel(val) {
-      if (val) this.orphanDialogCancel();
+      if (val) this.orphanDialogCancel()
     },
     validPersonalForm(val) {
-      this.$emit("personalError", val);
+      this.$emit('personalError', val)
     },
     registrationDone(val) {
       if (val.reset) {
-        this.orphanDialogReset();
+        this.orphanDialogReset()
       }
     },
     orphanDateOfBirthMenu(val) {
-      val && setTimeout(() => (this.$refs.picker.activePicker = "YEAR"));
+      val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'))
     },
     dialog(val) {
-      val || this.orphanDialogClose();
-    },
+      val || this.orphanDialogClose()
+    }
   },
   methods: {
     displayOrphan() {
-      console.log(this.orphan);
+      console.log(this.orphan)
     },
     orphanDateOfBirthSave(date) {
-      this.$refs.menu.save(date);
+      this.$refs.menu.save(date)
     },
 
     orphanDialogClose() {
-      this.dialog = false;
+      this.dialog = false
     },
 
     orphanDialogReset() {
-      this.formHasErrors = false;
-      this.$refs.personalForm.reset();
+      this.formHasErrors = false
+      this.$refs.personalForm.reset()
 
       // $$ This gets executed after the DOM have been renderd in the next event loop what ever that means
       // this.$nextTick(() => {
@@ -337,37 +359,38 @@ export default {
     },
 
     orphanDialogNext() {
-      this.formHasErrors = false;
+      this.formHasErrors = false
 
       if (this.$refs.personalForm.validate()) {
         this.orphan.gender = this.selectedOrphan.gender
           .slice(0, 1)
-          .toUpperCase();
-        this.orphan.psychologicalStatus = this.selectedOrphan.psychologicalStatus;
+          .toUpperCase()
+        this.orphan.psychologicalStatus = this.selectedOrphan.psychologicalStatus
         if (this.orphan.psychologicalStatus) {
-          const words = this.orphan.psychologicalStatus.split(" ");
-          this.orphan.psychologicalStatus = "";
+          const words = this.orphan.psychologicalStatus.split(' ')
+          this.orphan.psychologicalStatus = ''
           if (words.length > 1) {
             words.forEach((elmt) => {
-              this.orphan.psychologicalStatus += elmt.toLowerCase();
-            });
+              this.orphan.psychologicalStatus += elmt.toLowerCase()
+            })
           } else {
-            this.orphan.psychologicalStatus = words[0].toLowerCase();
+            this.orphan.psychologicalStatus = words[0].toLowerCase()
           }
         }
 
-        this.$emit("personalDone", this.orphan);
-        this.$emit("personalRefs", this.$refs.personalForm);
-        this.orphanDialogClose();
+
+        this.$emit('personalDone', this.orphan)
+        this.$emit('personalRefs', this.$refs.personalForm)
+        this.orphanDialogClose()
       } else if (!this.$refs.personalForm.validate()) {
-        this.formHasErrors = true;
+        this.formHasErrors = true
       }
     },
 
     orphanDialogCancel() {
-      this.orphanDialogReset();
-      this.orphanDialogClose();
-    },
-  },
-};
+      this.orphanDialogReset()
+      this.orphanDialogClose()
+    }
+  }
+}
 </script>
