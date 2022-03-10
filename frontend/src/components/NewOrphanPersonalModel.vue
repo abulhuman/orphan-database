@@ -134,7 +134,7 @@
           <v-text-field
             v-model="orphan.placeOfBirth"
             label="Place of Birth*"
-            :rules="[rules.required, rules.name]"
+            :rules="[rules.required, rules.textWithSpaces]"
           ></v-text-field>
         </v-col>
         <!-- Spoken Language(s) -->
@@ -261,7 +261,11 @@ export default {
         name: (value) => {
           const namePattern = /(^[A-z][A-Z-a-z/'.,/]+)[A-z]\s*$/g
           return namePattern.test(value) || 'Invalid name'
-        }
+        },
+        textWithSpaces: (value) => {
+          const pattern = /(^[A-z][A-Z-a-z/'.,/]+)[A-z]\s*$/g;
+          return pattern.test(value) || !value || 'Invalid name';
+        },
       },
       orphanDateOfBirthMenu: false,
       orphanReligionOptions: [

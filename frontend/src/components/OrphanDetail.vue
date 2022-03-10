@@ -106,6 +106,7 @@
                       @click="editProfile"
                       width="90%"
                       color="blue lighten-2"
+                      disabled
                     >
                       {{ notEditable ? 'Edit' : 'Save' }}
                     </v-btn>
