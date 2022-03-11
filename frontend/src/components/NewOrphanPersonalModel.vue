@@ -263,7 +263,7 @@ export default {
           return namePattern.test(value) || 'Invalid name'
         },
         textWithSpaces: (value) => {
-          const pattern = /(^[A-z][A-Z-a-z/'.,/]+)[A-z]\s*$/g;
+          const pattern = /(^[A-z][A-Z-a-z/'.,/\s]+)[A-z]\s*$/g;
           return pattern.test(value) || !value || 'Invalid name';
         },
       },
