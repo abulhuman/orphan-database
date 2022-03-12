@@ -21,11 +21,11 @@
                 <template v-slot:activator="{ on, attrs }">
                   <v-text-field
                     v-model="fatherDateOfBirth"
-                    label="Date of Birth*"
+                    label="Date of Birth"
                     prepend-icon="mdi-calendar"
                     v-bind="attrs"
                     v-on="on"
-                    :rules="[rules.required, rules.isDate]"
+                    :rules="[rules.isDate]"
                   ></v-text-field>
                 </template>
                 <!-- v-model="orphan.father.dateOfBirth" -->
@@ -159,11 +159,11 @@
                 <template v-slot:activator="{ on, attrs }">
                   <v-text-field
                     v-model="orphan.mother.dateOfBirth"
-                    label="Date of Birth*"
+                    label="Date of Birth"
                     prepend-icon="mdi-calendar"
                     v-bind="attrs"
                     v-on="on"
-                    :rules="[rules.required, rules.isDate]"
+                    :rules="[rules.isDate]"
                   ></v-text-field>
                 </template>
                 <v-date-picker

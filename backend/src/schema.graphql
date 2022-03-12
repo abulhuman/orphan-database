@@ -123,7 +123,7 @@ type Mutation {
     lastName: String!
     dateOfDeath: DateTime!
     causeOfDeath: String!
-    dateOfBirth: DateTime!
+    dateOfBirth: DateTime
     deathCertificateUrl: String!
     orphans: [ID]
   ): Father!
@@ -179,7 +179,7 @@ type Mutation {
     middleName: String!
     lastName: String!
     vitalStatus: motherVitalStatus!
-    dateOfBirth: DateTime!
+    dateOfBirth: DateTime
     dateOfDeath: DateTime
     causeOfDeath: String
     mobileNumber: String!
@@ -782,7 +782,7 @@ type Father {
   lastName: String!
   dateOfDeath: DateTime!
   causeOfDeath: String!
-  dateOfBirth: DateTime!
+  dateOfBirth: DateTime
   deathCertificateUrl: String!
   orphans: [Orphan]
 }
@@ -815,7 +815,7 @@ type Mother {
   middleName: String!
   lastName: String!
   vitalStatus: motherVitalStatus!
-  dateOfBirth: DateTime!
+  dateOfBirth: DateTime
   dateOfDeath: DateTime
   causeOfDeath: String
   mobileNumber: String!
@@ -1471,7 +1471,7 @@ input FatherCreateInput {
   lastName: String!
   dateOfDeath: DateTime!
   causeOfDeath: String!
-  dateOfBirth: DateTime!
+  dateOfBirth: DateTime
   deathCertificateUrl: String!
 }
 
@@ -1480,7 +1480,7 @@ input MotherCreateInput {
   middleName: String!
   lastName: String!
   vitalStatus: motherVitalStatus!
-  dateOfBirth: DateTime!
+  dateOfBirth: DateTime
   dateOfDeath: DateTime
   causeOfDeath: String
   mobileNumber: String

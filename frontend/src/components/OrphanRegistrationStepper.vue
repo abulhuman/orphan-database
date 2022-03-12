@@ -483,7 +483,7 @@ export default {
     },
 
     isoDateFormatter(dateString) {
-      return new Date(dateString).toISOString();
+      return dateString ? new Date(dateString).toISOString(): null;
     },
 
     registerOrphanWithBaselineData(
