@@ -23,10 +23,9 @@
                     v-model="fatherDateOfBirth"
                     label="Date of Birth*"
                     prepend-icon="mdi-calendar"
-                    readonly
                     v-bind="attrs"
                     v-on="on"
-                    :rules="[rules.required]"
+                    :rules="[rules.required, rules.isDate]"
                   ></v-text-field>
                 </template>
                 <!-- v-model="orphan.father.dateOfBirth" -->
@@ -67,11 +66,10 @@
                   <v-text-field
                     v-model="fatherDateOfDeath"
                     label="Date of Death*"
-                    prepend-icon="mdi-calendar"
-                    readonly
+                    prepend-icon="mdi-calendar"                    
                     v-bind="attrs"
                     v-on="on"
-                    :rules="[rules.required]"
+                    :rules="[rules.required, rules.isDate]"
                   ></v-text-field>
                 </template>
                 <v-date-picker
@@ -163,10 +161,9 @@
                     v-model="orphan.mother.dateOfBirth"
                     label="Date of Birth*"
                     prepend-icon="mdi-calendar"
-                    readonly
                     v-bind="attrs"
                     v-on="on"
-                    :rules="[rules.required]"
+                    :rules="[rules.required, rules.isDate]"
                   ></v-text-field>
                 </template>
                 <v-date-picker
@@ -266,7 +263,7 @@
                       v-model="motherDateOfDeath"
                       label="Date of Death"
                       prepend-icon="mdi-calendar"
-                      readonly
+                      :rules="[rules.isDate]"
                       v-bind="attrs"
                       v-on="on"
                     ></v-text-field>
@@ -398,7 +395,9 @@ export default {
         mobileNumber: (value) => {
           const mobilePattern = /^09[0-9]{8}$/g;
           return mobilePattern.test(value) || 'Invalid Number';
-        }
+        },
+        isDate: (value) =>
+          new Date(value).toString() !== 'Invalid Date' || 'Invalid Date'
       },
       fatherDateOfBirthMenu: false,
       fatherDateOfDeathMenu: false,

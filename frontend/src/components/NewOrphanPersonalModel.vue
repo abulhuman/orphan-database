@@ -56,10 +56,9 @@
                 v-model="orphan.dateOfBirth"
                 label="Date of Birth*"
                 prepend-icon="mdi-calendar"
-                readonly
                 v-bind="attrs"
                 v-on="on"
-                :rules="[rules.required]"
+                :rules="[rules.required, rules.isDate]"
               ></v-text-field>
             </template>
             <v-date-picker
@@ -261,7 +260,9 @@ export default {
         name: (value) => {
           const namePattern = /(^[A-z][A-Z-a-z/'.,/]+)[A-z]\s*$/g
           return namePattern.test(value) || 'Invalid name'
-        }
+        },
+        isDate: (value) =>
+          new Date(value).toString() !== 'Invalid Date' || 'Invalid Date'
       },
       orphanDateOfBirthMenu: false,
       orphanReligionOptions: [
@@ -377,7 +378,6 @@ export default {
             this.orphan.psychologicalStatus = words[0].toLowerCase()
           }
         }
-
 
         this.$emit('personalDone', this.orphan)
         this.$emit('personalRefs', this.$refs.personalForm)
