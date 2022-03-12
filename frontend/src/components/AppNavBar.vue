@@ -38,6 +38,14 @@
         <v-btn
           text
           class="mr-0 py-8 indigo--text"
+          :class="{ active: isOrphanList }"
+          @click.stop="toggleOrphanListDialog"
+        >
+          Orphan List
+        </v-btn>
+        <v-btn
+          text
+          class="mr-0 py-8 indigo--text"
           :class="{ active: isChangeStatus }"
           @click.stop="toggleChangeStatusDialog"
         >
@@ -132,6 +140,7 @@
           color="indigo"
         ></v-text-field>
       </v-responsive> -->
+
       <!-- user profile menu -->
       <v-menu
         v-model="accountMenu"
@@ -220,7 +229,7 @@
 </style>
 
 <script>
-import axios from "axios";
+import axios from 'axios';
 export default {
   props: {
     user: {
@@ -240,13 +249,15 @@ export default {
   data() {
     return {
       accountMenu: false,
-      search: "",
+      search: '',
       drawer: false,
       newOrphanDialog: true,
+      orphanList: true,
       supportPlanTable: true,
       changeStatusDialog: true,
-      state: "",
+      state: '',
       isNewOrphan: false,
+      isOrphanList: false,
       isSupportPlan: false,
       isChangeStatus: false,
       isProcessing: true,
@@ -264,44 +275,60 @@ export default {
     },
     changeStatusDialogValue(val) {
       this.isChangeStatus = val;
+    },
+    changeOrphanListValue(val) {
+      this.isOrphanList = val;
     }
   },
   methods: {
     toggleNewOrphanDialog() {
       // because when the dialog closes this function don't get the memo so do it manually like a noob same goes for toggleChangeStatusDialog
       if (this.newOrphanDialog === false) this.newOrphanDialog = !this.dialog;
-      this.$emit("toggleNewOrphanDialog", this.newOrphanDialog);
+      this.$emit('toggleNewOrphanDialog', this.newOrphanDialog);
       this.newOrphanDialog = !this.newOrphanDialog;
 
       this.isSupportPlan = false;
+      this.isOrphanList = false;
       this.isChangeStatus = false;
+    },
+    toggleOrphanListDialog() {
+      if (this.orphanList === false)
+        this.orphanList = !this.changeOrphanListValue;
+      this.$emit('toogleChangeOrphanListValue', this.orphanList);
+      this.orphanList = !this.orphanList;
+
+      this.isSupportPlan = false;
+      this.isChangeStatus = false;
+      this.isNewOrphan = false;
     },
     toggleSupportPlanComponent() {
       console.log(this.supportPlanTable);
       // if(this.supportPlanTable === false) this.supportPlanTable = true;
-      this.$emit("toggleSupportPlanComponent", this.supportPlanTable);
+      this.$emit('toggleSupportPlanComponent', this.supportPlanTable);
       this.supportPlanTable = !this.supportPlanTable;
 
       this.isSupportPlan = !this.supportPlanTable;
       this.isNewOrphan = false;
+      this.isOrphanList = false;
       this.isChangeStatus = false;
     },
     toggleChangeStatusDialog() {
       if (this.changeStatusDialog === false)
         this.changeStatusDialog = !this.changeStatusDialogValue;
-      this.$emit("toggleChangeStatusDialog", this.changeStatusDialog);
+      this.$emit('toggleChangeStatusDialog', this.changeStatusDialog);
       this.changeStatusDialog = !this.changeStatusDialog;
 
       this.isSupportPlan = false;
+      this.isOrphanList = false;
       this.isNewOrphan = false;
     },
     displayName() {
-      if (Object.hasOwnProperty.call(this.user, "companyName")) {
+      if (Object.hasOwnProperty.call(this.user, 'companyName')) {
         return this.user.companyName;
       } else return `${this.user.firstName} ${this.user.middleName}`;
     },
     displayNameInitials() {
-      if (Object.hasOwnProperty.call(this.user, "nameInitials")) {
+      if (Object.hasOwnProperty.call(this.user, 'nameInitials')) {
         return this.user.nameInitials;
       } else
         return (
@@ -315,42 +342,42 @@ export default {
     logOut() {
       (async () => {
         const query = `mutation{logout}`;
-        const loggedOut = await axios.post("/graphql", { query });
+        const loggedOut = await axios.post('/graphql', { query });
         console.log();
         if (loggedOut.data.data.logout) {
           sessionStorage.clear();
-          this.$router.push("/");
+          this.$router.push('/');
         }
       })();
     },
     // -------------Donor----------------
     processingActive() {
-      this.state = "processing";
-      this.$emit("activeTab", this.state);
+      this.state = 'processing';
+      this.$emit('activeTab', this.state);
       this.isProcessing = true;
       this.isPending = false;
       this.isSponsored = false;
       this.isGraduated = false;
     },
     pendingActive() {
-      this.state = "pending";
-      this.$emit("activeTab", this.state);
+      this.state = 'pending';
+      this.$emit('activeTab', this.state);
       this.isProcessing = false;
       this.isPending = true;
       this.isSponsored = false;
       this.isGraduated = false;
     },
     sponsoredActive() {
-      this.state = "sponsored";
-      this.$emit("activeTab", this.state);
+      this.state = 'sponsored';
+      this.$emit('activeTab', this.state);
       this.isProcessing = false;
       this.isPending = false;
       this.isSponsored = true;
       this.isGraduated = false;
     },
     graduatedActive() {
-      this.state = "graduated";
-      this.$emit("activeTab", this.state);
+      this.state = 'graduated';
+      this.$emit('activeTab', this.state);
       this.isProcessing = false;
       this.isPending = false;
       this.isSponsored = false;

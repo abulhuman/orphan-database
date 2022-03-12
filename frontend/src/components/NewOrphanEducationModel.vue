@@ -79,7 +79,7 @@
             <v-responsive max-width="" class="">
               <v-text-field
                 v-model="orphan.educationalRecord.schoolName"
-                :rules="[rules.required, rules.name]"
+                :rules="[rules.required, rules.textWithSpaces]"
                 label="School/University Name*"
               >
               </v-text-field>
@@ -121,7 +121,7 @@
             <v-responsive max-width="" class="">
               <v-text-field
                 v-model="orphan.gradeAgeMismatchReason"
-                :rules="[rules.name]"
+                :rules="[rules.textWithSpaces]"
                 label="Grade-Age Mismatch Reason"
               >
               </v-text-field>
@@ -133,7 +133,7 @@
           <v-responsive max-width="" class="">
             <v-text-field
               v-model="orphan.hobbies"
-              :rules="[rules.name]"
+              :rules="[rules.textWithSpaces]"
               label="Hobbies"
             >
             </v-text-field>
@@ -182,6 +182,10 @@ export default {
         name: (value) => {
           const namePattern = /(^[A-z][A-Z-a-z/'.,/]+)[A-z]\s*$/g;
           return namePattern.test(value) || !value || 'Invalid name';
+        },
+        textWithSpaces: (value) => {
+          const pattern = /(^[A-z][A-Z-a-z/'.,/]+)[A-z]\s*$/g;
+          return pattern.test(value) || !value || 'Invalid name';
         },
         underAge: (value) => {
           const age =

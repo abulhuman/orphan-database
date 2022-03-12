@@ -133,7 +133,7 @@
           <v-text-field
             v-model="orphan.placeOfBirth"
             label="Place of Birth*"
-            :rules="[rules.required, rules.name]"
+            :rules="[rules.required, rules.textWithSpaces]"
           ></v-text-field>
         </v-col>
         <!-- Spoken Language(s) -->
@@ -262,7 +262,11 @@ export default {
           return namePattern.test(value) || 'Invalid name'
         },
         isDate: (value) =>
-          new Date(value).toString() !== 'Invalid Date' || 'Invalid Date'
+          new Date(value).toString() !== 'Invalid Date' || 'Invalid Date',
+        textWithSpaces: (value) => {
+          const pattern = /(^[A-z][A-Z-a-z/'.,/]+)[A-z]\s*$/g;
+          return pattern.test(value) || !value || 'Invalid name';
+        },
       },
       orphanDateOfBirthMenu: false,
       orphanReligionOptions: [

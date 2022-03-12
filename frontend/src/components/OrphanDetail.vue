@@ -51,9 +51,9 @@
                     <div class="text-center text-h6">
                       {{
                         orphan.firstName +
-                          " " +
+                          ' ' +
                           orphan.father.firstName +
-                          " " +
+                          ' ' +
                           orphan.father.lastName
                       }}
                     </div>
@@ -106,8 +106,9 @@
                       @click="editProfile"
                       width="90%"
                       color="blue lighten-2"
+                      disabled
                     >
-                      {{ notEditable ? "Edit" : "Save" }}
+                      {{ notEditable ? 'Edit' : 'Save' }}
                     </v-btn>
                   </v-col>
                 </v-row>
@@ -1884,8 +1885,8 @@
                                         <v-col cols="12" class="text-center">
                                           <span>{{
                                             notEditable
-                                              ? "Passport"
-                                              : "Edit Passport"
+                                              ? 'Passport'
+                                              : 'Edit Passport'
                                           }}</span>
                                         </v-col>
                                         <v-col cols="12" class="text-center">
@@ -1971,8 +1972,8 @@
                                         <v-col cols="12" class="text-center">
                                           <span>{{
                                             notEditable
-                                              ? "Birth Certificate"
-                                              : "Edit Birth Certificate"
+                                              ? 'Birth Certificate'
+                                              : 'Edit Birth Certificate'
                                           }}</span>
                                         </v-col>
                                         <v-col cols="12" class="text-center">
@@ -2073,8 +2074,8 @@
                                         <v-col cols="12" class="text-center">
                                           <span>{{
                                             notEditable
-                                              ? "Thankyou Letter"
-                                              : "Edit Thankyou Letter"
+                                              ? 'Thankyou Letter'
+                                              : 'Edit Thankyou Letter'
                                           }}</span>
                                         </v-col>
                                         <v-col cols="12" class="text-center">
@@ -2166,8 +2167,8 @@
                                         <v-col cols="12" class="text-center">
                                           <span>{{
                                             notEditable
-                                              ? "Id Card"
-                                              : "Edit Id Card"
+                                              ? 'Id Card'
+                                              : 'Edit Id Card'
                                           }}</span>
                                         </v-col>
                                         <v-col cols="12" class="text-center">
@@ -2271,8 +2272,8 @@
                                         <v-col cols="12" class="text-center">
                                           <span>{{
                                             notEditable
-                                              ? "Death Certificate"
-                                              : "Edit Death Certificate"
+                                              ? 'Death Certificate'
+                                              : 'Edit Death Certificate'
                                           }}</span>
                                         </v-col>
                                         <v-col cols="12" class="text-center">
@@ -2371,8 +2372,8 @@
                                         <v-col cols="12" class="text-center">
                                           <span>{{
                                             notEditable
-                                              ? "Confirmation Letter"
-                                              : "Edit Confirmation Letter"
+                                              ? 'Confirmation Letter'
+                                              : 'Edit Confirmation Letter'
                                           }}</span>
                                         </v-col>
                                         <v-col cols="12" class="text-center">
@@ -2460,8 +2461,8 @@
                                         <v-col cols="12" class="text-center">
                                           <span>{{
                                             notEditable
-                                              ? "Legal Confirmation Letter"
-                                              : "Edit Legal Confirmation Letter"
+                                              ? 'Legal Confirmation Letter'
+                                              : 'Edit Legal Confirmation Letter'
                                           }}</span>
                                         </v-col>
                                         <v-col cols="12" class="text-center">
@@ -2552,8 +2553,8 @@
                                         <v-col cols="12" class="text-center">
                                           <span>{{
                                             notEditable
-                                              ? " Guardian Id Card"
-                                              : "Edit Guardian Id Card"
+                                              ? ' Guardian Id Card'
+                                              : 'Edit Guardian Id Card'
                                           }}</span>
                                         </v-col>
                                         <v-col cols="12" class="text-center">
@@ -2813,8 +2814,8 @@
                                                         >
                                                           <span>{{
                                                             notEditable
-                                                              ? "Passport"
-                                                              : "Edit Passport"
+                                                              ? 'Passport'
+                                                              : 'Edit Passport'
                                                           }}</span>
                                                         </v-col>
                                                         <v-col
@@ -2937,8 +2938,8 @@
                                                         >
                                                           <span>{{
                                                             notEditable
-                                                              ? "Passport"
-                                                              : "Edit Passport"
+                                                              ? 'Passport'
+                                                              : 'Edit Passport'
                                                           }}</span>
                                                         </v-col>
                                                         <v-col
@@ -3137,59 +3138,59 @@
 <style scoped></style>
 
 <script>
-import axios from "axios";
-import EducationalRecordsDialog from "@/components/EducationalRecordsDialog.vue";
+import axios from 'axios';
+import EducationalRecordsDialog from '@/components/EducationalRecordsDialog.vue';
 
 // enums
-const gender = ["M", "F"];
+const gender = ['M', 'F'];
 const religion = [
-  "Christianity",
-  "Islam",
-  "Buddhism",
-  "Hinduism",
-  "Judaism",
-  "Other",
+  'Christianity',
+  'Islam',
+  'Buddhism',
+  'Hinduism',
+  'Judaism',
+  'Other'
 ];
 const psychologicalStatus = [
-  "isolated",
-  "stressed",
-  "unsociable",
-  "overlysociable",
-  "normal",
+  'isolated',
+  'stressed',
+  'unsociable',
+  'overlysociable',
+  'normal'
 ];
-const enrollmentStatus = ["enrolled", "unenrolled", "droppedout"];
-const type = ["private", "public", "N_A"];
+const enrollmentStatus = ['enrolled', 'unenrolled', 'droppedout'];
+const type = ['private', 'public', 'N_A'];
 const level = [
-  "religiousEducation",
-  "preSchool",
-  "gradeSchool",
-  "underGraduate",
-  "postGraduate",
-  "N_A",
+  'religiousEducation',
+  'preSchool',
+  'gradeSchool',
+  'underGraduate',
+  'postGraduate',
+  'N_A'
 ];
-const vitalStatus = ["alive", "passed"];
-const maritalStatus = ["married", "widow", "N_A"];
+const vitalStatus = ['alive', 'passed'];
+const maritalStatus = ['married', 'widow', 'N_A'];
 const nationality = [
-  "Djiboutian",
-  "Ethiopian",
-  "Eritrean",
-  "Kenyan",
-  "Somali",
-  "South_Sudanese",
-  "Sudanese",
+  'Djiboutian',
+  'Ethiopian',
+  'Eritrean',
+  'Kenyan',
+  'Somali',
+  'South_Sudanese',
+  'Sudanese'
 ];
 const relationToOrphan = [
-  "mother",
-  "grandmother",
-  "grandfather",
-  "sister",
-  "brother",
-  "uncle",
-  "aunt",
-  "cousin",
-  "niece",
-  "nephew",
-  "legalGuardian",
+  'mother',
+  'grandmother',
+  'grandfather',
+  'sister',
+  'brother',
+  'uncle',
+  'aunt',
+  'cousin',
+  'niece',
+  'nephew',
+  'legalGuardian'
 ];
 
 export default {
@@ -3197,12 +3198,12 @@ export default {
   props: {
     details: {
       type: Object,
-      required: true,
+      required: true
     },
     user: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     return {
@@ -3223,65 +3224,65 @@ export default {
         orphanMotherMaritalStatusOptions: maritalStatus,
         orphanGuardianNationalityOptions: nationality,
         orphanGuardianRelationToOrphanOptions: relationToOrphan,
-        orphanSocialWorkerOptions: null,
+        orphanSocialWorkerOptions: null
       },
       orphanSelectedOption: {
-        orphanGender: "",
-        orphanReligion: "",
-        orphanPsychologicalStatus: "",
-        orphanEducationEnrollmentStatus: "",
-        orphanEducationTypeOfSchool: "",
-        orphanEducationLevel: "",
-        orphanMotherVitalStatus: "",
-        orphanMotherMaritalStatus: "",
-        orphanGuardianGender: "",
-        orphanGuardianNationality: "",
-        orphanGuardianRelationToOrphan: "",
+        orphanGender: '',
+        orphanReligion: '',
+        orphanPsychologicalStatus: '',
+        orphanEducationEnrollmentStatus: '',
+        orphanEducationTypeOfSchool: '',
+        orphanEducationLevel: '',
+        orphanMotherVitalStatus: '',
+        orphanMotherMaritalStatus: '',
+        orphanGuardianGender: '',
+        orphanGuardianNationality: '',
+        orphanGuardianRelationToOrphan: ''
       },
-      orphanSelectedSocialWorker: "",
-      orphanSocialWorkerGender: "",
-      orphanSocialWorkerDateOfBirth: "",
-      orphanSocialWorkerMobileNumber: "",
+      orphanSelectedSocialWorker: '',
+      orphanSocialWorkerGender: '',
+      orphanSocialWorkerDateOfBirth: '',
+      orphanSocialWorkerMobileNumber: '',
       orphanEditableFields: {
-        orphanFirstName: "",
-        orphanFatherFirstName: "",
-        orphanFatherLastName: "",
-        orphanPlaceOfBirth: "",
-        orphanSpokenLanguages: "",
-        orphanAccountNumber: "",
-        orphanHealthDescription: "",
-        orphanEducationYear: "",
-        orphanEducationSchoolName: "",
-        orphanEducationReason: "",
-        orphanHobbies: "",
-        orphanFatherCauseOfDeath: "",
-        orphanMotherFirstName: "",
-        orphanMotherMiddleName: "",
-        orphanMotherLastName: "",
-        orphanMotherMobileNumber: "",
-        orphanMotherCauseOfDeath: "",
-        orphanHouse_propertyHousingSituation: "",
-        orphanHouse_propertyOtherProperty: "",
-        orphanGuardianFirstName: "",
-        orphanGuardianMiddleName: "",
-        orphanGuardianLastName: "",
-        orphanGuardianEmail: "",
-        orphanGuardianMobileNumber: "",
-        orphanGuardianTelephoneNumber: "",
+        orphanFirstName: '',
+        orphanFatherFirstName: '',
+        orphanFatherLastName: '',
+        orphanPlaceOfBirth: '',
+        orphanSpokenLanguages: '',
+        orphanAccountNumber: '',
+        orphanHealthDescription: '',
+        orphanEducationYear: '',
+        orphanEducationSchoolName: '',
+        orphanEducationReason: '',
+        orphanHobbies: '',
+        orphanFatherCauseOfDeath: '',
+        orphanMotherFirstName: '',
+        orphanMotherMiddleName: '',
+        orphanMotherLastName: '',
+        orphanMotherMobileNumber: '',
+        orphanMotherCauseOfDeath: '',
+        orphanHouse_propertyHousingSituation: '',
+        orphanHouse_propertyOtherProperty: '',
+        orphanGuardianFirstName: '',
+        orphanGuardianMiddleName: '',
+        orphanGuardianLastName: '',
+        orphanGuardianEmail: '',
+        orphanGuardianMobileNumber: '',
+        orphanGuardianTelephoneNumber: ''
       },
       orphanSelectEditableFields: {
-        orphanGender: "",
-        orphanReligion: "",
-        orphanPsychologicalStatus: "",
-        orphanEducationEnrollmentStatus: "",
-        orphanEducationTypeOfSchool: "",
-        orphanEducationLevel: "",
-        orphanMotherVitalStatus: "",
-        orphanMotherMaritalStatus: "",
-        orphanGuardianGender: "",
-        orphanGuardianRelationToOrphan: "",
-        orphanGuardianNationality: "",
-        orphanSocialWorker: "",
+        orphanGender: '',
+        orphanReligion: '',
+        orphanPsychologicalStatus: '',
+        orphanEducationEnrollmentStatus: '',
+        orphanEducationTypeOfSchool: '',
+        orphanEducationLevel: '',
+        orphanMotherVitalStatus: '',
+        orphanMotherMaritalStatus: '',
+        orphanGuardianGender: '',
+        orphanGuardianRelationToOrphan: '',
+        orphanGuardianNationality: '',
+        orphanSocialWorker: ''
       },
       orphanSelectedDates: {
         orphanDateOfBirth: null,
@@ -3289,79 +3290,79 @@ export default {
         orphanFatherDateOfDeath: null,
         orphanMotherDateOfBirth: null,
         orphanMotherDateOfDeath: null,
-        orphanGuardianDateOfBirth: null,
+        orphanGuardianDateOfBirth: null
       },
       rules: {
         educationGrade: (value) => {
           if (
             this.orphanSelectedOption.orphanEducationLevel ===
-              "Religious Education" &&
+              'Religious Education' &&
             value > 0 &&
             value < 4
           )
             return true;
           else if (
-            this.orphanSelectedOption.orphanEducationLevel === "Preschool" &&
+            this.orphanSelectedOption.orphanEducationLevel === 'Preschool' &&
             value > 0 &&
             value < 4
           )
             return true;
           else if (
             this.orphanSelectedOption.orphanEducationLevel ===
-              "Primary/Elementary" &&
+              'Primary/Elementary' &&
             value > 0 &&
             value < 7
           )
             return true;
           else if (
-            this.orphanSelectedOption.orphanEducationLevel === "Junior" &&
+            this.orphanSelectedOption.orphanEducationLevel === 'Junior' &&
             value > 6 &&
             value < 9
           )
             return true;
           else if (
-            this.orphanSelectedOption.orphanEducationLevel === "Highschool" &&
+            this.orphanSelectedOption.orphanEducationLevel === 'Highschool' &&
             value > 8 &&
             value < 13
           )
             return true;
           else if (
             this.orphanSelectedOption.orphanEducationLevel ===
-              "Under Graduate" &&
+              'Under Graduate' &&
             value > 0 &&
             value < 11
           )
             return true;
           else if (
             this.orphanSelectedOption.orphanEducationLevel ===
-              "Post Graduate" &&
+              'Post Graduate' &&
             value > 0 &&
             value < 11
           )
             return true;
           else if (
-            this.orphanSelectedOption.orphanEducationLevel === "N_A" &&
+            this.orphanSelectedOption.orphanEducationLevel === 'N_A' &&
             value === 0
           )
             return true;
-          else return "Invalid Grade/Year with respect to Educational Level";
+          else return 'Invalid Grade/Year with respect to Educational Level';
         },
         name: (value) => {
           const namePattern = /(^[A-z][A-Z-a-z/'.,/]+)[A-z]\s*$/g;
-          return namePattern.test(value) || !value || "Invalid name";
+          return namePattern.test(value) || !value || 'Invalid name';
         },
         email: (value) => {
           const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-          return emailPattern.test(value) || "Invalid e-mail";
+          return emailPattern.test(value) || 'Invalid e-mail';
         },
         telephoneNumber: (value) => {
           const telephonePattern = /(^01[0-9]{8}$)/g;
-          return telephonePattern.test(value) || !value || "Invalid Number";
+          return telephonePattern.test(value) || !value || 'Invalid Number';
         },
         mobileNumber: (value) => {
           const mobilePattern = /^09[0-9]{8}$/g;
-          return mobilePattern.test(value) || "Invalid Number";
-        },
+          return mobilePattern.test(value) || 'Invalid Number';
+        }
       },
       notEditable: true,
       detailDialog: false,
@@ -3393,8 +3394,8 @@ export default {
       guardianIdCardDialog: false,
       guardianIdCardFile: null,
       educationalRecordHeaders: [
-        { text: "Id", value: "id" },
-        { text: "Year Division", value: "yearDivision" },
+        { text: 'Id', value: 'id' },
+        { text: 'Year Division', value: 'yearDivision' }
       ],
       educationalRecordItems: [],
       photoPortrait: null,
@@ -3409,7 +3410,7 @@ export default {
       confirmationLetter: null,
       legalConfirmationLetter: null,
       socialWorkers: null,
-      educationalRecordsDialog: false,
+      educationalRecordsDialog: false
     };
   },
   created() {
@@ -3420,83 +3421,81 @@ export default {
   mounted() {},
   computed: {
     guardianRelationToOrphan() {
-      if (this.orphanSelectedOption.orphanGuardianGender === "M") {
+      if (this.orphanSelectedOption.orphanGuardianGender === 'M') {
         return [
-          "grandfather",
-          "brother",
-          "uncle",
-          "cousin",
-          "nephew",
-          "legalGuardian",
+          'grandfather',
+          'brother',
+          'uncle',
+          'cousin',
+          'nephew',
+          'legalGuardian'
         ];
       } else {
         return [
-          "mother",
-          "grandmother",
-          "sister",
-          "aunt",
-          "cousin",
-          "niece",
-          "legalGuardian",
+          'mother',
+          'grandmother',
+          'sister',
+          'aunt',
+          'cousin',
+          'niece',
+          'legalGuardian'
         ];
       }
-    },
+    }
   },
   watch: {
     orphanDateOfBirthMenu(val) {
       val &&
         setTimeout(
-          () => (this.$refs.orphanDateOfBirthPicker.activePicker = "YEAR")
+          () => (this.$refs.orphanDateOfBirthPicker.activePicker = 'YEAR')
         );
     },
     fatherDateOfBirthMenu(val) {
       val &&
         setTimeout(
-          () => (this.$refs.fatherDateOfBirthPicker.activePicker = "YEAR")
+          () => (this.$refs.fatherDateOfBirthPicker.activePicker = 'YEAR')
         );
     },
     fatherDateOfDeathMenu(val) {
       val &&
         setTimeout(
-          () => (this.$refs.fatherDateOfDeathPicker.activePicker = "YEAR")
+          () => (this.$refs.fatherDateOfDeathPicker.activePicker = 'YEAR')
         );
     },
     motherDateOfBirthMenu(val) {
       val &&
         setTimeout(
-          () => (this.$refs.motherDateOfBirthPicker.activePicker = "YEAR")
+          () => (this.$refs.motherDateOfBirthPicker.activePicker = 'YEAR')
         );
     },
     motherDateOfDeathMenu(val) {
       val &&
         setTimeout(
-          () => (this.$refs.motherDateOfDeathPicker.activePicker = "YEAR")
+          () => (this.$refs.motherDateOfDeathPicker.activePicker = 'YEAR')
         );
     },
     guardianDateOfBirthMenu(val) {
       val &&
         setTimeout(
-          () => (this.$refs.guardianDateOfBirthPicker.activePicker = "YEAR")
+          () => (this.$refs.guardianDateOfBirthPicker.activePicker = 'YEAR')
         );
-    },
+    }
   },
   methods: {
-    test(index, item) {
-      console.log(index);
-      console.log(item);
-    },
     async initialize() {
       this.orphan = this.details;
       axios
-        .post("/graphql/", {
+        .post('/graphql/', {
           query: `query orphan($id: ID!) {
                   orphan(id: $id) {
                     id
                     birthCertificateUrl
                     idCardUrl
                     passportUrl
-                    originalThankyouLetterUrl
-                    translatedThankyouLetterUrl
+                    letters {
+                      originalThankyouLetterUrl
+                      translatedThankyouLetterUrl
+                    }
                     photos {
                       id
                       photoLongUrl
@@ -3505,89 +3504,73 @@ export default {
                   }
                 }`,
           variables: {
-            id: this.orphan.id,
-          },
+            id: this.orphan.id
+          }
         })
         .then((res) => res.data.data.orphan)
         .then((orphan) => {
           this.orphan = Object.assign(this.orphan, orphan);
 
-          // console.log(this.orphan)
+          // console.log(this.orphan);
 
           // do error handling and maybe notify user if needed. the code below throws a type error if any of the urls are null
           this.photoPortrait = `${axios.defaults.baseURL}${this.orphan.photos[
             this.orphan.photos.length - 1
-          ]?.photoPortraitUrl.slice(
-            this.orphan.photos[
-              this.orphan.photos.length - 1
-            ]?.photoPortraitUrl.indexOf("/")
-          )}`;
+          ]?.photoPortraitUrl
+          }`;
 
-          this.photoLong = `${axios.defaults.baseURL}${this.orphan.photos[
+          this.photoLong = `${axios.defaults.baseURL}img/${this.orphan.photos[
             this.orphan.photos.length - 1
-          ]?.photoLongUrl?.slice(
-            this.orphan.photos[
-              this.orphan.photos.length - 1
-            ]?.photoLongUrl?.indexOf("/")
-          )}`;
+          ]?.photoLongUrl}`;
 
           this.orphanPassport = `${
             axios.defaults.baseURL
-          }${this.orphan.passportUrl.slice(
-            this.orphan.passportUrl.indexOf("/")
-          )}`;
+          }img/${this.orphan.passportUrl}`;
 
           this.orphanBirthCertificate = `${
             axios.defaults.baseURL
-          }${this.orphan.birthCertificateUrl.slice(
-            this.orphan.birthCertificateUrl.indexOf("/")
-          )}`;
+          }img/${this.orphan.birthCertificateUrl}`;
 
-          this.originalThankyouLetter = `${
-            axios.defaults.baseURL
-          }${this.orphan.originalThankyouLetterUrl?.slice(
-            this.orphan.originalThankyouLetterUrl?.indexOf("/")
-          )}`;
+          if (this.orphan.letters) {
 
-          this.translatedThankyouLetter = `${
-            axios.defaults.baseURL
-          }${this.orphan.translatedThankyouLetterUrl?.slice(
-            this.orphan.translatedThankyouLetterUrl?.indexOf("/")
-          )}`;
+            this.originalThankyouLetter = `${
+              axios.defaults.baseURL
+            }img/${this.orphan.letters[
+              this.orphans.letters - 1
+            ]?.originalThankyouLetterUrl}`;
+
+            this.translatedThankyouLetter = `${
+              axios.defaults.baseURL
+            }img/${this.orphan.letters[
+              this.orphans.letters - 1
+            ]?.translatedThankyouLetterUrl}`;
+          }
 
           this.orphanIdCard = `${
             axios.defaults.baseURL
-          }${this.orphan.idCardUrl.slice(this.orphan.idCardUrl.indexOf("/"))}`;
+          }img/${this.orphan.idCardUrl}`;
 
           this.fatherDeathCertificate = `${
             axios.defaults.baseURL
-          }${this.orphan.father?.deathCertificateUrl.slice(
-            this.orphan.father?.deathCertificateUrl.indexOf("/")
-          )}`;
+          }img/${this.orphan.father?.deathCertificateUrl}`;
 
           this.guardianIdCard = `${
             axios.defaults.baseURL
-          }${this.orphan.guardian.iDCardUrl.slice(
-            this.orphan.guardian.iDCardUrl.indexOf("/")
-          )}`;
+          }img/${this.orphan.guardian?.idCardUrl}`;
 
           this.confirmationLetter = `${
             axios.defaults.baseURL
-          }${this.orphan.guardian.confirmationLetterUrl.slice(
-            this.orphan.guardian.confirmationLetterUrl.indexOf("/")
-          )}`;
+          }img/${this.orphan.guardian.confirmationLetterUrl}`;
 
           this.legalConfirmationLetter = `${
             axios.defaults.baseURL
-          }${this.orphan.guardian?.legalConfirmationLetterUrl.slice(
-            this.orphan.guardian?.legalConfirmationLetterUrl.indexOf("/")
-          )}`;
+          }img/${this.orphan.guardian?.legalConfirmationLetterUrl}`;
         })
         .catch((err) => console.warn(err));
 
       // TODO: # this need to be custom for different users
       this.orphanSelectOptions.orphanSocialWorkerOptions = await axios
-        .post("/graphql/", {
+        .post('/graphql/', {
           query: `query {
                     allSocialWorkers {
                       id
@@ -3596,7 +3579,7 @@ export default {
                       lastName
                       mobileNumber
                     }
-                  }`,
+                  }`
         })
         .then((res) => res.data.data.allSocialWorkers)
         .then((socialWorkers) => {
@@ -3717,42 +3700,39 @@ export default {
         this.copyToOrphan(this.orphan, this.orphanSelectedDates);
 
         // if (this.orphan.education.level) {
-        if (this.orphan.education.level === "Religious Education") {
-          this.orphan.education.level = "religiousEducation";
-        } else if (this.orphan.education.level === "Preschool") {
-          this.orphan.education.level = "preSchool";
-        } else if (this.orphan.education.level === "Primary/Elementary") {
-          this.orphan.education.level = "primary_elementary";
-        } else if (this.orphan.education.level === "Junior") {
-          this.orphan.education.level = "junior";
-        } else if (this.orphan.education.level === "Highschool") {
-          this.orphan.education.level = "highschool";
-        } else if (this.orphan.education.level === "Undergraduate") {
-          this.orphan.education.level = "underGraduate";
-        } else if (this.orphan.education.level === "Postgraduate") {
-          this.orphan.education.level = "postGraduate";
+        if (this.orphan.education.level === 'Religious Education') {
+          this.orphan.education.level = 'religiousEducation';
+        } else if (this.orphan.education.level === 'Preschool') {
+          this.orphan.education.level = 'preSchool';
+        } else if (this.orphan.education.level === 'Primary/Elementary') {
+          this.orphan.education.level = 'primary_elementary';
+        } else if (this.orphan.education.level === 'Junior') {
+          this.orphan.education.level = 'junior';
+        } else if (this.orphan.education.level === 'Highschool') {
+          this.orphan.education.level = 'highschool';
+        } else if (this.orphan.education.level === 'Undergraduate') {
+          this.orphan.education.level = 'underGraduate';
+        } else if (this.orphan.education.level === 'Postgraduate') {
+          this.orphan.education.level = 'postGraduate';
         } else {
-          this.orphan.education.level = "N_A";
+          this.orphan.education.level = 'N_A';
         }
         // }
 
-        console.log("editedOrphan: ", this.orphan);
+        console.log('editedOrphan: ', this.orphan);
 
         let fatherUrl = {};
 
         if (this.fatherDeathCertificateFile) {
           const fatherDeathCertificateFormData = new FormData();
           fatherDeathCertificateFormData.append(
-            "document",
+            'document',
             this.fatherDeathCertificateFile,
             this.fatherDeathCertificateFile.name
           );
 
-          fatherUrl["deathCertificateUrl"] = await axios
-            .post(
-              `/document/`,
-              fatherDeathCertificateFormData
-            )
+          fatherUrl['deathCertificateUrl'] = await axios
+            .post(`/document/`, fatherDeathCertificateFormData)
             .then((res) => res.data)
             .catch((err) => console.warn(err));
         }
@@ -3823,16 +3803,13 @@ export default {
         if (this.confirmationLetterFile) {
           const guardianConfirmationLetterFormData = new FormData();
           guardianConfirmationLetterFormData.append(
-            "document",
+            'document',
             this.confirmationLetterFile,
             this.confirmationLetterFile.name
           );
 
-          guardianUrls["confirmationLetterUrl"] = await axios
-            .post(
-              `/document/`,
-              guardianConfirmationLetterFormData
-            )
+          guardianUrls['confirmationLetterUrl'] = await axios
+            .post(`/document/`, guardianConfirmationLetterFormData)
             .then((res) => res.data)
             .catch((err) => console.warn(err));
         }
@@ -3840,16 +3817,13 @@ export default {
         if (this.legalConfirmationLetterFile) {
           const guardianLegalConfirmationLetterFormData = new FormData();
           guardianLegalConfirmationLetterFormData.append(
-            "document",
+            'document',
             this.legalConfirmationLetterFile,
             this.legalConfirmationLetterFile.name
           );
 
-          guardianUrls["legalConfirmationLetterUrl"] = await axios
-            .post(
-              `/document/`,
-              guardianLegalConfirmationLetterFormData
-            )
+          guardianUrls['legalConfirmationLetterUrl'] = await axios
+            .post(`/document/`, guardianLegalConfirmationLetterFormData)
             .then((res) => res.data)
             .catch((err) => console.warn(err));
         }
@@ -3857,12 +3831,12 @@ export default {
         if (this.guardianIdCardFile) {
           const guardianIdCardFormData = new FormData();
           guardianIdCardFormData.append(
-            "document",
+            'document',
             this.guardianIdCardFile,
             this.guardianIdCardFile.name
           );
 
-          guardianUrls["iDCardUrl"] = await axios
+          guardianUrls['idCardUrl'] = await axios
             .post(`/document/`, guardianIdCardFormData)
             .then((res) => res.data)
             .catch((err) => console.warn(err));
@@ -3900,16 +3874,13 @@ export default {
         if (this.orphanBirthCertificateFile) {
           const orphanBirthCertificateFormData = new FormData();
           orphanBirthCertificateFormData.append(
-            "document",
+            'document',
             this.orphanBirthCertificateFile,
             this.orphanBirthCertificateFile.name
           );
 
-          orphanUrls["birthCertificateUrl"] = await axios
-            .post(
-              `/document/`,
-              orphanBirthCertificateFormData
-            )
+          orphanUrls['birthCertificateUrl'] = await axios
+            .post(`/document/`, orphanBirthCertificateFormData)
             .then((res) => res.data)
             .catch((err) => console.warn(err));
         }
@@ -3917,12 +3888,12 @@ export default {
         if (this.orphanIdCardFile) {
           const orphanIdCardFormData = new FormData();
           orphanIdCardFormData.append(
-            "document",
+            'document',
             this.orphanIdCardFile,
             this.orphanIdCardFile.name
           );
 
-          orphanUrls["idCardUrl"] = await axios
+          orphanUrls['idCardUrl'] = await axios
             .post(`/document/`, orphanIdCardFormData)
             .then((res) => res.data)
             .catch((err) => console.warn(err));
@@ -3931,12 +3902,12 @@ export default {
         if (this.orphanPassportFile) {
           const orphanPassportFormData = new FormData();
           orphanPassportFormData.append(
-            "document",
+            'document',
             this.orphanPassportFile,
             this.orphanPassportFile.name
           );
 
-          orphanUrls["passportUrl"] = await axios
+          orphanUrls['passportUrl'] = await axios
             .post(`/document/`, orphanPassportFormData)
             .then((res) => res.data)
             .catch((err) => console.warn(err));
@@ -3945,16 +3916,13 @@ export default {
         if (this.originalThankyouLetterFile) {
           const originalThankyouLetterFormData = new FormData();
           originalThankyouLetterFormData.append(
-            "document",
+            'document',
             this.originalThankyouLetterFile,
             this.originalThankyouLetterFile.name
           );
 
-          orphanUrls["originalThankyouLetterUrl"] = await axios
-            .post(
-              `/document/`,
-              originalThankyouLetterFormData
-            )
+          orphanUrls['originalThankyouLetterUrl'] = await axios
+            .post(`/document/`, originalThankyouLetterFormData)
             .then((res) => res.data)
             .catch((err) => console.warn(err));
         }
@@ -3998,10 +3966,10 @@ export default {
       causeOfDeath,
       fatherUrl
     ) {
-      let queryParameterInjection = "",
-        query$ParameterInjection = "";
+      let queryParameterInjection = '',
+        query$ParameterInjection = '';
       for (const url in fatherUrl) {
-        if (url !== "") {
+        if (url !== '') {
           query$ParameterInjection += ` $${url}: String`;
           queryParameterInjection += ` ${url}: $${url}`;
         }
@@ -4035,14 +4003,14 @@ export default {
         lastName: lastName,
         dateOfBirth: dateOfBirth,
         dateOfDeath: dateOfDeath,
-        causeOfDeath: causeOfDeath,
+        causeOfDeath: causeOfDeath
       };
       variables = Object.assign(variables, fatherUrl);
 
       return axios
-        .post("/graphql/", {
+        .post('/graphql/', {
           query: query,
-          variables: variables,
+          variables: variables
         })
         .then((res) => res.data.data.updateFather)
         .catch((err) => console.warn(err));
@@ -4058,7 +4026,7 @@ export default {
       reason
     ) {
       return axios
-        .post("/graphql/", {
+        .post('/graphql/', {
           query: `mutation updateEducation(
                   $id: ID!
                   $enrollmentStatus: educationEnrollmentStatus
@@ -4087,8 +4055,8 @@ export default {
             typeOfSchool: typeOfSchool,
             year: year,
             level: level,
-            reason: reason,
-          },
+            reason: reason
+          }
         })
         .then((res) => res.data.data.updateEducation)
         .catch((err) => console.warn(err));
@@ -4108,10 +4076,10 @@ export default {
       nationality,
       guardianUrls
     ) {
-      let queryParameterInjection = "",
-        query$ParameterInjection = "";
+      let queryParameterInjection = '',
+        query$ParameterInjection = '';
       for (const url in guardianUrls) {
-        if (url !== "") {
+        if (url !== '') {
           query$ParameterInjection += ` $${url}: String`;
           queryParameterInjection += ` ${url}: $${url}`;
         }
@@ -4160,14 +4128,14 @@ export default {
         email: email,
         mobileNumber: mobileNumber,
         telephoneNumber: telephoneNumber,
-        nationality: nationality,
+        nationality: nationality
       };
       variables = Object.assign(variables, guardianUrls);
 
       return axios
-        .post("/graphql/", {
+        .post('/graphql/', {
           query: query,
-          variables: variables,
+          variables: variables
         })
         .then((res) => res.data.data.updateGuardian)
         .catch((err) => console.warn(err));
@@ -4186,7 +4154,7 @@ export default {
       mobileNumber
     ) {
       return axios
-        .post("/graphql/", {
+        .post('/graphql/', {
           query: `mutation updateMother(
                   $id: ID!
                   $firstName: String
@@ -4224,8 +4192,8 @@ export default {
             dateOfDeath: dateOfDeath,
             causeOfDeath: causeOfDeath || null,
             mobileNumber: mobileNumber,
-            maritalStatus: maritalStatus,
-          },
+            maritalStatus: maritalStatus
+          }
         })
         .then((res) => res.data.data.updateMother)
         .catch((err) => console.warn(err));
@@ -4233,7 +4201,7 @@ export default {
 
     updateHouseProperty(HousePropertyId, housingSituation, otherProperty) {
       return axios
-        .post("/graphql/", {
+        .post('/graphql/', {
           query: `mutation updateHouse_property(
                   $id: ID!
                   $housingSituation: String
@@ -4250,8 +4218,8 @@ export default {
           variables: {
             id: HousePropertyId,
             housingSituation: housingSituation,
-            otherProperty: otherProperty,
-          },
+            otherProperty: otherProperty
+          }
         })
         .then((res) => res.data.data.updateHouse_property)
         .catch((err) => console.warn(err));
@@ -4281,10 +4249,10 @@ export default {
       photosIds,
       orphanUrls
     ) {
-      let queryParameterInjection = "",
-        query$ParameterInjection = "";
+      let queryParameterInjection = '',
+        query$ParameterInjection = '';
       for (const url in orphanUrls) {
-        if (url !== "") {
+        if (url !== '') {
           query$ParameterInjection += ` $${url}: String`;
           queryParameterInjection += ` ${url}: $${url}`;
         }
@@ -4345,8 +4313,10 @@ export default {
           religion
           idCardUrl
           passportUrl
-          originalThankyouLetterUrl
-          translatedThankyouLetterUrl
+          letters {
+            originalThankyouLetterUrl
+            translatedThankyouLetterUrl
+          }
           birthCertificateUrl
           healthDescription
           psychologicalStatus
@@ -4386,7 +4356,7 @@ export default {
             mobileNumber
             telephoneNumber
             nationality
-            iDCardUrl
+            idCardUrl
             confirmationLetterUrl
             legalConfirmationLetterUrl
           }
@@ -4443,22 +4413,22 @@ export default {
         house_propertyId: house_propertyId,
         motherId: motherId,
         socialWorkerId: socialWorkerId,
-        photos: photosIds,
+        photos: photosIds
       };
       variables = Object.assign(variables, orphanUrls);
 
       return axios
-        .post("/graphql/", {
+        .post('/graphql/', {
           query: query,
-          variables: variables,
+          variables: variables
         })
         .then((res) => res.data.data.updateOrphan)
         .catch((err) => console.warn(err));
     },
 
     orphanIdGenerator() {
-      let orphanId = "";
-      let splitName = this.orphan.village.name.trim().split(" ");
+      let orphanId = '';
+      let splitName = this.orphan.village.name.trim().split(' ');
       if (splitName.length === 1) {
         orphanId =
           splitName[0].slice(0, 1).toUpperCase() +
@@ -4468,20 +4438,20 @@ export default {
           orphanId += namePart.slice(0, 1).toUpperCase();
         }
       }
-      orphanId += "-" + this.orphan.id;
+      orphanId += '-' + this.orphan.id;
       return orphanId;
     },
     dateGenerator(date) {
-      return date ? new Date(Date.parse(date.toString())).toDateString() : "";
+      return date ? new Date(Date.parse(date.toString())).toDateString() : '';
     },
     genderGenerator(genderAbbr) {
-      return genderAbbr === "M" ? "Male" : genderAbbr === "F" ? "Female" : "";
+      return genderAbbr === 'M' ? 'Male' : genderAbbr === 'F' ? 'Female' : '';
     },
     ageGenerator(date) {
       return date
         ? new Date().getFullYear() -
             new Date(Date.parse(date.toString())).getFullYear()
-        : "";
+        : '';
     },
     portraitImageGenerator(photo) {
       // const image = this.orphan.photos.filter(val => val.id === id)[0];
@@ -4489,9 +4459,9 @@ export default {
 
       return photo
         ? `${axios.defaults.baseURL}${photo.photoPortraitUrl.slice(
-            photo.photoPortraitUrl.indexOf("/")
+            photo.photoPortraitUrl.indexOf('/')
           )}`
-        : "";
+        : '';
     },
     longImageGenerator(photo) {
       // const image = this.orphan.photos.filter(val => val.id === id)[0];
@@ -4499,9 +4469,9 @@ export default {
 
       return photo
         ? `${axios.defaults.baseURL}${photo.photoLongUrl.slice(
-            photo.photoLongUrl.indexOf("/")
+            photo.photoLongUrl.indexOf('/')
           )}`
-        : "";
+        : '';
     },
     toggleOrphanPassportDialog() {
       this.orphanPassportDialog = !this.orphanPassportDialog;
@@ -4581,10 +4551,10 @@ export default {
       this.orphanSelectOptions.genderOptions = this.orphanSelectOptions.genderOptions.map(
         (val) => {
           let obj = {
-            text: "",
-            value: "",
+            text: '',
+            value: ''
           };
-          obj.text = val === "M" ? "Male" : "Female";
+          obj.text = val === 'M' ? 'Male' : 'Female';
           obj.value = val;
           return obj;
         }
@@ -4593,30 +4563,30 @@ export default {
       // removing primary_elementary and adding Primary/Elementary
       this.orphanSelectOptions.orphanEducationLevelOptions.splice(
         this.orphanSelectOptions.orphanEducationLevelOptions.indexOf(
-          "primary_elementary"
+          'primary_elementary'
         ),
         1,
-        "Primary/Elementary"
+        'Primary/Elementary'
       );
 
       this.orphanSelectOptions.orphanEducationLevelOptions = this.orphanSelectOptions.orphanEducationLevelOptions.map(
         (val) => {
           let obj = {
-            text: "",
-            value: "",
+            text: '',
+            value: ''
           };
           const regex = /[A-Z]/g;
           let idx = val.search(regex);
-          if (val === "N_A") obj.text = val;
-          else if (val === "Primary/Elementary") obj.text = val;
-          else if (val === "preSchool")
+          if (val === 'N_A') obj.text = val;
+          else if (val === 'Primary/Elementary') obj.text = val;
+          else if (val === 'preSchool')
             obj.text =
               val.slice(0, 1).toUpperCase() + val.slice(1).toLowerCase();
           else
             obj.text =
               val.slice(0, 1).toUpperCase() +
               val.slice(1, idx) +
-              " " +
+              ' ' +
               val.slice(idx);
           obj.value = val;
           return obj;
@@ -4627,10 +4597,10 @@ export default {
       this.orphanSelectOptions.orphanEducationTypeOfSchoolOptions = this.orphanSelectOptions.orphanEducationTypeOfSchoolOptions.map(
         (val) => {
           let obj = {
-            text: "",
-            value: "",
+            text: '',
+            value: ''
           };
-          if (val === "N_A") obj.text = val;
+          if (val === 'N_A') obj.text = val;
           obj.text = val.slice(0, 1).toUpperCase() + val.slice(1);
           obj.value = val;
 
@@ -4640,29 +4610,29 @@ export default {
     },
     // formats education level
     educationLevelFormatter() {
-      if (this.orphan.education?.level === "religiousEducation") {
+      if (this.orphan.education?.level === 'religiousEducation') {
         this.orphanSelectEditableFields.orphanEducationLevel =
-          "Religious Education";
-        this.orphanSelectedOption.orphanEducationLevel = "Religious Education";
-      } else if (this.orphan.education?.level === "preSchool") {
-        this.orphanSelectEditableFields.orphanEducationLevel = "Preschool";
-        this.orphanSelectedOption.orphanEducationLevel = "Preschool";
-      } else if (this.orphan.education?.level === "primary_elementary") {
+          'Religious Education';
+        this.orphanSelectedOption.orphanEducationLevel = 'Religious Education';
+      } else if (this.orphan.education?.level === 'preSchool') {
+        this.orphanSelectEditableFields.orphanEducationLevel = 'Preschool';
+        this.orphanSelectedOption.orphanEducationLevel = 'Preschool';
+      } else if (this.orphan.education?.level === 'primary_elementary') {
         this.orphanSelectEditableFields.orphanEducationLevel =
-          "Primary/Elementary";
-        this.orphanSelectedOption.orphanEducationLevel = "Primary/Elementary";
-      } else if (this.orphan.education?.level === "junior") {
-        this.orphanSelectEditableFields.orphanEducationLevel = "Junior";
-        this.orphanSelectedOption.orphanEducationLevel = "Junior";
-      } else if (this.orphan.education?.level === "highschool") {
-        this.orphanSelectEditableFields.orphanEducationLevel = "Highschool";
-        this.orphanSelectedOption.orphanEducationLevel = "Highschool";
-      } else if (this.orphan.education?.level === "underGraduate") {
-        this.orphanSelectEditableFields.orphanEducationLevel = "Under Graduate";
-        this.orphanSelectedOption.orphanEducationLevel = "Under Graduate";
-      } else if (this.orphan.education?.level === "postGraduate") {
-        this.orphanSelectEditableFields.orphanEducationLevel = "Post Graduate";
-        this.orphanSelectedOption.orphanEducationLevel = "Post Graduate";
+          'Primary/Elementary';
+        this.orphanSelectedOption.orphanEducationLevel = 'Primary/Elementary';
+      } else if (this.orphan.education?.level === 'junior') {
+        this.orphanSelectEditableFields.orphanEducationLevel = 'Junior';
+        this.orphanSelectedOption.orphanEducationLevel = 'Junior';
+      } else if (this.orphan.education?.level === 'highschool') {
+        this.orphanSelectEditableFields.orphanEducationLevel = 'Highschool';
+        this.orphanSelectedOption.orphanEducationLevel = 'Highschool';
+      } else if (this.orphan.education?.level === 'underGraduate') {
+        this.orphanSelectEditableFields.orphanEducationLevel = 'Under Graduate';
+        this.orphanSelectedOption.orphanEducationLevel = 'Under Graduate';
+      } else if (this.orphan.education?.level === 'postGraduate') {
+        this.orphanSelectEditableFields.orphanEducationLevel = 'Post Graduate';
+        this.orphanSelectedOption.orphanEducationLevel = 'Post Graduate';
       } else {
         this.orphanSelectEditableFields.orphanEducationLevel = this.orphan.education?.level;
         this.orphanSelectedOption.orphanEducationLevel = this.orphan.education?.level;
@@ -4672,14 +4642,14 @@ export default {
       for (let editorName in editorObject) {
         const capitalCheckerRegex = /[A-Z]/;
         let idx = editorName.search(capitalCheckerRegex);
-        let property = "";
+        let property = '';
 
         property = editorName
           .slice(idx, idx + 1)
           .toLowerCase()
           .concat(editorName.slice(idx + 1));
 
-        if (property === null || property === "") {
+        if (property === null || property === '') {
           console.log(`Orphan doesn't have "${property}" property`);
         } else if (Object.hasOwnProperty.call(baseObject, property)) {
           baseObject[property] = editorObject[editorName];
@@ -4706,14 +4676,14 @@ export default {
       for (let editorName in editorObject) {
         const capitalCheckerRegex = /[A-Z]/;
         let idx = editorName.search(capitalCheckerRegex);
-        let property = "";
+        let property = '';
 
         property = editorName
           .slice(idx, idx + 1)
           .toLowerCase()
           .concat(editorName.slice(idx + 1));
 
-        if (property === null || property === "") {
+        if (property === null || property === '') {
           console.log(`Orphan doesn't have "${property}" property`);
         } else if (Object.hasOwnProperty.call(baseObject, property)) {
           editorObject[editorName] = baseObject[property];
@@ -4763,7 +4733,7 @@ export default {
       let dateFormat = new Date(dateString);
       return `${dateFormat.getFullYear()}-0${dateFormat.getMonth() +
         1}-${dateFormat.getDate()}`;
-    },
-  },
+    }
+  }
 };
 </script>
