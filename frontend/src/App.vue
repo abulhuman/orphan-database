@@ -1,7 +1,7 @@
 <template>
   <v-app>
+    <Loader />
     <v-main class="max-width: 100%;" style="background: #eee;">
-      <!-- style="background-image: linear-gradient(to bottom right, rgba(100,115,201,.6), rgba(25,32,72,1);" -->
       <router-view />
       <v-snackbar
         v-model="getSnackbar"
@@ -30,24 +30,52 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
-import store from "./store";
+import axios from 'axios'
+import { mapGetters, mapMutations } from 'vuex'
+import Loader from './components/Loader.vue'
+import store from './store'
 export default {
-  name: "App",
+  components: { Loader },
+  name: 'App',
+  created() {
+    axios.interceptors.request.use(
+      (config) => {
+        store.commit('SET_LOADING_STATUS', true)
+        return config
+      },
+      (error) => {
+        store.commit('SET_LOADING_STATUS', false)
 
-  data: () => ({
-    //
-    valueChanger: false
-  }),
+        // TODO create logout mutation/action then re-route to login page
+        // this.$router.push({ name: 'login' })
+        
+        return Promise.reject(error)
+      }
+    )
+
+    axios.interceptors.response.use(
+      (response) => {
+        store.commit('SET_LOADING_STATUS', false)
+        return response
+      },
+      (error) => {
+        // TODO create logout mutation/action then re-route to login page
+        // this.$router.push({ name: 'login' })
+        
+        store.commit('SET_LOADING_STATUS', true)
+        return error
+      }
+    )
+  },
   computed: {
-    ...mapGetters(["getSnackbarColor", "getSnackbarText"]),
+    ...mapGetters(['getSnackbarColor', 'getSnackbarText']),
     getSnackbar: {
       get: () => store.getters.getSnackbar,
-      set: payload => store.commit("SET_SNACKBAR", payload)
+      set: (payload) => store.commit('SET_SNACKBAR', payload)
     }
   },
   methods: {
-    ...mapMutations(["SET_SNACKBAR", "SET_SNACKBAR_COLOR", "SET_SNACKBAR_TEXT"])
+    ...mapMutations(['SET_SNACKBAR', 'SET_SNACKBAR_COLOR', 'SET_SNACKBAR_TEXT'])
   }
-};
+}
 </script>
