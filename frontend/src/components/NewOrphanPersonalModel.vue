@@ -2,8 +2,18 @@
   <v-form ref="personalForm" v-model="validPersonalForm" lazy-validation>
     <v-container>
       <v-row class="mt-2">
+        <!-- Orphan Code field -->
+        <v-col cols="12" sm="6" md="3">
+          <!-- <v-responsive max-width="" class=""> -->
+          <v-text-field
+            v-model="orphan.orphanCode"
+            label="Orphan Code"
+          >
+          </v-text-field>
+          <!-- </v-responsive> -->
+        </v-col>
         <!-- Orphan Name field -->
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" md="3">
           <!-- <v-responsive max-width="" class=""> -->
           <v-text-field
             v-model="orphan.firstName"
@@ -14,7 +24,7 @@
           <!-- </v-responsive> -->
         </v-col>
         <!-- Father Name field -->
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" md="3">
           <v-text-field
             v-model="orphan.father.firstName"
             label="Father Name*"
@@ -23,7 +33,7 @@
           </v-text-field>
         </v-col>
         <!-- Grand Father Name field -->
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" md="3">
           <v-text-field
             v-model="orphan.father.lastName"
             label="Grand Father Name*"
@@ -238,6 +248,7 @@ export default {
       validPersonalForm: false,
       formHasErrors: false,
       orphan: {
+        orphanCode: null,
         firstName: null,
         dateOfBirth: null,
         placeOfBirth: null,

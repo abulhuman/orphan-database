@@ -409,6 +409,7 @@ export default {
       );
 
       const registeredOrphan = await this.registerOrphanWithBaselineData(
+        this.orphan.orphanCode,
         this.orphan.firstName,
         this.orphan.gender,
         this.orphan.placeOfBirth,
@@ -487,6 +488,7 @@ export default {
     },
 
     registerOrphanWithBaselineData(
+      orphanCode,
       firstName,
       gender,
       placeOfBirth,
@@ -512,6 +514,7 @@ export default {
       return axios
         .post('graphql', {
           query: `mutation createOrphanWithBaselineData (
+                  $orphanCode: String
                   $firstName: String!
                   $gender: orphanGender!
                   $placeOfBirth: String!
@@ -535,6 +538,7 @@ export default {
                   $villageId: ID!
                 ) {
                   createOrphanWithBaselineData (
+                    orphanCode: $orphanCode,
                     firstName: $firstName,
                     gender: $gender,
                     placeOfBirth: $placeOfBirth,
@@ -565,6 +569,7 @@ export default {
                   }
                 }`,
           variables: {
+            orphanCode,
             firstName,
             gender,
             placeOfBirth,
