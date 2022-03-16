@@ -309,7 +309,7 @@
           </v-col>
           <!-- TODO # change this field to select -->
           <!-- Housing Situation field -->
-          <v-col cols="12" sm="6" md="7" class="mb-n3">
+          <v-col cols="6" sm="6" md="6" class="mb-n3">
             <v-select
               v-model="orphan.House_property.housingSituation"
               :items="orphanHousingSituationOptions"
@@ -320,6 +320,12 @@
               :rules="[rules.required]"
               label="Housing Situation*"
             ></v-select>
+          </v-col><!-- Housing Situation field -->
+          <v-col cols="6" sm="6" md="6" class="mb-n3">
+            <v-text-field
+              v-model="orphan.House_property.houseType"
+              label="House Type"
+            ></v-text-field>
           </v-col>
           <!-- Other Properties -->
           <v-col cols="12" sm="12" md="12" class="mt-n5">
@@ -379,6 +385,7 @@ export default {
         },
         House_property: {
           housingSituation: null,
+          houseType: null,
           otherProperty: null
         }
       },
