@@ -448,6 +448,7 @@ type Mutation {
 
   createHouse_property(
     housingSituation: String!
+    houseType: String
     otherProperty: String
     orphans: [ID]
   ): House_property!
@@ -455,6 +456,7 @@ type Mutation {
   updateHouse_property(
     id: ID!
     housingSituation: String
+    houseType: String
     otherProperty: String
     orphans: [ID]
   ): House_property!
@@ -961,6 +963,7 @@ type House_property {
   created_at: DateTime
   updated_at: DateTime
   housingSituation: String!
+  houseType: String
   otherProperty: String
   orphans: [Orphan]
 }
@@ -1506,6 +1509,7 @@ input GuardianCreateInput {
 
 input House_propertyCreateInput {
   housingSituation: String!
+  houseType: String
   otherProperty: String
 }
 

@@ -295,6 +295,7 @@ model House_property {
   created_at       DateTime? @default(now())
   updated_at       DateTime?
   housingSituation String    @default("")
+  houseType        String?
   otherProperty    String?
   orphans          Orphan[]  @relation("house_propertyToorphan")
 
