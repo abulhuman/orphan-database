@@ -173,6 +173,7 @@ model Orphan {
   id                     Int                 @id @default(autoincrement())
   created_at             DateTime?           @default(now())
   updated_at             DateTime?
+  orphanCode             String?
   firstName              String              @default("")
   gender                 String              @default("M")
   placeOfBirth           String              @default("")

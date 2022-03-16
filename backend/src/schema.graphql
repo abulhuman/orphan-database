@@ -252,6 +252,7 @@ type Mutation {
   ): Village!
 
   createOrphan(
+    orphanCode: String!
     firstName: String!
     gender: orphanGender!
     placeOfBirth: String!
@@ -285,6 +286,7 @@ type Mutation {
   ): Orphan!
 
   createOrphanWithBaselineData(
+    orphanCode: String!
     firstName: String!
     gender: orphanGender!
     placeOfBirth: String!
@@ -310,6 +312,7 @@ type Mutation {
 
   updateOrphan(
     id: ID!
+    orphanCode: String
     firstName: String
     gender: orphanGender
     placeOfBirth: String
@@ -880,6 +883,7 @@ type Orphan {
   id: ID!
   created_at: DateTime
   updated_at: DateTime
+  orphanCode: String
   firstName: String!
   gender: orphanGender!
   placeOfBirth: String!
