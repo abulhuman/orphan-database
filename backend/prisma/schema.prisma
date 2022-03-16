@@ -78,7 +78,7 @@ model Guardian {
   telephoneNumber            String?
   nationality                String    @default("Ethiopian")
   idCardUrl                  String    @default("")
-  confirmationLetterUrl      String    @default("")
+  confirmationLetterUrl      String?    @default("")
   legalConfirmationLetterUrl String?   @default("")
   orphans                    Orphan[]  @relation("guardianToorphan")
 

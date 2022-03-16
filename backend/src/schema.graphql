@@ -151,7 +151,7 @@ type Mutation {
     telephoneNumber: String
     nationality: guardianNationality!
     idCardUrl: String!
-    confirmationLetterUrl: String!
+    confirmationLetterUrl: String
     legalConfirmationLetterUrl: String
     orphans: [ID]
   ): Guardian!
@@ -807,8 +807,8 @@ type Guardian {
   telephoneNumber: String
   nationality: guardianNationality!
   idCardUrl: String!
-  confirmationLetterUrl: String!
-  legalConfirmationLetterUrl: String!
+  confirmationLetterUrl: String
+  legalConfirmationLetterUrl: String
   orphans: [Orphan]
 }
 
@@ -1507,8 +1507,8 @@ input GuardianCreateInput {
   telephoneNumber: String
   nationality: guardianNationality!
   idCardUrl: String!
-  confirmationLetterUrl: String!
-  legalConfirmationLetterUrl: String!
+  confirmationLetterUrl: String
+  legalConfirmationLetterUrl: String
 }
 
 input House_propertyCreateInput {
