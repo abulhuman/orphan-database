@@ -312,8 +312,7 @@
               accept="image/*, .pdf"
               counter
               prepend-icon="mdi-file-document-outline"
-              :rules="[rules.required]"
-              label="Guardian Confirmation Letter"
+              label="Guardian Confirmation Letter (MOU)"
               @change="toggleGuardianConfirmationLetterInput"
             >
               <template v-slot:append>
@@ -361,7 +360,6 @@
               accept="image/*, .pdf"
               counter
               prepend-icon="mdi-file-document-outline"
-              :rules="[rules.required]"
               label="Guardian Legal Confirmation Letter"
               @change="toggleGuardianLegalConfirmationLetterInput"
             >
@@ -410,7 +408,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'
 
 export default {
   props: {
@@ -476,25 +474,25 @@ export default {
       guardianLegalConfirmationLetterDialog: false,
       guardianLegalConfirmationLetterFile: null,
       guardianLegalConfirmationLetterPreview: null
-    };
+    }
   },
   computed: {
     orphanDocumentSave: function() {
-      return this.save;
+      return this.save
     },
     orphanDocumentCancel: function() {
-      return this.cancel;
+      return this.cancel
     }
   },
   watch: {
     orphanDocumentSave(val) {
-      if (val) this.documentDialogSave();
+      if (val) this.documentDialogSave()
     },
     orphanDocumentCancel(val) {
-      if (val) this.documentDialogCancel();
+      if (val) this.documentDialogCancel()
     },
     validDocumentForm(val) {
-      this.$emit('documentError', val);
+      this.$emit('documentError', val)
     }
   },
   methods: {
@@ -504,97 +502,97 @@ export default {
       if (this.birthCertificateFile) {
         this.birthCertificatePreview = URL.createObjectURL(
           this.birthCertificateFile
-        );
+        )
       }
     },
     toggleBirthCertificateDialog() {
-      this.birthCertificateDialog = !this.birthCertificateDialog;
+      this.birthCertificateDialog = !this.birthCertificateDialog
     },
     // Portrait Photo
     togglePortraitPhotoInput() {
       if (this.portraitPhotoFile) {
-        this.portraitPhotoPreview = URL.createObjectURL(this.portraitPhotoFile);
+        this.portraitPhotoPreview = URL.createObjectURL(this.portraitPhotoFile)
       }
     },
     togglePortraitPhotoDialog() {
-      this.portraitPhotoDialog = !this.portraitPhotoDialog;
+      this.portraitPhotoDialog = !this.portraitPhotoDialog
     },
     // Orphan Id
     toggleOrphanIdInput() {
       if (this.orphanIdFile) {
-        this.orphanIdPreview = URL.createObjectURL(this.orphanIdFile);
+        this.orphanIdPreview = URL.createObjectURL(this.orphanIdFile)
       }
     },
     toggleOrphanIdDialog() {
-      this.orphanIdDialog = !this.orphanIdDialog;
+      this.orphanIdDialog = !this.orphanIdDialog
     },
     // Orphan Passport
     toggleOrphanPassportInput() {
       if (this.orphanPassportFile) {
         this.orphanPassportPreview = URL.createObjectURL(
           this.orphanPassportFile
-        );
+        )
       }
     },
     toggleOrphanPassportDialog() {
-      this.orphanPassportDialog = !this.orphanPassportDialog;
+      this.orphanPassportDialog = !this.orphanPassportDialog
     },
     // Father Death Certificate
     toggleFatherDeathCertificateInput() {
       if (this.fatherDeathCertificateFile) {
         this.fatherDeathCertificatePreview = URL.createObjectURL(
           this.fatherDeathCertificateFile
-        );
+        )
       }
     },
     toggleFatherDeathCertificateDialog() {
-      this.fatherDeathCertificateDialog = !this.fatherDeathCertificateDialog;
+      this.fatherDeathCertificateDialog = !this.fatherDeathCertificateDialog
     },
     // Guardian Id
     toggleGuardianIdInput() {
       if (this.guardianIdFile) {
-        this.guardianIdPreview = URL.createObjectURL(this.guardianIdFile);
+        this.guardianIdPreview = URL.createObjectURL(this.guardianIdFile)
       }
     },
     toggleGuardianIdDialog() {
-      this.guardianIdDialog = !this.guardianIdDialog;
+      this.guardianIdDialog = !this.guardianIdDialog
     },
     // Guardian Confirmation Letter
     toggleGuardianConfirmationLetterInput() {
       if (this.guardianConfirmationLetterFile) {
         this.guardianConfirmationLetterPreview = URL.createObjectURL(
           this.guardianConfirmationLetterFile
-        );
+        )
       }
     },
     toggleGuardianConfirmationLetterDialog() {
       this.guardianConfirmationLetterDialog = !this
-        .guardianConfirmationLetterDialog;
+        .guardianConfirmationLetterDialog
     },
     // Guardian Legal Confirmation Letter
     toggleGuardianLegalConfirmationLetterInput() {
       if (this.guardianLegalConfirmationLetterFile) {
         this.guardianLegalConfirmationLetterPreview = URL.createObjectURL(
           this.guardianLegalConfirmationLetterFile
-        );
+        )
       }
     },
     toggleGuardianLegalConfirmationLetterDialog() {
       this.guardianLegalConfirmationLetterDialog = !this
-        .guardianLegalConfirmationLetterDialog;
+        .guardianLegalConfirmationLetterDialog
     },
 
     documentDialogClose() {
-      this.dialog = false;
+      this.dialog = false
     },
 
     documentDialogReset() {
-      this.formHasErrors = false;
-      this.$refs.documentForm.reset();
+      this.formHasErrors = false
+      this.$refs.documentForm.reset()
     },
 
     async documentDialogSave() {
-      this.formHasErrors = false;
+      this.formHasErrors = false
       if (this.$refs.documentForm.validate()) {
         const documents = {
           orphanBirthCertificateFormData: null,
@@ -605,88 +603,92 @@ export default {
           guardianIdFormData: null,
           guardianConfirmationLetterFormData: null,
           guardianLegalConfirmationLetterFormData: null
-        };
+        }
 
-        documents.orphanBirthCertificateFormData = new FormData();
+        documents.orphanBirthCertificateFormData = new FormData()
         documents.orphanBirthCertificateFormData.append(
           'document',
           this.birthCertificateFile,
           this.birthCertificateFile.name
-        );
+        )
         this.orphan.birthCertificateUrl = await axios
           .post(`/document/`, documents.orphanBirthCertificateFormData)
           .then((res) => res.data)
-          .catch((err) => console.warn(err));
+          .catch((err) => console.warn(err))
 
-        documents.fatherDeathCertificateFormData = new FormData();
+        documents.fatherDeathCertificateFormData = new FormData()
         documents.fatherDeathCertificateFormData.append(
           'document',
           this.fatherDeathCertificateFile,
           this.fatherDeathCertificateFile.name
-        );
+        )
 
-        documents.guardianIdFormData = new FormData();
+        documents.guardianIdFormData = new FormData()
         documents.guardianIdFormData.append(
           'document',
           this.guardianIdFile,
           this.guardianIdFile.name
-        );
+        )
 
-        documents.guardianConfirmationLetterFormData = new FormData();
-        documents.guardianConfirmationLetterFormData.append(
-          'document',
-          this.guardianConfirmationLetterFile,
-          this.guardianConfirmationLetterFile.name
-        );
+        if (this.guardianConfirmationLetterFile) {
+          documents.guardianConfirmationLetterFormData = new FormData()
+          documents.guardianConfirmationLetterFormData.append(
+            'document',
+            this.guardianConfirmationLetterFile,
+            this.guardianConfirmationLetterFile.name
+          )
+        }
 
-        documents.guardianLegalConfirmationLetterFormData = new FormData();
-        documents.guardianLegalConfirmationLetterFormData.append(
-          'document',
-          this.guardianLegalConfirmationLetterFile,
-          this.guardianLegalConfirmationLetterFile.name
-        );
+        if (this.guardianLegalConfirmationLetterFile) {
+          documents.guardianLegalConfirmationLetterFormData = new FormData()
+          documents.guardianLegalConfirmationLetterFormData.append(
+            'document',
+            this.guardianLegalConfirmationLetterFile,
+            this.guardianLegalConfirmationLetterFile.name
+          )
+        }
 
         if (this.portraitPhotoFile) {
-          documents.orphanPortraitPhotoFormData = new FormData();
+          documents.orphanPortraitPhotoFormData = new FormData()
           documents.orphanPortraitPhotoFormData.append(
             'image',
             this.portraitPhotoFile,
             this.portraitPhotoFile.name
-          );
+          )
         }
 
         if (this.orphanIdFile) {
-          documents.orphanIdFormData = new FormData();
+          documents.orphanIdFormData = new FormData()
           documents.orphanIdFormData.append(
             'document',
             this.orphanIdFile,
             this.orphanIdFile.name
-          );
+          )
         }
 
         if (this.orphanPassportFile) {
-          documents.orphanPassportFormData = new FormData();
+          documents.orphanPassportFormData = new FormData()
           documents.orphanPassportFormData.append(
             'document',
             this.orphanPassportFile,
             this.orphanPassportFile.name
-          );
+          )
         }
 
         // console.log('documents', documents);
 
-        this.$emit('documentDone', documents);
-        this.$emit('documentRefs', this.$refs.documentForm);
-        this.documentDialogClose();
+        this.$emit('documentDone', documents)
+        this.$emit('documentRefs', this.$refs.documentForm)
+        this.documentDialogClose()
       } else {
-        this.formHasErrors = true;
+        this.formHasErrors = true
       }
     },
 
     documentDialogCancel() {
-      this.documentDialogReset();
-      this.documentDialogClose();
+      this.documentDialogReset()
+      this.documentDialogClose()
     }
   }
-};
+}
 </script>
