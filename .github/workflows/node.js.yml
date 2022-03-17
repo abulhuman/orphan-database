@@ -29,8 +29,8 @@ jobs:
           npm run build
           cd ../backend
           npm run db:push
-          cd ../
+          cd ../backend
           pm2 kill
-          pm2 start backend/src/server.js
+          pm2 start npm --name "orphan-database" -- run serve
           pm2 save --force
           sudo service nginx restart
