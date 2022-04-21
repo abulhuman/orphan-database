@@ -78,7 +78,7 @@ model Guardian {
   telephoneNumber            String?
   nationality                String    @default("Ethiopian")
   idCardUrl                  String    @default("")
-  confirmationLetterUrl      String?    @default("")
+  confirmationLetterUrl      String?   @default("")
   legalConfirmationLetterUrl String?   @default("")
   orphans                    Orphan[]  @relation("guardianToorphan")
 
@@ -244,22 +244,23 @@ model OrphanLetter {
 }
 
 model SocialWorker {
-  id           Int        @id @default(autoincrement())
-  created_at   DateTime?  @default(now())
-  updated_at   DateTime?
-  firstName    String     @default("")
-  middleName   String     @default("")
-  lastName     String     @default("")
-  gender       String?
-  dateOfBirth  DateTime?
-  mobileNumber String     @default("")
-  startDate    DateTime?
-  endDate      DateTime?
-  userId       Int        @unique
-  user         User       @relation(fields: [userId], references: [id])
-  districts    District[] @relation("districtsSocialWorkers")
-  villages     Village[]  @relation("villageTosocialworker")
-  orphans      Orphan[]   @relation("orphanTosocialworker")
+  id                Int               @id @default(autoincrement())
+  created_at        DateTime?         @default(now())
+  updated_at        DateTime?
+  firstName         String            @default("")
+  middleName        String            @default("")
+  lastName          String            @default("")
+  gender            String?
+  dateOfBirth       DateTime?
+  mobileNumber      String            @default("")
+  startDate         DateTime?
+  endDate           DateTime?
+  userId            Int               @unique
+  user              User              @relation(fields: [userId], references: [id])
+  districts         District[]        @relation("districtsSocialWorkers")
+  villages          Village[]         @relation("villageTosocialworker")
+  orphans           Orphan[]          @relation("orphanTosocialworker")
+  projectActivities ProjectActivity[]
 
   @@map("socialworker")
 }
@@ -328,6 +329,39 @@ model SponsorshipStatus {
   @@map("sponsorshipstatus")
 }
 
+model ProjectActivity {
+  id                Int             @id @default(autoincrement())
+  created_at        DateTime?       @default(now())
+  updated_at        DateTime?
+  title             String
+  category          String
+  unitOfMeasurement String
+  planOfAYear       String
+  planOfSixMonths   String
+  planOfAQuarter    String
+  planOfAMonth      String
+  projectId         Int
+  socialWorkerId    Int
+  project           Project?        @relation(fields: [projectId], references: [id])
+  socialWorker      SocialWorker?   @relation(fields: [socialWorkerId], references: [id])
+  dailyActivities   DailyActivity[]
+
+  @@map("projectActivity")
+}
+
+model DailyActivity {
+  id                       Int              @id @default(autoincrement())
+  created_at               DateTime?        @default(now())
+  updated_at               DateTime?
+  planOfADay               Float
+  accomplishmentAmount     Float
+  accomplishmentPercentage Float
+  activityId               Int
+  projectActivity          ProjectActivity? @relation(fields: [activityId], references: [id])
+
+  @@map("dailyAccomplishment")
+}
+
 model Project {
   id                           Int                        @id @default(autoincrement())
   created_at                   DateTime?                  @default(now())
@@ -344,6 +378,7 @@ model Project {
   supportPlans                 SupportPlan[]              @relation("projectTosupportplan")
   coordinators                 Coordinator[]
   projectDocuments             ProjectDocument[]
+  projectActivities            ProjectActivity[]
   incomeGeneratingActivities   IncomeGeneratingActivity[]
 
   @@map("project")

@@ -96,6 +96,22 @@ type Query {
   getPaymentsBySupportPlanId(supportPlanId: ID!): [Payment]!
 
   getVillagesByProjectId(projectId: ID!): [Village!]!
+
+  getProjectActivitiesBySocialWorkerId(
+    socialWorkerId: ID!
+    fromDate: DateTime
+    toDate: DateTime
+  ): [ProjectActivity]
+  getDailyActivitiesByProjectActivityId(
+    projectActivityId: ID!
+    fromDate: DateTime
+    toDate: DateTime
+  ): [DailyActivity]
+  getProjectActivitiesByProjectId(
+    projectId: ID!
+    fromDate: DateTime
+    toDate: DateTime
+  ): [ProjectActivity]
 }
 
 type Mutation {
@@ -518,6 +534,12 @@ type Mutation {
     orphanId: ID!
   ): SponsorshipStatus!
 
+  createProjectActivity(input: ProjectActivityCreateInput!): ProjectActivity!
+  updateProjectActivity(input: ProjectActivityUpdateInput!): ProjectActivity!
+
+  createDailyActivity(input: DailyActivityCreateInput!): DailyActivity!
+  updateDailyActivity(input: DailyActivityUpdateInput!): DailyActivity!
+
   createProject(
     number: String!
     startDate: DateTime
@@ -934,6 +956,7 @@ type SocialWorker {
   districts: [District]
   villages: [Village]
   orphans: [Orphan]
+  projectActivities: [ProjectActivity]
 }
 
 type FinancialRecord {
@@ -1009,6 +1032,32 @@ type SponsorshipStatus {
   orphan: Orphan
 }
 
+type ProjectActivity {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  title: String!
+  category: String!
+  unitOfMeasurement: String!
+  planOfAYear: String!
+  planOfSixMonths: String!
+  planOfAQuarter: String!
+  planOfAMonth: String!
+  project: Project!
+  socialWorker: SocialWorker!
+  dailyActivities: [DailyActivity]
+}
+
+type DailyActivity {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  planOfADay: Float!
+  accomplishmentAmount: Float!
+  accomplishmentPercentage: Float!
+  projectActivity: ProjectActivity!
+}
+
 type Project {
   id: ID!
   created_at: DateTime
@@ -1025,6 +1074,7 @@ type Project {
   supportPlans: [SupportPlan]
   coordinators: [Coordinator]
   projectDocuments: [ProjectDocument]
+  projectActivities: [ProjectActivity]
   incomeGeneratingActivities: [IncomeGeneratingActivity]
 }
 
@@ -1538,4 +1588,41 @@ input EducationalRecordCreateInput {
 
 input IncomeGeneratingActivityPhotoInput {
   photoUrl: String!
+}
+
+input ProjectActivityCreateInput {
+  title: String!
+  category: String!
+  unitOfMeasurement: String!
+  planOfAYear: String!
+  planOfSixMonths: String!
+  planOfAQuarter: String!
+  planOfAMonth: String!
+  projectId: ID!
+  socialWorkerId: ID!
+}
+
+input ProjectActivityUpdateInput {
+  id: ID!
+  title: String
+  category: String
+  unitOfMeasurement: String
+  planOfAYear: String
+  planOfSixMonths: String
+  planOfAQuarter: String
+  planOfAMonth: String
+}
+
+input DailyActivityCreateInput {
+  planOfADay: Float!
+  accomplishmentAmount: Float!
+  accomplishmentPercentage: Float!
+  projectActivityId: ID!
+}
+
+input DailyActivityUpdateInput {
+  id: ID!
+  planOfADay: Float
+  accomplishmentAmount: Float
+  accomplishmentPercentage: Float
 }
