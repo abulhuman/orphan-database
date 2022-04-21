@@ -1,15 +1,15 @@
 <template>
   <div style="margin-top: 1.5rem">
     <AppNavBar :user="socialWorkerUser" />
-    <social-worker-orphan-list
+    <social-worker-u-i
       class="mt-16 pt-3"
       :socialWorerkId="$route.params.id"
-    ></social-worker-orphan-list>
+    ></social-worker-u-i>
   </div>
 </template>
 
 <script>
-import SocialWorkerOrphanList from "@/components/SocialWorkerOrphanList.vue";
+import SocialWorkerUI from "@/components/SocialWorkerUI.vue";
 import AppNavBar from "@/components/AppNavBar.vue";
 import axios from "axios";
 import { mapMutations } from "vuex";
@@ -28,7 +28,7 @@ export default {
     };
   },
   components: {
-    SocialWorkerOrphanList,
+    SocialWorkerUI,
     AppNavBar
   },
   created() {
