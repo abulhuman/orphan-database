@@ -14,9 +14,14 @@ function orphans({ id }, _args, { prisma }) {
   return prisma.socialWorker.findUnique({ where: { id } }).orphans();
 }
 
+function projectActivities({ id }, _args, { prisma }) {
+  return prisma.socialWorker.findUnique({ where: { id } }).projectActivities();
+}
+
 module.exports = {
   user,
   districts,
   villages,
-  orphans
+  orphans,
+  projectActivities
 };

@@ -1,31 +1,34 @@
 function supportPlans({ id }, _args, { prisma }) {
-  return prisma.project.findUnique({ where: { id } }).supportPlans();
+  return prisma.project.findUnique({ where: { id } }).supportPlans()
 }
 
 function coordinators({ id }, _args, { prisma }) {
-  return prisma.project.findUnique({ where: { id } }).coordinators();
+  return prisma.project.findUnique({ where: { id } }).coordinators()
 }
 
 function projectDocuments({ id }, _args, { prisma }) {
-  return prisma.project.findUnique({ where: { id } }).projectDocuments();
+  return prisma.project.findUnique({ where: { id } }).projectDocuments()
+}
+
+function projectActivities({ id }, _args, { prisma }) {
+  return prisma.project.findUnique({ where: { id } }).projectActivities()
 }
 
 function incomeGeneratingActivities({ id }, _args, { prisma }) {
   return prisma.project
     .findUnique({ where: { id } })
-    .incomeGeneratingActivities();
+    .incomeGeneratingActivities()
 }
 
 function location({ id }, _args, { prisma }) {
-  return prisma.project
-    .findUnique({ where: { id } })
-    .location();
+  return prisma.project.findUnique({ where: { id } }).location()
 }
 
 module.exports = {
   supportPlans,
   coordinators,
   projectDocuments,
+  projectActivities,
   incomeGeneratingActivities,
   location
-};
+}
