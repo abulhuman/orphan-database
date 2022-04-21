@@ -97,21 +97,13 @@ type Query {
 
   getVillagesByProjectId(projectId: ID!): [Village!]!
 
-  getProjectActivitiesBySocialWorkerId(
-    socialWorkerId: ID!
-    fromDate: DateTime
-    toDate: DateTime
-  ): [ProjectActivity]
+  getProjectActivitiesBySocialWorkerId(socialWorkerId: ID!): [ProjectActivity]
   getDailyActivitiesByProjectActivityId(
     projectActivityId: ID!
     fromDate: DateTime
     toDate: DateTime
   ): [DailyActivity]
-  getProjectActivitiesByProjectId(
-    projectId: ID!
-    fromDate: DateTime
-    toDate: DateTime
-  ): [ProjectActivity]
+  getProjectActivitiesByProjectId(projectId: ID!): [ProjectActivity]
 }
 
 type Mutation {

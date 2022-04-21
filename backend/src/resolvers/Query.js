@@ -805,16 +805,23 @@ async function getProjectActivitiesBySocialWorkerId(
 
 async function getDailyActivitiesByProjectActivityId(
   _parent,
-  { projectActivityId },
+  { projectActivityId, fromDate, toDate },
   { prisma, req },
   _info
 ) {
   if (getUser(req).userId) {
-    return await prisma.dailyActivity.findMany({
+    const dailyActivities = await prisma.dailyActivity.findMany({
       where: {
         activityId: parseInt(projectActivityId)
       }
     })
+    fromDate = new Date(fromDate)
+    toDate = new Date(toDate)
+    return dailyActivities.filter(
+      (item) =>
+        new Date(item.created_at) < toDate &&
+        new Date(item.created_at) > fromDate
+    )
   }
   throw new AuthenticationError()
 }
