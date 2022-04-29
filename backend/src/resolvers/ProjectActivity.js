@@ -7,7 +7,7 @@ function dailyActivities({ id }, _args, { prisma }) {
 }
 
 function socialWorker({ id }, _args, { prisma }) {
-  return prisma.dailyActivity.findUnique({ where: { id } }).socialWorker()
+  return prisma.projectActivity.findUnique({ where: { id } }).socialWorker()
 }
 
 module.exports = {
