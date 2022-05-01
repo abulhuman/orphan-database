@@ -2372,8 +2372,8 @@
                                         <v-col cols="12" class="text-center">
                                           <span>{{
                                             notEditable
-                                              ? 'Confirmation Letter'
-                                              : 'Edit Confirmation Letter'
+                                              ? 'Confirmation Letter (MOU)'
+                                              : 'Edit Confirmation Letter (MOU)'
                                           }}</span>
                                         </v-col>
                                         <v-col cols="12" class="text-center">

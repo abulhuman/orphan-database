@@ -2,8 +2,18 @@
   <v-form ref="personalForm" v-model="validPersonalForm" lazy-validation>
     <v-container>
       <v-row class="mt-2">
+        <!-- Orphan Code field -->
+        <v-col cols="12" sm="6" md="3">
+          <!-- <v-responsive max-width="" class=""> -->
+          <v-text-field
+            v-model="orphan.orphanCode"
+            label="Orphan Code"
+          >
+          </v-text-field>
+          <!-- </v-responsive> -->
+        </v-col>
         <!-- Orphan Name field -->
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" md="3">
           <!-- <v-responsive max-width="" class=""> -->
           <v-text-field
             v-model="orphan.firstName"
@@ -14,7 +24,7 @@
           <!-- </v-responsive> -->
         </v-col>
         <!-- Father Name field -->
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" md="3">
           <v-text-field
             v-model="orphan.father.firstName"
             label="Father Name*"
@@ -23,7 +33,7 @@
           </v-text-field>
         </v-col>
         <!-- Grand Father Name field -->
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" md="3">
           <v-text-field
             v-model="orphan.father.lastName"
             label="Grand Father Name*"
@@ -56,10 +66,9 @@
                 v-model="orphan.dateOfBirth"
                 label="Date of Birth*"
                 prepend-icon="mdi-calendar"
-                readonly
                 v-bind="attrs"
                 v-on="on"
-                :rules="[rules.required]"
+                :rules="[rules.required, rules.isDate]"
               ></v-text-field>
             </template>
             <v-date-picker
@@ -239,6 +248,7 @@ export default {
       validPersonalForm: false,
       formHasErrors: false,
       orphan: {
+        orphanCode: null,
         firstName: null,
         dateOfBirth: null,
         placeOfBirth: null,
@@ -262,6 +272,8 @@ export default {
           const namePattern = /(^[A-z][A-Z-a-z/'.,/]+)[A-z]\s*$/g
           return namePattern.test(value) || 'Invalid name'
         },
+        isDate: (value) =>
+          new Date(value).toString() !== 'Invalid Date' || 'Invalid Date',
         textWithSpaces: (value) => {
           const pattern = /(^[A-z][A-Z-a-z/'.,/\s]+)[A-z]\s*$/g;
           return pattern.test(value) || !value || 'Invalid name';
@@ -381,7 +393,6 @@ export default {
             this.orphan.psychologicalStatus = words[0].toLowerCase()
           }
         }
-
 
         this.$emit('personalDone', this.orphan)
         this.$emit('personalRefs', this.$refs.personalForm)

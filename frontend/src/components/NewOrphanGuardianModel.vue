@@ -54,10 +54,9 @@
                   v-model="orphan.guardian.dateOfBirth"
                   label="Date of Birth*"
                   prepend-icon="mdi-calendar"
-                  readonly
                   v-bind="attrs"
                   v-on="on"
-                  :rules="[rules.required]"
+                  :rules="[rules.required, rules.isDate]"
                 ></v-text-field>
               </template>
               <v-date-picker
@@ -232,7 +231,9 @@ export default {
         mobileNumber: (value) => {
           const mobilePattern = /^09[0-9]{8}$/g;
           return mobilePattern.test(value) || 'Invalid Number';
-        }
+        },
+        isDate: (value) =>
+          new Date(value).toString() !== 'Invalid Date' || 'Invalid Date'
       },
       guardianDateOfBirthMenu: false,
       guardianGenderOptions: ['Male', 'Female'],

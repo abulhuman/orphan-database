@@ -96,6 +96,14 @@ type Query {
   getPaymentsBySupportPlanId(supportPlanId: ID!): [Payment]!
 
   getVillagesByProjectId(projectId: ID!): [Village!]!
+
+  getProjectActivitiesBySocialWorkerId(socialWorkerId: ID!): [ProjectActivity]
+  getDailyActivitiesByProjectActivityId(
+    projectActivityId: ID!
+    fromDate: DateTime
+    toDate: DateTime
+  ): [DailyActivity]
+  getProjectActivitiesByProjectId(projectId: ID!): [ProjectActivity]
 }
 
 type Mutation {
@@ -123,7 +131,7 @@ type Mutation {
     lastName: String!
     dateOfDeath: DateTime!
     causeOfDeath: String!
-    dateOfBirth: DateTime!
+    dateOfBirth: DateTime
     deathCertificateUrl: String!
     orphans: [ID]
   ): Father!
@@ -151,7 +159,7 @@ type Mutation {
     telephoneNumber: String
     nationality: guardianNationality!
     idCardUrl: String!
-    confirmationLetterUrl: String!
+    confirmationLetterUrl: String
     legalConfirmationLetterUrl: String
     orphans: [ID]
   ): Guardian!
@@ -179,7 +187,7 @@ type Mutation {
     middleName: String!
     lastName: String!
     vitalStatus: motherVitalStatus!
-    dateOfBirth: DateTime!
+    dateOfBirth: DateTime
     dateOfDeath: DateTime
     causeOfDeath: String
     mobileNumber: String!
@@ -252,6 +260,7 @@ type Mutation {
   ): Village!
 
   createOrphan(
+    orphanCode: String
     firstName: String!
     gender: orphanGender!
     placeOfBirth: String!
@@ -285,6 +294,7 @@ type Mutation {
   ): Orphan!
 
   createOrphanWithBaselineData(
+    orphanCode: String
     firstName: String!
     gender: orphanGender!
     placeOfBirth: String!
@@ -310,6 +320,7 @@ type Mutation {
 
   updateOrphan(
     id: ID!
+    orphanCode: String
     firstName: String
     gender: orphanGender
     placeOfBirth: String
@@ -448,6 +459,7 @@ type Mutation {
 
   createHouse_property(
     housingSituation: String!
+    houseType: String
     otherProperty: String
     orphans: [ID]
   ): House_property!
@@ -455,6 +467,7 @@ type Mutation {
   updateHouse_property(
     id: ID!
     housingSituation: String
+    houseType: String
     otherProperty: String
     orphans: [ID]
   ): House_property!
@@ -512,6 +525,12 @@ type Mutation {
     reason: String
     orphanId: ID!
   ): SponsorshipStatus!
+
+  createProjectActivity(input: ProjectActivityCreateInput!): ProjectActivity!
+  updateProjectActivity(input: ProjectActivityUpdateInput!): ProjectActivity!
+
+  createDailyActivity(input: DailyActivityCreateInput!): DailyActivity!
+  updateDailyActivity(input: DailyActivityUpdateInput!): DailyActivity!
 
   createProject(
     number: String!
@@ -782,7 +801,7 @@ type Father {
   lastName: String!
   dateOfDeath: DateTime!
   causeOfDeath: String!
-  dateOfBirth: DateTime!
+  dateOfBirth: DateTime
   deathCertificateUrl: String!
   orphans: [Orphan]
 }
@@ -802,8 +821,8 @@ type Guardian {
   telephoneNumber: String
   nationality: guardianNationality!
   idCardUrl: String!
-  confirmationLetterUrl: String!
-  legalConfirmationLetterUrl: String!
+  confirmationLetterUrl: String
+  legalConfirmationLetterUrl: String
   orphans: [Orphan]
 }
 
@@ -815,7 +834,7 @@ type Mother {
   middleName: String!
   lastName: String!
   vitalStatus: motherVitalStatus!
-  dateOfBirth: DateTime!
+  dateOfBirth: DateTime
   dateOfDeath: DateTime
   causeOfDeath: String
   mobileNumber: String!
@@ -878,6 +897,7 @@ type Orphan {
   id: ID!
   created_at: DateTime
   updated_at: DateTime
+  orphanCode: String
   firstName: String!
   gender: orphanGender!
   placeOfBirth: String!
@@ -928,6 +948,7 @@ type SocialWorker {
   districts: [District]
   villages: [Village]
   orphans: [Orphan]
+  projectActivities: [ProjectActivity]
 }
 
 type FinancialRecord {
@@ -961,6 +982,7 @@ type House_property {
   created_at: DateTime
   updated_at: DateTime
   housingSituation: String!
+  houseType: String
   otherProperty: String
   orphans: [Orphan]
 }
@@ -1002,6 +1024,32 @@ type SponsorshipStatus {
   orphan: Orphan
 }
 
+type ProjectActivity {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  title: String!
+  category: String!
+  unitOfMeasurement: String!
+  planOfAYear: String!
+  planOfSixMonths: String!
+  planOfAQuarter: String!
+  planOfAMonth: String!
+  project: Project!
+  socialWorker: SocialWorker!
+  dailyActivities: [DailyActivity]
+}
+
+type DailyActivity {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  planOfADay: Float!
+  accomplishmentAmount: Float!
+  accomplishmentPercentage: Float!
+  projectActivity: ProjectActivity!
+}
+
 type Project {
   id: ID!
   created_at: DateTime
@@ -1018,6 +1066,7 @@ type Project {
   supportPlans: [SupportPlan]
   coordinators: [Coordinator]
   projectDocuments: [ProjectDocument]
+  projectActivities: [ProjectActivity]
   incomeGeneratingActivities: [IncomeGeneratingActivity]
 }
 
@@ -1471,7 +1520,7 @@ input FatherCreateInput {
   lastName: String!
   dateOfDeath: DateTime!
   causeOfDeath: String!
-  dateOfBirth: DateTime!
+  dateOfBirth: DateTime
   deathCertificateUrl: String!
 }
 
@@ -1480,7 +1529,7 @@ input MotherCreateInput {
   middleName: String!
   lastName: String!
   vitalStatus: motherVitalStatus!
-  dateOfBirth: DateTime!
+  dateOfBirth: DateTime
   dateOfDeath: DateTime
   causeOfDeath: String
   mobileNumber: String
@@ -1500,12 +1549,13 @@ input GuardianCreateInput {
   telephoneNumber: String
   nationality: guardianNationality!
   idCardUrl: String!
-  confirmationLetterUrl: String!
-  legalConfirmationLetterUrl: String!
+  confirmationLetterUrl: String
+  legalConfirmationLetterUrl: String
 }
 
 input House_propertyCreateInput {
   housingSituation: String!
+  houseType: String
   otherProperty: String
 }
 
@@ -1530,4 +1580,41 @@ input EducationalRecordCreateInput {
 
 input IncomeGeneratingActivityPhotoInput {
   photoUrl: String!
+}
+
+input ProjectActivityCreateInput {
+  title: String!
+  category: String!
+  unitOfMeasurement: String!
+  planOfAYear: String!
+  planOfSixMonths: String!
+  planOfAQuarter: String!
+  planOfAMonth: String!
+  projectId: ID!
+  socialWorkerId: ID!
+}
+
+input ProjectActivityUpdateInput {
+  id: ID!
+  title: String
+  category: String
+  unitOfMeasurement: String
+  planOfAYear: String
+  planOfSixMonths: String
+  planOfAQuarter: String
+  planOfAMonth: String
+}
+
+input DailyActivityCreateInput {
+  planOfADay: Float!
+  accomplishmentAmount: Float!
+  accomplishmentPercentage: Float!
+  projectActivityId: ID!
+}
+
+input DailyActivityUpdateInput {
+  id: ID!
+  planOfADay: Float
+  accomplishmentAmount: Float
+  accomplishmentPercentage: Float
 }

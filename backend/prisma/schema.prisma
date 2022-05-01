@@ -56,7 +56,7 @@ model Father {
   lastName            String    @default("")
   dateOfDeath         DateTime  @default("1970-01-01T00:00:00.000Z")
   causeOfDeath        String    @default("")
-  dateOfBirth         DateTime  @default("1970-01-01T00:00:00.000Z")
+  dateOfBirth         DateTime?
   deathCertificateUrl String    @default("")
   orphans             Orphan[]  @relation("fatherToorphan")
 
@@ -78,7 +78,7 @@ model Guardian {
   telephoneNumber            String?
   nationality                String    @default("Ethiopian")
   idCardUrl                  String    @default("")
-  confirmationLetterUrl      String    @default("")
+  confirmationLetterUrl      String?   @default("")
   legalConfirmationLetterUrl String?   @default("")
   orphans                    Orphan[]  @relation("guardianToorphan")
 
@@ -93,7 +93,7 @@ model Mother {
   middleName     String      @default("")
   lastName       String      @default("")
   vitalStatus    String      @default("alive")
-  dateOfBirth    DateTime    @default("1970-01-01T00:00:00.000Z")
+  dateOfBirth    DateTime?
   dateOfDeath    DateTime?
   causeOfDeath   String?
   mobileNumber   String      @default("")
@@ -173,6 +173,7 @@ model Orphan {
   id                     Int                 @id @default(autoincrement())
   created_at             DateTime?           @default(now())
   updated_at             DateTime?
+  orphanCode             String?
   firstName              String              @default("")
   gender                 String              @default("M")
   placeOfBirth           String              @default("")
@@ -243,22 +244,23 @@ model OrphanLetter {
 }
 
 model SocialWorker {
-  id           Int        @id @default(autoincrement())
-  created_at   DateTime?  @default(now())
-  updated_at   DateTime?
-  firstName    String     @default("")
-  middleName   String     @default("")
-  lastName     String     @default("")
-  gender       String?
-  dateOfBirth  DateTime?
-  mobileNumber String     @default("")
-  startDate    DateTime?
-  endDate      DateTime?
-  userId       Int        @unique
-  user         User       @relation(fields: [userId], references: [id])
-  districts    District[] @relation("districtsSocialWorkers")
-  villages     Village[]  @relation("villageTosocialworker")
-  orphans      Orphan[]   @relation("orphanTosocialworker")
+  id                Int               @id @default(autoincrement())
+  created_at        DateTime?         @default(now())
+  updated_at        DateTime?
+  firstName         String            @default("")
+  middleName        String            @default("")
+  lastName          String            @default("")
+  gender            String?
+  dateOfBirth       DateTime?
+  mobileNumber      String            @default("")
+  startDate         DateTime?
+  endDate           DateTime?
+  userId            Int               @unique
+  user              User              @relation(fields: [userId], references: [id])
+  districts         District[]        @relation("districtsSocialWorkers")
+  villages          Village[]         @relation("villageTosocialworker")
+  orphans           Orphan[]          @relation("orphanTosocialworker")
+  projectActivities ProjectActivity[]
 
   @@map("socialworker")
 }
@@ -295,6 +297,7 @@ model House_property {
   created_at       DateTime? @default(now())
   updated_at       DateTime?
   housingSituation String    @default("")
+  houseType        String?
   otherProperty    String?
   orphans          Orphan[]  @relation("house_propertyToorphan")
 
@@ -326,6 +329,39 @@ model SponsorshipStatus {
   @@map("sponsorshipstatus")
 }
 
+model ProjectActivity {
+  id                Int             @id @default(autoincrement())
+  created_at        DateTime?       @default(now())
+  updated_at        DateTime?
+  title             String
+  category          String
+  unitOfMeasurement String
+  planOfAYear       String
+  planOfSixMonths   String
+  planOfAQuarter    String
+  planOfAMonth      String
+  projectId         Int
+  socialWorkerId    Int
+  project           Project?        @relation(fields: [projectId], references: [id])
+  socialWorker      SocialWorker?   @relation(fields: [socialWorkerId], references: [id])
+  dailyActivities   DailyActivity[]
+
+  @@map("projectActivity")
+}
+
+model DailyActivity {
+  id                       Int              @id @default(autoincrement())
+  created_at               DateTime?        @default(now())
+  updated_at               DateTime?
+  planOfADay               Float
+  accomplishmentAmount     Float
+  accomplishmentPercentage Float
+  activityId               Int
+  projectActivity          ProjectActivity? @relation(fields: [activityId], references: [id])
+
+  @@map("dailyAccomplishment")
+}
+
 model Project {
   id                           Int                        @id @default(autoincrement())
   created_at                   DateTime?                  @default(now())
@@ -342,6 +378,7 @@ model Project {
   supportPlans                 SupportPlan[]              @relation("projectTosupportplan")
   coordinators                 Coordinator[]
   projectDocuments             ProjectDocument[]
+  projectActivities            ProjectActivity[]
   incomeGeneratingActivities   IncomeGeneratingActivity[]
 
   @@map("project")

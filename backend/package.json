@@ -9,6 +9,7 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon src/server.js",
+    "serve": "node src/server.js",
     "db:push": "prisma db push"
   },
   "keywords": [],
