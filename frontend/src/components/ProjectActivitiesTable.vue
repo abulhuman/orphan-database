@@ -6,7 +6,7 @@
       <v-btn icon class="mr-3" @click="initialize"
         ><v-icon>mdi-refresh</v-icon></v-btn
       >
-      <v-btn v-if="downloadButton" class="mr-3" small
+      <v-btn v-if="downloadButton" class="mr-3" small :disabled="downloadButton"
         ><v-icon dense class="mr-2">mdi-download</v-icon>Download</v-btn
       >
       <v-dialog
@@ -23,49 +23,114 @@
           <v-card-title primary-title>
             Project Activity Progress Report
           </v-card-title>
+          <v-divider></v-divider>
           <v-card-text>
             <v-form class="mx-3" lazy-validation ref="showReportForm">
+              <v-row v-if="showReport.validDateRangeInfo"
+                ><v-col class="mt-3 ml-6"
+                  ><p color="error" class="mb-n5 error--text">
+                    {{ showReport.validDateRangeInfo }}
+                  </p></v-col
+                ></v-row
+              >
+              <v-row>
+                <v-col>
+                  <v-menu
+                    ref="fromDateMenu"
+                    v-model="fromDateMenu"
+                    :close-on-content-click="false"
+                    :return-value.sync="fromDate"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="fromDate"
+                        label="From Date"
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                        :rules="[rules.required]"
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker
+                      v-model="fromDate"
+                      label="Date"
+                      no-title
+                      scrollable
+                    >
+                      <v-spacer></v-spacer>
+                      <v-btn text color="primary" @click="fromDateMenu = false">
+                        Cancel
+                      </v-btn>
+                      <v-btn
+                        text
+                        color="primary"
+                        @click="$refs.fromDateMenu.save(fromDate)"
+                      >
+                        OK
+                      </v-btn>
+                    </v-date-picker>
+                  </v-menu>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col
+                  ><v-menu
+                    ref="endDateMenu"
+                    v-model="endDateMenu"
+                    :close-on-content-click="false"
+                    :return-value.sync="toDate"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="toDate"
+                        label="To Date"
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                        :rules="[rules.required]"
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker v-model="toDate" no-title scrollable>
+                      <v-spacer></v-spacer>
+                      <v-btn text color="primary" @click="endDateMenu = false">
+                        Cancel
+                      </v-btn>
+                      <v-btn
+                        text
+                        color="primary"
+                        @click="$refs.endDateMenu.save(toDate)"
+                      >
+                        OK
+                      </v-btn>
+                    </v-date-picker>
+                  </v-menu></v-col
+                >
+              </v-row>
               <v-row>
                 <v-col>
                   <v-select
-                    label="Report Duration"
-                    v-model="showReport.reportDuration"
-                    :items="showReport.reportDurationOptions"
-                    :rules="[rules.required]"
-                  />
+                    label="Report Interval"
+                    v-model="showReport.interval"
+                    :items="[
+                      { text: 'Monthly', value: 'm' },
+                      { text: 'Quarterly', value: 'q' },
+                      { text: 'Yearly', value: 'y' }
+                    ]"
+                    :rules="[rules.required, rules.wip]"
+                  ></v-select>
                 </v-col>
               </v-row>
-              <v-row v-if="showReport.reportDuration == 'Yearly'">
-                <v-col>
-                  <v-select
-                    :items="showReport.yearOptions"
-                    v-model="showReport.year"
-                    label="Year"
-                  />
-                </v-col>
-              </v-row>
-              <div v-else-if="showReport.reportDuration == 'Semi-annual'">
-                <v-row>
-                  <v-col>
-                    <v-select
-                      :items="showReport.yearOptions"
-                      v-model="showReport.year"
-                      label="Year"
-                    ></v-select>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col>
-                    <v-select
-                      label="Half"
-                      :items="['First', 'Second']"
-                      v-model="showReport.half"
-                    />
-                  </v-col>
-                </v-row>
-              </div>
             </v-form>
           </v-card-text>
+          <v-divider></v-divider>
           <v-card-actions>
             <v-spacer />
             <v-btn
@@ -87,7 +152,6 @@
       >
     </v-card-title>
     <v-divider></v-divider>
-    <!-- <v-container> -->
     <v-data-table
       :headers="headers"
       :items="activities"
@@ -99,7 +163,6 @@
       group-by="Category"
     >
     </v-data-table>
-    <!-- </v-container> -->
   </v-card>
 </template>
 
@@ -126,29 +189,31 @@ export default {
           text: 'Unit',
           value: 'unitOfMeasurement'
         },
+        // {
+        //   text: 'Annual Plan',
+        //   value: 'planOfAYear'
+        // },
         {
-          text: 'Annual Plan',
-          value: 'planOfAYear'
-        },
-        {
-          text: 'Semi-Annual Plan',
+          text: 'Plan of 6 months',
           value: 'planOfSixMonths'
         },
-        {
-          text: 'Quarterly Plan',
-          value: 'planOfAQuarter'
-        },
+        // {
+        //   text: 'Quarterly Plan',
+        //   value: 'planOfAQuarter'
+        // },
         {
           text: 'Monthly Plan',
           value: 'planOfAMonth'
         }
-        // {
-        //   text: 'Daily Progress',
-        //   value: 'actions'
-        // }
       ],
+      fromDate: '2021-01-01T21:00:00.000Z', //null,
+      fromDateMenu: false,
+      toDate: '2021-01-31T21:00:00.000Z', //null,
+      endDateMenu: false,
       showReport: {
         dialog: false,
+        validDateRangeInfo: null,
+        interval: null,
         reportDuration: null,
         reportDurationOptions: [
           'Total So Far',
@@ -167,35 +232,8 @@ export default {
       },
       rules: {
         required: (v) => !!v || 'Required',
+        wip: (v) => v === 'm' || 'Work In Progress',
         isNumeric: (v) => /[0-9]/.test(v) || 'Must numeric'
-      }
-    }
-  },
-  computed: {
-    // 'showreport.reportDuration': function() {
-    //   return null
-    // }
-  },
-  watch: {
-    'showReport.reportDuration': function() {
-      if (
-        ['Yearly', 'Semi-annual', 'Quarterly', 'Daily'].includes(
-          this.showReport.reportDuration
-        )
-      ) {
-        const projectStartDate = parseInt(
-          moment(this.activities[0].project.startDate).format('YYYY')
-        )
-        const projectEndDate = parseInt(
-          moment(this.activities[0].project.endDate).format('YYYY')
-        )
-        for (
-          let index = projectStartDate;
-          index < projectEndDate + 1;
-          index++
-        ) {
-          this.showReport.yearOptions.push(index)
-        }
       }
     }
   },
@@ -204,7 +242,7 @@ export default {
   },
   methods: {
     async initialize() {
-      const query = `query GPABPI($projectId: ID!) {
+      const query = `query getProjectActivitiesByProjectId($projectId: ID!) {
                         items: getProjectActivitiesByProjectId(projectId: $projectId) {
                             id
                             title
@@ -252,18 +290,18 @@ export default {
           text: 'Unit',
           value: 'unitOfMeasurement'
         },
+        // {
+        //   text: 'Annual Plan',
+        //   value: 'planOfAYear'
+        // },
         {
-          text: 'Annual Plan',
-          value: 'planOfAYear'
-        },
-        {
-          text: 'Semi-Annual Plan',
+          text: 'Plan of 6 months',
           value: 'planOfSixMonths'
         },
-        {
-          text: 'Quarterly Plan',
-          value: 'planOfAQuarter'
-        },
+        // {
+        //   text: 'Quarterly Plan',
+        //   value: 'planOfAQuarter'
+        // },
         {
           text: 'Monthly Plan',
           value: 'planOfAMonth'
@@ -271,42 +309,136 @@ export default {
       ]
     },
     reportParamsNext() {
+      this.headers = [
+        {
+          text: 'S/N',
+          value: 'id'
+        },
+        {
+          text: 'Activity',
+          value: 'title'
+        },
+        {
+          text: 'Unit',
+          value: 'unitOfMeasurement'
+        },
+        {
+          text: 'Plan of 6 months',
+          value: 'planOfSixMonths'
+        },
+        {
+          text: 'Monthly Plan',
+          value: 'planOfAMonth'
+        }
+      ]
+      if (new Date(this.fromDate) >= new Date(this.toDate)) {
+        this.showReport.validDateRangeInfo = `The date range is equal or reversed. Please enter proper dates.`
+        return
+      }
+      this.showReport.validDateRangeInfo = null
       if (this.$refs.showReportForm.validate()) {
-        this.activities.forEach((activity) => {
-          activity['totalPlanned'] = 0
-          activity['totalAccomplishedAmount'] = 0
-          activity.dailyActivities.forEach((progress) => {
-            activity['totalPlanned'] += parseFloat(progress.planOfADay)
-            activity['totalAccomplishedAmount'] += parseFloat(
-              progress.accomplishmentAmount
-            )
-          })
-          const tmp = (
-            (activity['totalAccomplishedAmount'] / activity['totalPlanned']) *
-            100
-          ).toFixed(2)
-          activity['totalAccomplishedPercentage'] = isNaN(tmp) ? 0 : tmp
-        })
+        const variables = {
+          fromDate: this.fromDate,
+          toDate: this.toDate
+        }
+        // this only works for dates that are within a year of eachother
+        // so we can get a monthly report for each month in a single year at once
+        if (this.showReport.interval === 'm') {
+          let dateStart = moment(variables.fromDate)
+          let dateEnd = moment(variables.toDate)
+          let timeValues = []
 
-        this.headers.push({
-          text: 'Total Planned',
-          value: 'totalPlanned'
-        })
-        this.headers.push({
-          text: 'Total Accomplished',
-          value: 'totalAccomplishedAmount'
-        })
-        this.headers.push({
-          text: 'Performance %',
-          value: 'totalAccomplishedPercentage'
-        })
+          while (
+            dateEnd > dateStart ||
+            dateStart.format('M') === dateEnd.format('M')
+          ) {
+            timeValues.push(dateStart.toISOString())
+            dateStart.add(1, 'month')
+          }
+          timeValues = timeValues.map((v) => ({
+            month: moment(v).format('MMMM'),
+            date: v,
+            activities: []
+          }))
+
+          this.activities.forEach(async (activity) => {
+            variables['projectActivityId'] = activity.id
+
+            const query = `query getFilteredDailyActivities(
+                            $projectActivityId: ID!
+                            $fromDate: DateTime
+                            $toDate: DateTime
+                          ) {
+                            items: getDailyActivitiesByProjectActivityId(
+                              projectActivityId: $projectActivityId
+                              fromDate: $fromDate
+                              toDate: $toDate
+                            ) {
+                              id
+                              created_at
+                              planOfADay
+                              accomplishmentAmount
+                              accomplishmentPercentage
+                            }
+                          }`
+
+            const res = await axios.post('/graphql', { query, variables })
+
+            const { items } = res.data.data
+
+            timeValues.forEach((tv) => {
+              items.forEach((item) => {
+                if (moment(item.created_at).isSame(tv.date, 'month')) {
+                  tv.activities.push(item)
+                }
+              })
+            })
+
+            timeValues.forEach((v) => {
+              activity[`${v.month}_planned`] = 0
+              activity[`${v.month}_accomplishment`] = 0
+              activity[`${v.month}_percentage`] = 0
+              v.activities.forEach((item) => {
+                activity[`${v.month}_planned`] += parseFloat(item.planOfADay)
+                activity[`${v.month}_accomplishment`] += parseFloat(
+                  item.accomplishmentAmount
+                )
+              })
+              let tmp =
+                activity[`${v.month}_accomplishment`] /
+                activity[`${v.month}_planned`]
+              tmp *= 100
+              activity[`${v.month}_percentage`] += parseFloat(tmp.toFixed(2))
+            })
+          })
+
+          // timed to 4secs to ensure the operation happens
+          // after the above is done synchronously
+          setTimeout(() => {
+            timeValues.forEach((tv) => {
+              if (tv.activities.length > 0) {
+                this.headers.push({
+                  text: `${tv.month} Planned`,
+                  value: `${tv.month}_planned`
+                })
+                this.headers.push({
+                  text: `${tv.month} Accomplished`,
+                  value: `${tv.month}_accomplishment`
+                })
+                this.headers.push({
+                  text: `Performance %`,
+                  value: `${tv.month}_percentage`
+                })
+              }
+            })
+          }, 4000)
+        }
+
         this.$refs.showReportForm.reset()
         this.showReport.dialog = false
-        this.downloadButton = true
+        // this.downloadButton = true // ! @Eyob Aschenaki todo uncomment this when you're done 
       }
     }
   }
 }
 </script>
-
-<style lang="scss" scoped></style>
