@@ -815,6 +815,9 @@ async function getDailyActivitiesByProjectActivityId(
         activityId: parseInt(projectActivityId)
       }
     })
+    
+    if (!fromDate || !toDate) return dailyActivities
+    
     fromDate = new Date(fromDate)
     toDate = new Date(toDate)
     return dailyActivities.filter(
