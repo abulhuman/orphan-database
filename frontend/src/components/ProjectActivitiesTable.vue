@@ -6,14 +6,14 @@
       <v-btn icon class="mr-3" @click="initialize"
         ><v-icon>mdi-refresh</v-icon></v-btn
       >
-      <!-- <v-btn v-if="downloadButton" class="mr-3" small :disabled="downloadButton"> -->
       <v-btn
-        v-if="downloadButton"
         class="mr-3"
         small
+        :disabled="downloadButtonDisabled"
         @click="downloadActivityReport"
       >
-        <v-icon dense class="mr-2">mdi-download</v-icon>Download</v-btn
+        <v-icon dense class="mr-2" color="primary">mdi-download</v-icon
+        >Download</v-btn
       >
       <v-dialog
         v-model="showReport.dialog"
@@ -173,17 +173,17 @@
 </template>
 
 <script>
-import axios from 'axios';
-import moment from 'moment';
-import XLSX from 'xlsx';
-import XLSXStyle from 'cptable-fixed-xlsx-style';
-import { saveAs } from 'file-saver';
+import axios from 'axios'
+import moment from 'moment'
+import XLSX from 'xlsx'
+import XLSXStyle from 'cptable-fixed-xlsx-style'
+import { saveAs } from 'file-saver'
 export default {
   props: ['projectId'],
   data() {
     return {
       item: null,
-      downloadButton: true,
+      downloadButtonDisabled: true,
       activities: [],
       headers: [
         {
@@ -198,26 +198,18 @@ export default {
           text: 'Unit',
           value: 'unitOfMeasurement'
         },
-        // {
-        //   text: 'Annual Plan',
-        //   value: 'planOfAYear'
-        // },
         {
           text: 'Plan of 6 months',
           value: 'planOfSixMonths'
         },
-        // {
-        //   text: 'Quarterly Plan',
-        //   value: 'planOfAQuarter'
-        // },
         {
           text: 'Monthly Plan',
           value: 'planOfAMonth'
         }
       ],
-      fromDate: '2021-01-01T21:00:00.000Z', //null,
+      fromDate: null,
       fromDateMenu: false,
-      toDate: '2021-01-31T21:00:00.000Z', //null,
+      toDate: null,
       endDateMenu: false,
       showReport: {
         dialog: false,
@@ -234,20 +226,16 @@ export default {
           'Daily',
           'Other'
         ],
-        year: null,
-        yearOptions: [],
-        half: null,
-        halfOptions: []
       },
       rules: {
         required: (v) => !!v || 'Required',
         wip: (v) => v === 'm' || 'Work In Progress',
         isNumeric: (v) => /[0-9]/.test(v) || 'Must numeric'
       }
-    };
+    }
   },
   created() {
-    this.initialize();
+    this.initialize()
   },
   methods: {
     async initialize() {
@@ -288,10 +276,10 @@ export default {
                                 }
                             }
                         }
-                    }`;
-      const variables = { projectId: this.projectId };
-      const res = await axios.post('/graphql', { query, variables });
-      this.activities = res.data.data.items;
+                    }`
+      const variables = { projectId: this.projectId }
+      const res = await axios.post('/graphql', { query, variables })
+      this.activities = res.data.data.items
       this.headers = [
         {
           text: 'S/N',
@@ -305,23 +293,15 @@ export default {
           text: 'Unit',
           value: 'unitOfMeasurement'
         },
-        // {
-        //   text: 'Annual Plan',
-        //   value: 'planOfAYear'
-        // },
         {
           text: 'Plan of 6 months',
           value: 'planOfSixMonths'
         },
-        // {
-        //   text: 'Quarterly Plan',
-        //   value: 'planOfAQuarter'
-        // },
         {
           text: 'Monthly Plan',
           value: 'planOfAMonth'
         }
-      ];
+      ]
     },
     reportParamsNext() {
       this.headers = [
@@ -345,40 +325,40 @@ export default {
           text: 'Monthly Plan',
           value: 'planOfAMonth'
         }
-      ];
+      ]
       if (new Date(this.fromDate) >= new Date(this.toDate)) {
-        this.showReport.validDateRangeInfo = `The date range is equal or reversed. Please enter proper dates.`;
-        return;
+        this.showReport.validDateRangeInfo = `The date range is equal or reversed. Please enter proper dates.`
+        return
       }
-      this.showReport.validDateRangeInfo = null;
+      this.showReport.validDateRangeInfo = null
       if (this.$refs.showReportForm.validate()) {
         const variables = {
           fromDate: this.fromDate,
           toDate: this.toDate
-        };
+        }
         // this only works for dates that are within a year of eachother
         // so we can get a monthly report for each month in a single year at once
         if (this.showReport.interval === 'm') {
-          let dateStart = moment(variables.fromDate);
-          let dateEnd = moment(variables.toDate);
-          let timeValues = [];
+          let fromDate = moment(variables.fromDate)
+          let toDate = moment(variables.toDate)
+          let monthContainers = []
 
           while (
-            dateEnd > dateStart ||
-            dateStart.format('M') === dateEnd.format('M')
+            toDate > fromDate ||
+            fromDate.format('M') === toDate.format('M')
           ) {
-            timeValues.push(dateStart.toISOString());
-            dateStart.add(1, 'month');
+            const currentMonthDate = fromDate.toISOString()
+            const monthContainer = {
+              month: moment(currentMonthDate).format('MMMM'),
+              date: currentMonthDate,
+              activitiesInThisMonth: []
+            }
+            monthContainers.push(monthContainer)
+            fromDate.add(1, 'month')
           }
-          timeValues = timeValues.map((v) => ({
-            month: moment(v).format('MMMM'),
-            date: v,
-            activities: []
-          }));
 
-          this.activities.forEach(async (activity) => {
-            variables['projectActivityId'] = activity.id;
-
+          this.activities.forEach((activity) => {
+            variables['projectActivityId'] = activity.id
             const query = `query getFilteredDailyActivities(
                             $projectActivityId: ID!
                             $fromDate: DateTime
@@ -394,64 +374,83 @@ export default {
                               planOfADay
                               accomplishmentAmount
                               accomplishmentPercentage
+                              projectActivity { id }
                             }
-                          }`;
+                          }`
 
-            const res = await axios.post('/graphql', { query, variables });
+            axios
+              .post('/graphql', { query, variables })
+              .then((res) => {
+                const { items } = res.data.data
+                monthContainers.forEach((container) => {
+                  activity[`${container.month}_activities`] = []
+                  items.forEach((dailyActivity) => {
+                    if (
+                      moment(dailyActivity.created_at).isSame(
+                        container.date,
+                        'month'
+                      ) &&
+                      dailyActivity.projectActivity.id === activity.id
+                    )
+                      activity[`${container.month}_activities`].push(
+                        dailyActivity
+                      )
+                  })
+                })
+              })
+              .then(() => {
+                monthContainers.forEach((container) => {
+                  activity[`${container.month}_planned`] = 0
+                  activity[`${container.month}_accomplishment`] = 0
+                  activity[`${container.month}_percentage`] = 0
 
-            const { items } = res.data.data;
+                  activity[`${container.month}_activities`].forEach(
+                    (filteredDailyActivity) => {
+                      activity[`${container.month}_planned`] += parseFloat(
+                        filteredDailyActivity.planOfADay
+                      )
+                      activity[
+                        `${container.month}_accomplishment`
+                      ] += parseFloat(
+                        filteredDailyActivity.accomplishmentAmount
+                      )
+                      let tmp =
+                        activity[`${container.month}_accomplishment`] /
+                        activity[`${container.month}_planned`]
+                      tmp *= 100
+                      activity[`${container.month}_percentage`] = parseFloat(
+                        tmp.toFixed(2)
+                      )
+                    }
+                  )
+                })
+              })
+              .catch((err) => console.warn(err))
+          })
 
-            timeValues.forEach((tv) => {
-              items.forEach((item) => {
-                if (moment(item.created_at).isSame(tv.date, 'month')) {
-                  tv.activities.push(item);
-                }
-              });
-            });
-
-            timeValues.forEach((v) => {
-              activity[`${v.month}_planned`] = 0;
-              activity[`${v.month}_accomplishment`] = 0;
-              activity[`${v.month}_percentage`] = 0;
-              v.activities.forEach((item) => {
-                activity[`${v.month}_planned`] += parseFloat(item.planOfADay);
-                activity[`${v.month}_accomplishment`] += parseFloat(
-                  item.accomplishmentAmount
-                );
-              });
-              let tmp =
-                activity[`${v.month}_accomplishment`] /
-                activity[`${v.month}_planned`];
-              tmp *= 100;
-              activity[`${v.month}_percentage`] += parseFloat(tmp.toFixed(2));
-            });
-          });
-
-          // timed to 4secs to ensure the operation happens
+          // timed to 5secs to ensure the operation happens
           // after the above is done synchronously
           setTimeout(() => {
-            timeValues.forEach((tv) => {
-              if (tv.activities.length > 0) {
-                this.headers.push({
-                  text: `${tv.month} Planned`,
-                  value: `${tv.month}_planned`
-                });
-                this.headers.push({
-                  text: `${tv.month} Accomplished`,
-                  value: `${tv.month}_accomplishment`
-                });
-                this.headers.push({
-                  text: `Performance %`,
-                  value: `${tv.month}_percentage`
-                });
-              }
-            });
-          }, 4000);
+            monthContainers.forEach((container) => {
+              this.headers.push({
+                text: `${container.month} Planned`,
+                value: `${container.month}_planned`
+              })
+              this.headers.push({
+                text: `${container.month} Accomplished`,
+                value: `${container.month}_accomplishment`
+              })
+              this.headers.push({
+                text: `Performance %`,
+                value: `${container.month}_percentage`
+              })
+            })
+            this.downloadButtonDisabled = false
+          }, 5000)
         }
 
-        this.$refs.showReportForm.reset();
-        this.showReport.dialog = false;
-        this.downloadButton = true;
+        this.$refs.showReportForm.reset()
+        this.showReport.dialog = false
       }
     },
     downloadActivityReport() {
@@ -460,7 +459,7 @@ export default {
       let districtName = this.activities[0].project.location[0].district.name,
         zoneName = this.activities[0].project.location[0].district.zone.name,
         regionName = this.activities[0].project.location[0].district.zone.region
-          .name;
+          .name
 
       let jsonExportData = [
         [
@@ -493,54 +492,54 @@ export default {
           null,
           null
         ]
-      ];
+      ]
 
-      jsonExportData.push(this.headers.map((header) => header.text));
+      jsonExportData.push(this.headers.map((header) => header.text))
 
-      let categories = {};
+      let categories = {}
 
       let exportTableData = this.activities.map((activity, idx) => {
-        let modifiedActivities = [];
+        let modifiedActivities = []
 
-        if (!categories[activity.Category]) categories[activity.Category] = [];
+        if (!categories[activity.Category]) categories[activity.Category] = []
 
-        categories[activity.Category].push(idx);
+        categories[activity.Category].push(idx)
 
         for (const key in this.headers) {
           if (Object.hasOwnProperty.call(activity, this.headers[key].value))
-            modifiedActivities.push(activity[this.headers[key].value]);
+            modifiedActivities.push(activity[this.headers[key].value])
         }
 
-        return modifiedActivities;
-      });
+        return modifiedActivities
+      })
 
       let exportTableDataWithCategory = [],
         categoryCounter = 0,
-        decimalCounter = 0;
+        decimalCounter = 0
 
-      const categoryKeys = Object.keys(categories);
-      let categoryIdxs = [];
+      const categoryKeys = Object.keys(categories)
+      let categoryIdxs = []
 
       categoryKeys.forEach((key) => {
-        categoryCounter++;
-        exportTableDataWithCategory.push([`${categoryCounter}`, key]);
-        categoryIdxs.push(exportTableDataWithCategory.length - 1);
+        categoryCounter++
+        exportTableDataWithCategory.push([`${categoryCounter}`, key])
+        categoryIdxs.push(exportTableDataWithCategory.length - 1)
 
-        decimalCounter = 0;
+        decimalCounter = 0
         categories[key].forEach((rowIdx) => {
-          decimalCounter++;
-          exportTableDataWithCategory.push(exportTableData[rowIdx]);
+          decimalCounter++
+          exportTableDataWithCategory.push(exportTableData[rowIdx])
           exportTableDataWithCategory[
             exportTableDataWithCategory.length - 1
-          ][0] = `${categoryCounter}.${decimalCounter}`;
-        });
-      });
+          ][0] = `${categoryCounter}.${decimalCounter}`
+        })
+      })
 
       // jsonExportData.push(...exportTableData);
-      jsonExportData.push(...exportTableDataWithCategory);
+      jsonExportData.push(...exportTableDataWithCategory)
 
-      const workBook = XLSX.utils.book_new();
-      const workSheet = XLSX.utils.aoa_to_sheet(jsonExportData);
+      const workBook = XLSX.utils.book_new()
+      const workSheet = XLSX.utils.aoa_to_sheet(jsonExportData)
 
       // console.log('workSheet: ', workSheet);
 
@@ -551,7 +550,7 @@ export default {
         { s: { r: 2, c: 0 }, e: { r: 2, c: 1 } },
         { s: { r: 2, c: 2 }, e: { r: 2, c: 3 } },
         { s: { r: 2, c: 4 }, e: { r: 2, c: 5 } }
-      ];
+      ]
 
       // sets the width of colns
       workSheet['!cols'] = [
@@ -564,7 +563,7 @@ export default {
         { wpx: 80 }, // G
         { wpx: 80 }, // H
         { wpx: 80 } // I
-      ];
+      ]
 
       // // sets the height of rows
       // workSheet['!rows'] = [
@@ -585,12 +584,12 @@ export default {
             horizontal: 'center',
             vertical: 'center'
           }
-        };
+        }
       }
 
       // sets the 3th row elments to bold
       for (let i = 0; i <= 4; i += 2) {
-        const char = String.fromCharCode(65 + i);
+        const char = String.fromCharCode(65 + i)
         workSheet[`${char}3`].s = {
           font: {
             bold: true
@@ -598,14 +597,14 @@ export default {
           alignment: {
             horizontal: 'right'
           }
-        };
+        }
       }
 
       // sets border to the table
       for (const key in workSheet) {
-        const flag = key.localeCompare('A4', undefined, { numeric: true });
+        const flag = key.localeCompare('A4', undefined, { numeric: true })
 
-        if (flag < 0 || key === 'C3' || key === 'E3') continue;
+        if (flag < 0 || key === 'C3' || key === 'E3') continue
 
         workSheet[key].s = {
           alignment: {
@@ -630,7 +629,7 @@ export default {
               color: '000000'
             }
           }
-        };
+        }
 
         // for categories
         for (const idx of categoryIdxs) {
@@ -643,14 +642,14 @@ export default {
                 horizontal: 'center',
                 wrapText: false
               }
-            };
+            }
           }
         }
       }
 
       // sets the 4th row to bold and text-wrap
       for (let i = 0; i <= 25; i++) {
-        const char = String.fromCharCode(65 + i);
+        const char = String.fromCharCode(65 + i)
 
         if (workSheet[`${char}4`] !== undefined) {
           workSheet[`${char}4`].s = {
@@ -680,25 +679,25 @@ export default {
                 color: '000000'
               }
             }
-          };
+          }
         }
       }
 
       // creates an output buffer
       function s2ab(s) {
         if (typeof ArrayBuffer !== 'undefined') {
-          const buf = new ArrayBuffer(s.length);
-          const view = new Uint8Array(buf);
+          const buf = new ArrayBuffer(s.length)
+          const view = new Uint8Array(buf)
           for (let i = 0; i !== s.length; ++i) {
-            view[i] = s.charCodeAt(i) & 0xff;
+            view[i] = s.charCodeAt(i) & 0xff
           }
-          return buf;
+          return buf
         } else {
-          const buf = new Array(s.length);
+          const buf = new Array(s.length)
           for (let i = 0; i !== s.length; ++i) {
-            buf[i] = s.charCodeAt(i) & 0xff;
+            buf[i] = s.charCodeAt(i) & 0xff
           }
-          return buf;
+          return buf
         }
       }
 
@@ -706,21 +705,21 @@ export default {
         workBook,
         workSheet,
         'Project Activities Sheet'
-      );
+      )
 
       // XLSX.writeFile(workBook, "orphanTest.xlsx");
       const wbOut = XLSXStyle.write(workBook, {
         bookSST: false,
         type: 'binary'
-      });
+      })
 
       saveAs(
         new Blob([s2ab(wbOut)], { type: '' }),
         'ProjectActivitiesReport.xlsx'
-      );
+      )
 
-      console.log('jsonExportData', jsonExportData);
+      console.log('jsonExportData', jsonExportData)
     }
   }
-};
+}
 </script>
