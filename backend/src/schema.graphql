@@ -110,6 +110,7 @@ type Query {
 
 input FindOrphanFilter {
   status: sponsorshipStatus
+  gender: orphanGender
 }
 
 type Mutation {

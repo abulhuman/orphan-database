@@ -858,13 +858,11 @@ async function getTotalNumberOfOrphans(
 ) {
   AuthGuard(req)
   if (!filter) return await prisma.orphan.count()
-  const statusFilter = null
-  if (filter?.status) {
-    const { status } = filter
-
-    const where = { currentSponsorshipStatus: status }
-    return await prisma.orphan.count({ where })
+  const where = {
+    currentSponsorshipStatus: filter?.status,
+    gender: { equals: filter?.gender }
   }
+  return await prisma.orphan.count({ where })
 }
 
 module.exports = {
