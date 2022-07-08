@@ -1,6 +1,11 @@
 // Todo //! change all references of prisma enums to strings
 const { orphan_gender_enum, sponsorshipstatus_enum } = require('@prisma/client')
-const { getUser, AuthenticationError, AuthorizationError } = require('../utils')
+const {
+  getUser,
+  AuthenticationError,
+  AuthorizationError,
+  AuthGuard
+} = require('../utils')
 
 async function donor(_parent, { id }, { prisma, req }, _info) {
   if (getUser(req).userId) {
@@ -815,9 +820,9 @@ async function getDailyActivitiesByProjectActivityId(
         activityId: parseInt(projectActivityId)
       }
     })
-    
+
     if (!fromDate || !toDate) return dailyActivities
-    
+
     fromDate = new Date(fromDate)
     toDate = new Date(toDate)
     return dailyActivities.filter(
@@ -843,6 +848,11 @@ async function getProjectActivitiesByProjectId(
     })
   }
   throw new AuthenticationError()
+}
+
+async function getTotalNumberOfOrphans(_parent, _args, { prisma, req }, _info) {
+  AuthGuard(req)
+  return await prisma.orphan.count()
 }
 
 module.exports = {
@@ -914,5 +924,6 @@ module.exports = {
 
   getProjectActivitiesBySocialWorkerId,
   getDailyActivitiesByProjectActivityId,
-  getProjectActivitiesByProjectId
+  getProjectActivitiesByProjectId,
+  getTotalNumberOfOrphans
 }

@@ -104,6 +104,8 @@ type Query {
     toDate: DateTime
   ): [DailyActivity]
   getProjectActivitiesByProjectId(projectId: ID!): [ProjectActivity]
+
+  getTotalNumberOfOrphans: Int
 }
 
 type Mutation {
