@@ -170,50 +170,51 @@ model Village {
 }
 
 model Orphan {
-  id                     Int                 @id @default(autoincrement())
-  created_at             DateTime?           @default(now())
-  updated_at             DateTime?
-  orphanCode             String?
-  firstName              String              @default("")
-  gender                 String              @default("M")
-  placeOfBirth           String              @default("")
-  dateOfBirth            DateTime            @default("1970-01-01T00:00:00.000Z")
-  spokenLanguages        String?
-  gradeAgeMismatchReason String?
-  hobbies                String?
-  religion               String?
-  idCardUrl              String?
-  passportUrl            String?
-  birthCertificateUrl    String              @default("")
-  accountNumber          String?
-  currentBalance         Float?
-  motherId               Int?
-  fatherId               Int?
-  guardianId             Int?
-  educationId            Int?
-  villageId              Int?
-  socialWorkerId         Int?
-  coordinatorId          Int?
-  house_propertyId       Int?
-  father                 Father?             @relation("fatherToorphan", fields: [fatherId], references: [id])
-  guardian               Guardian?           @relation("guardianToorphan", fields: [guardianId], references: [id])
-  house_property         House_property?     @relation("house_propertyToorphan", fields: [house_propertyId], references: [id])
-  mother                 Mother?             @relation("motherToorphan", fields: [motherId], references: [id])
-  village                Village?            @relation("orphanTovillage", fields: [villageId], references: [id])
-  socialWorker           SocialWorker?       @relation("orphanTosocialworker", fields: [socialWorkerId], references: [id])
-  coordinator            Coordinator?        @relation("orphanTocoordinator", fields: [coordinatorId], references: [id])
-  supportPlans           SupportPlan[]       @relation("orphanTosupportplan")
-  individualPayments     IndividualPayment[]
-  sponsorshipStatuses    SponsorshipStatus[] @relation("orphanTosponsorshipstatus")
-  financialRecords       FinancialRecord[]   @relation("financialrecordToorphan")
-  educationalRecords     EducationalRecord[] @relation("educationToorphan")
-  documents              OrphanDocument[]    @relation("orphanDocumentToorphan")
-  healthStatuses         HealthStatus[]      @relation("healthstatusToorphan")
-  photos                 OrphanPhoto[]       @relation("orphanToorphanphoto")
-  letters                OrphanLetter[]      @relation("orphanLetterToorphan")
-  donors                 Donor[]             @relation("donorToorphan")
-  siblings               Orphan[]            @relation("orphan_sibling")
-  siblingOf              Orphan[]            @relation("orphan_sibling")
+  id                       Int                 @id @default(autoincrement())
+  created_at               DateTime?           @default(now())
+  updated_at               DateTime?
+  orphanCode               String?
+  firstName                String              @default("")
+  gender                   String              @default("M")
+  placeOfBirth             String              @default("")
+  dateOfBirth              DateTime            @default("1970-01-01T00:00:00.000Z")
+  spokenLanguages          String?
+  gradeAgeMismatchReason   String?
+  hobbies                  String?
+  religion                 String?
+  idCardUrl                String?
+  passportUrl              String?
+  birthCertificateUrl      String              @default("")
+  accountNumber            String?
+  currentBalance           Float?
+  currentSponsorshipStatus String              @default("new")
+  motherId                 Int?
+  fatherId                 Int?
+  guardianId               Int?
+  educationId              Int?
+  villageId                Int?
+  socialWorkerId           Int?
+  coordinatorId            Int?
+  house_propertyId         Int?
+  father                   Father?             @relation("fatherToorphan", fields: [fatherId], references: [id])
+  guardian                 Guardian?           @relation("guardianToorphan", fields: [guardianId], references: [id])
+  house_property           House_property?     @relation("house_propertyToorphan", fields: [house_propertyId], references: [id])
+  mother                   Mother?             @relation("motherToorphan", fields: [motherId], references: [id])
+  village                  Village?            @relation("orphanTovillage", fields: [villageId], references: [id])
+  socialWorker             SocialWorker?       @relation("orphanTosocialworker", fields: [socialWorkerId], references: [id])
+  coordinator              Coordinator?        @relation("orphanTocoordinator", fields: [coordinatorId], references: [id])
+  supportPlans             SupportPlan[]       @relation("orphanTosupportplan")
+  individualPayments       IndividualPayment[]
+  sponsorshipStatuses      SponsorshipStatus[] @relation("orphanTosponsorshipstatus")
+  financialRecords         FinancialRecord[]   @relation("financialrecordToorphan")
+  educationalRecords       EducationalRecord[] @relation("educationToorphan")
+  documents                OrphanDocument[]    @relation("orphanDocumentToorphan")
+  healthStatuses           HealthStatus[]      @relation("healthstatusToorphan")
+  photos                   OrphanPhoto[]       @relation("orphanToorphanphoto")
+  letters                  OrphanLetter[]      @relation("orphanLetterToorphan")
+  donors                   Donor[]             @relation("donorToorphan")
+  siblings                 Orphan[]            @relation("orphan_sibling")
+  siblingOf                Orphan[]            @relation("orphan_sibling")
 
   @@map("orphan")
 }

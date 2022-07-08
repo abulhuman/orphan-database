@@ -105,7 +105,11 @@ type Query {
   ): [DailyActivity]
   getProjectActivitiesByProjectId(projectId: ID!): [ProjectActivity]
 
-  getTotalNumberOfOrphans: Int
+  getTotalNumberOfOrphans(filter: FindOrphanFilter): Int
+}
+
+input FindOrphanFilter {
+  status: sponsorshipStatus
 }
 
 type Mutation {
@@ -913,6 +917,7 @@ type Orphan {
   birthCertificateUrl: String!
   accountNumber: String
   currentBalance: Float
+  currentSponsorshipStatus: String
   father: Father
   guardian: Guardian
   house_property: House_property

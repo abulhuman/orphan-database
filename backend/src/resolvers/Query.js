@@ -850,9 +850,21 @@ async function getProjectActivitiesByProjectId(
   throw new AuthenticationError()
 }
 
-async function getTotalNumberOfOrphans(_parent, _args, { prisma, req }, _info) {
+async function getTotalNumberOfOrphans(
+  _parent,
+  { filter },
+  { prisma, req },
+  _info
+) {
   AuthGuard(req)
-  return await prisma.orphan.count()
+  if (!filter) return await prisma.orphan.count()
+  const statusFilter = null
+  if (filter?.status) {
+    const { status } = filter
+
+    const where = { currentSponsorshipStatus: status }
+    return await prisma.orphan.count({ where })
+  }
 }
 
 module.exports = {

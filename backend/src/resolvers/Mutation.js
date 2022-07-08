@@ -709,10 +709,11 @@ async function createOrphanWithBaselineData(
       sponsorshipStatuses: {
         create: {
           status: 'new',
-          reason: 'new registreation successful',
+          reason: 'new registration successful',
           date: new Date()
         }
       },
+      currentSponsorshipStatus: 'new',
       village: { connect: { id: parseInt(args.villageId) } }
     }
     delete OrphanCreateInput.firstHealthStatus
@@ -1193,14 +1194,21 @@ async function updateOrphanPhoto(_parent, args, { prisma, req }, _info) {
 
 async function createSponsorshipStatus(_parent, args, { prisma, req }, _info) {
   if (getUser(req).userId) {
-    const SponsorshipStatusCreateInput = {
-      ...args,
-      orphan: { connect: { id: parseInt(args.orphanId) } }
-    }
-    delete SponsorshipStatusCreateInput.orphanId
-    return await prisma.sponsorshipStatus.create({
-      data: SponsorshipStatusCreateInput
-    })
+    const [newSponsorshipStatus, ...rest] = await prisma.$transaction([
+      prisma.sponsorshipStatus.create({
+        data: {
+          date: args.date,
+          status: args.status,
+          reason: args.reason,
+          orphan: { connect: { id: parseInt(args.orphanId) } }
+        }
+      }),
+      prisma.orphan.update({
+        where: { id: parseInt(args.orphanId) },
+        data: { currentSponsorshipStatus: args.status }
+      })
+    ])
+    return newSponsorshipStatus
   }
   throw new AuthenticationError()
 }
