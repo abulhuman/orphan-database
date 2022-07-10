@@ -108,9 +108,11 @@ type Query {
   getTotalNumberOfOrphans(filter: FindOrphanFilter): Int
 }
 
+# This works as expected for age >= 1; it will be ineffective for age < 1
 input FindOrphanFilter {
   status: sponsorshipStatus
   gender: orphanGender
+  age: Int
 }
 
 type Mutation {

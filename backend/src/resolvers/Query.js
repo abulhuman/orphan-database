@@ -1,10 +1,10 @@
 // Todo //! change all references of prisma enums to strings
-const { orphan_gender_enum, sponsorshipstatus_enum } = require('@prisma/client')
 const {
   getUser,
   AuthenticationError,
   AuthorizationError,
-  AuthGuard
+  AuthGuard,
+  ageFilterWhere
 } = require('../utils')
 
 async function donor(_parent, { id }, { prisma, req }, _info) {
@@ -860,7 +860,8 @@ async function getTotalNumberOfOrphans(
   if (!filter) return await prisma.orphan.count()
   const where = {
     currentSponsorshipStatus: filter?.status,
-    gender: { equals: filter?.gender }
+    gender: { equals: filter?.gender },
+    dateOfBirth: filter?.age ? ageFilterWhere(filter.age) : {}
   }
   return await prisma.orphan.count({ where })
 }

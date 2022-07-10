@@ -1,5 +1,6 @@
 const { ApolloError } = require('apollo-server-express')
 const fs = require('fs')
+const moment = require('moment')
 const path = require('path')
 // const pdf = require('pdf-poppler');
 // ! // TODO implement pdf conversion on a linux supported pdf-library
@@ -163,11 +164,26 @@ class AuthorizationError extends ApolloError {
   }
 }
 
+function calculateAge(dateOfBirth) {
+  return moment().diff(dateOfBirth, `years`)
+}
+
+function ageFilterWhere(age) {
+  const ageDateLowerLimit = moment().subtract(age, 'years')
+  const ageDateUpperLimit = moment(ageDateLowerLimit).subtract(1, 'years')
+  return {
+    gt: new Date(ageDateUpperLimit),
+    lt: new Date(ageDateLowerLimit)
+  }
+}
+
 module.exports = {
   getUser,
   updateImage,
   convertImage,
   AuthenticationError,
   AuthorizationError,
-  AuthGuard
+  AuthGuard,
+  calculateAge,
+  ageFilterWhere
 }
