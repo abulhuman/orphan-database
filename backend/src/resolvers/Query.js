@@ -4,7 +4,8 @@ const {
   AuthenticationError,
   AuthorizationError,
   AuthGuard,
-  ageFilterWhere
+  ageFilterWhere,
+  locationFilterWhere
 } = require('../utils')
 
 async function donor(_parent, { id }, { prisma, req }, _info) {
@@ -857,13 +858,27 @@ async function getTotalNumberOfOrphans(
   _info
 ) {
   AuthGuard(req)
-  if (!filter) return await prisma.orphan.count()
   const where = {
     currentSponsorshipStatus: filter?.status,
     gender: { equals: filter?.gender },
-    dateOfBirth: filter?.age ? ageFilterWhere(filter.age) : {}
+    dateOfBirth: filter?.age ? ageFilterWhere(filter.age) : {},
+    village: filter?.village
+      ? locationFilterWhere(filter.village)
+      : {
+          district: filter?.district
+            ? locationFilterWhere(filter.district)
+            : {
+                zone: filter?.zone
+                  ? locationFilterWhere(filter.zone)
+                  : {
+                      region: filter?.region
+                        ? locationFilterWhere(filter.region)
+                        : {}
+                    }
+              }
+        }
   }
-  return await prisma.orphan.count({ where })
+  return await prisma.orphan.count({ where: filter ? where : {} })
 }
 
 module.exports = {

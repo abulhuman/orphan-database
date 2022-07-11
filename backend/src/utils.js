@@ -177,6 +177,10 @@ function ageFilterWhere(age) {
   }
 }
 
+const locationFilterWhere = function (searchText) {
+  return { name: { contains: searchText, mode: 'insensitive' } }
+}
+
 module.exports = {
   getUser,
   updateImage,
@@ -185,5 +189,6 @@ module.exports = {
   AuthorizationError,
   AuthGuard,
   calculateAge,
-  ageFilterWhere
+  ageFilterWhere,
+  locationFilterWhere
 }

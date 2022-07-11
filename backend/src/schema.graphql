@@ -113,6 +113,14 @@ input FindOrphanFilter {
   status: sponsorshipStatus
   gender: orphanGender
   age: Int
+  location: LocationFilter
+}
+
+input LocationFilter {
+  region: String
+  zone: String
+  district: String
+  village: String
 }
 
 type Mutation {
