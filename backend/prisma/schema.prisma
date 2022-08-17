@@ -54,7 +54,7 @@ model Father {
   updated_at          DateTime?
   firstName           String    @default("")
   lastName            String    @default("")
-  dateOfDeath         DateTime  @default("1970-01-01T00:00:00.000Z")
+  dateOfDeath         DateTime  @default(dbgenerated("'1970-01-01 00:00:00'::timestamp without time zone"))
   causeOfDeath        String    @default("")
   dateOfBirth         DateTime?
   deathCertificateUrl String    @default("")
@@ -71,7 +71,7 @@ model Guardian {
   middleName                 String    @default("")
   lastName                   String    @default("")
   gender                     String    @default("M")
-  dateOfBirth                DateTime  @default("1970-01-01T00:00:00.000Z")
+  dateOfBirth                DateTime  @default(dbgenerated("'1970-01-01 00:00:00'::timestamp without time zone"))
   relationToOrphan           String    @default("mother")
   email                      String    @default("")
   mobileNumber               String    @default("")
@@ -161,10 +161,10 @@ model Village {
   name           String?
   districtId     Int?
   socialWorkerId Int?
-  socialWorker   SocialWorker? @relation("villageTosocialworker", fields: [socialWorkerId], references: [id])
   district       District?     @relation(fields: [districtId], references: [id])
-  projects       Project[]     @relation("projectTovillage")
+  socialWorker   SocialWorker? @relation("villageTosocialworker", fields: [socialWorkerId], references: [id])
   orphans        Orphan[]      @relation("orphanTovillage")
+  projects       Project[]     @relation("projectTovillage")
 
   @@map("village")
 }
@@ -173,11 +173,10 @@ model Orphan {
   id                       Int                 @id @default(autoincrement())
   created_at               DateTime?           @default(now())
   updated_at               DateTime?
-  orphanCode               String?
   firstName                String              @default("")
   gender                   String              @default("M")
   placeOfBirth             String              @default("")
-  dateOfBirth              DateTime            @default("1970-01-01T00:00:00.000Z")
+  dateOfBirth              DateTime            @default(dbgenerated("'1970-01-01 00:00:00'::timestamp without time zone"))
   spokenLanguages          String?
   gradeAgeMismatchReason   String?
   hobbies                  String?
@@ -187,7 +186,6 @@ model Orphan {
   birthCertificateUrl      String              @default("")
   accountNumber            String?
   currentBalance           Float?
-  currentSponsorshipStatus String              @default("new")
   motherId                 Int?
   fatherId                 Int?
   guardianId               Int?
@@ -196,23 +194,25 @@ model Orphan {
   socialWorkerId           Int?
   coordinatorId            Int?
   house_propertyId         Int?
+  orphanCode               String?
+  currentSponsorshipStatus String              @default("new")
+  coordinator              Coordinator?        @relation("orphanTocoordinator", fields: [coordinatorId], references: [id])
   father                   Father?             @relation("fatherToorphan", fields: [fatherId], references: [id])
   guardian                 Guardian?           @relation("guardianToorphan", fields: [guardianId], references: [id])
   house_property           House_property?     @relation("house_propertyToorphan", fields: [house_propertyId], references: [id])
   mother                   Mother?             @relation("motherToorphan", fields: [motherId], references: [id])
-  village                  Village?            @relation("orphanTovillage", fields: [villageId], references: [id])
   socialWorker             SocialWorker?       @relation("orphanTosocialworker", fields: [socialWorkerId], references: [id])
-  coordinator              Coordinator?        @relation("orphanTocoordinator", fields: [coordinatorId], references: [id])
-  supportPlans             SupportPlan[]       @relation("orphanTosupportplan")
-  individualPayments       IndividualPayment[]
-  sponsorshipStatuses      SponsorshipStatus[] @relation("orphanTosponsorshipstatus")
-  financialRecords         FinancialRecord[]   @relation("financialrecordToorphan")
+  village                  Village?            @relation("orphanTovillage", fields: [villageId], references: [id])
   educationalRecords       EducationalRecord[] @relation("educationToorphan")
-  documents                OrphanDocument[]    @relation("orphanDocumentToorphan")
+  financialRecords         FinancialRecord[]   @relation("financialrecordToorphan")
   healthStatuses           HealthStatus[]      @relation("healthstatusToorphan")
-  photos                   OrphanPhoto[]       @relation("orphanToorphanphoto")
+  individualPayments       IndividualPayment[]
   letters                  OrphanLetter[]      @relation("orphanLetterToorphan")
+  documents                OrphanDocument[]    @relation("orphanDocumentToorphan")
+  photos                   OrphanPhoto[]       @relation("orphanToorphanphoto")
+  sponsorshipStatuses      SponsorshipStatus[] @relation("orphanTosponsorshipstatus")
   donors                   Donor[]             @relation("donorToorphan")
+  supportPlans             SupportPlan[]       @relation("orphanTosupportplan")
   siblings                 Orphan[]            @relation("orphan_sibling")
   siblingOf                Orphan[]            @relation("orphan_sibling")
 
@@ -240,7 +240,6 @@ model OrphanLetter {
   orphanId                    Int?
   orphan                      Orphan?   @relation("orphanLetterToorphan", fields: [orphanId], references: [id])
 
-
   @@map("orphanLetter")
 }
 
@@ -258,10 +257,10 @@ model SocialWorker {
   endDate           DateTime?
   userId            Int               @unique
   user              User              @relation(fields: [userId], references: [id])
-  districts         District[]        @relation("districtsSocialWorkers")
-  villages          Village[]         @relation("villageTosocialworker")
   orphans           Orphan[]          @relation("orphanTosocialworker")
   projectActivities ProjectActivity[]
+  villages          Village[]         @relation("villageTosocialworker")
+  districts         District[]        @relation("districtsSocialWorkers")
 
   @@map("socialworker")
 }
@@ -298,8 +297,8 @@ model House_property {
   created_at       DateTime? @default(now())
   updated_at       DateTime?
   housingSituation String    @default("")
-  houseType        String?
   otherProperty    String?
+  houseType        String?
   orphans          Orphan[]  @relation("house_propertyToorphan")
 
   @@map("house_property")
@@ -322,7 +321,7 @@ model SponsorshipStatus {
   created_at DateTime? @default(now())
   updated_at DateTime?
   status     String?
-  date       DateTime  @default("1970-01-01T00:00:00.000Z")
+  date       DateTime  @default(dbgenerated("'1970-01-01 00:00:00'::timestamp without time zone"))
   reason     String?
   orphanId   Int?
   orphan     Orphan?   @relation("orphanTosponsorshipstatus", fields: [orphanId], references: [id])
@@ -343,22 +342,22 @@ model ProjectActivity {
   planOfAMonth      String
   projectId         Int
   socialWorkerId    Int
-  project           Project?        @relation(fields: [projectId], references: [id])
-  socialWorker      SocialWorker?   @relation(fields: [socialWorkerId], references: [id])
+  project           Project         @relation(fields: [projectId], references: [id])
+  socialWorker      SocialWorker    @relation(fields: [socialWorkerId], references: [id])
   dailyActivities   DailyActivity[]
 
   @@map("projectActivity")
 }
 
 model DailyActivity {
-  id                       Int              @id @default(autoincrement())
-  created_at               DateTime?        @default(now())
+  id                       Int             @id @default(autoincrement())
+  created_at               DateTime?       @default(now())
   updated_at               DateTime?
   planOfADay               Float
   accomplishmentAmount     Float
   accomplishmentPercentage Float
   activityId               Int
-  projectActivity          ProjectActivity? @relation(fields: [activityId], references: [id])
+  projectActivity          ProjectActivity @relation(fields: [activityId], references: [id])
 
   @@map("dailyAccomplishment")
 }
@@ -372,15 +371,15 @@ model Project {
   endDate                      DateTime?
   maximumNumberOfBeneficiaries Int
   durationInYears              Int
-  location                     Village[]                  @relation("projectTovillage")
   grandTotalBudget             Float                      @default(0)
   administrativeCost           Float
   status                       String                     @default("new")
+  incomeGeneratingActivities   IncomeGeneratingActivity[]
+  projectActivities            ProjectActivity[]
+  projectDocuments             ProjectDocument[]
   supportPlans                 SupportPlan[]              @relation("projectTosupportplan")
   coordinators                 Coordinator[]
-  projectDocuments             ProjectDocument[]
-  projectActivities            ProjectActivity[]
-  incomeGeneratingActivities   IncomeGeneratingActivity[]
+  location                     Village[]                  @relation("projectTovillage")
 
   @@map("project")
 }
@@ -426,7 +425,6 @@ model IncomeGeneratingActivityPhoto {
   photoUrl                   String
   incomeGeneratingActivityId Int?
   incomeGeneratingActivity   IncomeGeneratingActivity? @relation(fields: [incomeGeneratingActivityId], references: [id])
-
 
   @@map("incomeGeneratingActivityPhoto")
 }
@@ -488,7 +486,6 @@ model IndividualPayment {
   orphan                            Orphan?   @relation(fields: [orphanId], references: [id])
   payment                           Payment?  @relation(fields: [paymentId], references: [id])
 
-
   @@map("individualPayment")
 }
 
@@ -514,9 +511,9 @@ model Coordinator {
   lastName   String    @default("")
   userId     Int       @unique
   user       User      @relation(fields: [userId], references: [id])
-  donors     Donor[]   @relation("donorTocoordinator")
-  projects   Project[]
   orphans    Orphan[]  @relation("orphanTocoordinator")
+  projects   Project[]
+  donors     Donor[]   @relation("donorTocoordinator")
 
   @@map("coordinator")
 }
@@ -529,9 +526,9 @@ model User {
   email        String        @unique @default("")
   password     String?
   coordinator  Coordinator?
+  donor        Donor?
   head         Head?
   socialWorker SocialWorker?
-  donor        Donor?
 
   @@map("user")
 }
