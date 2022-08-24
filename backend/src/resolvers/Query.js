@@ -815,9 +815,9 @@ async function getDailyActivitiesByProjectActivityId(
         activityId: parseInt(projectActivityId)
       }
     })
-    
+
     if (!fromDate || !toDate) return dailyActivities
-    
+
     fromDate = new Date(fromDate)
     toDate = new Date(toDate)
     return dailyActivities.filter(
@@ -841,6 +841,50 @@ async function getProjectActivitiesByProjectId(
         projectId: parseInt(projectId)
       }
     })
+  }
+  throw new AuthenticationError()
+}
+
+async function generateOrphanPaymentHistoryReport(
+  _parent,
+  { input },
+  { prisma, req },
+  _info
+) {
+  if (getUser(req).userId) {
+    const { orphanId } = input
+    const orphan = prisma.orphan.findUniqueOrThrow({
+      where: {
+        id: parseInt(orphanId)
+      }
+    })
+    const financialRecords = prisma.financialRecord.findMany({
+      where: {
+        orphanId: parseInt(orphanId),
+        transactionType: {
+          equals: 'deposit'
+        }
+      }
+    })
+    const promiseAll = await Promise.all([orphan, financialRecords])
+    const data = { orphan: promiseAll[0], financialRecords: promiseAll[1] }
+
+    if (input.startDate && !input.endDate) {
+      input.endDate = new Date()
+    } else if (!input.startDate && input.endDate) {
+      input.startDate = data.orphan.created_at
+    } else if (!input.startDate && !input.endDate) {
+      input.endDate = new Date()
+      input.startDate = data.orphan.created_at
+    }
+
+    data.financialRecords = data.financialRecords.filter(
+      (record) =>
+        new Date(record.transactionDate) <= new Date(input.endDate) &&
+        new Date(record.transactionDate) > new Date(input.startDate)
+    )
+
+    return data
   }
   throw new AuthenticationError()
 }
@@ -914,5 +958,6 @@ module.exports = {
 
   getProjectActivitiesBySocialWorkerId,
   getDailyActivitiesByProjectActivityId,
-  getProjectActivitiesByProjectId
+  getProjectActivitiesByProjectId,
+  generateOrphanPaymentHistoryReport
 }
