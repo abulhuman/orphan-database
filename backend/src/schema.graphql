@@ -104,6 +104,10 @@ type Query {
     toDate: DateTime
   ): [DailyActivity]
   getProjectActivitiesByProjectId(projectId: ID!): [ProjectActivity]
+
+  generateOrphanPaymentHistoryReport(
+    input: OrphanPaymentHistoryReportInput!
+  ): OrphanPaymentHistoryReport
 }
 
 type Mutation {
@@ -1204,6 +1208,11 @@ type AccountMaintainence {
   mobileNumber: String!
 }
 
+type OrphanPaymentHistoryReport {
+  orphan: Orphan!
+  financialRecords: [FinancialRecord]!
+}
+
 enum accountMaintainenceStatus {
   pending
   approved
@@ -1617,4 +1626,10 @@ input DailyActivityUpdateInput {
   planOfADay: Float
   accomplishmentAmount: Float
   accomplishmentPercentage: Float
+}
+
+input OrphanPaymentHistoryReportInput {
+  orphanId: ID!
+  startDate: DateTime
+  endDate: DateTime
 }
