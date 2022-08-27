@@ -49,8 +49,7 @@ build/Release
 
 # Dependency directories
 
-backend/node_modules
-frontend/node_modules
+node_modules
 jspm_packages/
 
 # Public build directory
@@ -142,3 +141,4 @@ dist
 .tern-port
 
 backend/public
+node_modules

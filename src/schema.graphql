@@ -1,0 +1,1635 @@
+scalar DateTime
+
+type Query {
+  donor(id: ID!): Donor!
+  father(id: ID!): Father!
+  guardian(id: ID!): Guardian!
+  mother(id: ID!): Mother!
+  motherJob(id: ID!): MotherJob!
+  orphan(id: ID!): Orphan!
+  socialWorker(id: ID!): SocialWorker!
+  region(id: ID!): Region!
+  zone(id: ID!): Zone!
+  district(id: ID!): District!
+  village(id: ID!): Village!
+  educationalRecord(id: ID!): EducationalRecord!
+  financialRecord(id: ID!): FinancialRecord!
+  orphanDocument(id: ID!): OrphanDocument!
+  house_property(id: ID!): House_property!
+  orphanPhoto(id: ID!): OrphanPhoto!
+  sponsorshipStatus(id: ID!): SponsorshipStatus!
+  supportPlan(id: ID!): SupportPlan!
+  head(id: ID!): Head!
+  coordinator(id: ID!): Coordinator!
+  user(id: ID!): User!
+
+  getAllDonors(take: Int, filter: String, orderBy: DonorOrderByInput): [Donor]!
+  allGuardians(
+    take: Int
+    filter: String
+    orderBy: GuardianOrderByInput
+  ): [Guardian]!
+  allMothers(take: Int, filter: String, orderBy: MotherOrderByInput): [Mother]!
+  allOrphans: [Orphan]!
+  #  take: Int, filter: String, orderBy: OrphanOrderByInput
+  someOrphansByIds(orphansIds: [ID]!): [Orphan]!
+  someOrphansByDonorId(
+    take: Int
+    donorId: ID!
+    orderBy: OrphanOrderByInput
+  ): [Orphan]!
+  allSocialWorkers(
+    take: Int
+    filter: String
+    orderBy: SocialWorkerOrderByInput
+  ): [SocialWorker]!
+  allRegions(take: Int, filter: String, orderBy: RegionOrderByInput): [Region]!
+  allZones(take: Int, filter: String, orderBy: ZoneOrderByInput): [Zone]!
+  allDistricts(
+    take: Int
+    filter: String
+    orderBy: DistrictOrderByInput
+  ): [District]!
+  allVillages(
+    take: Int
+    filter: String
+    orderBy: VillageOrderByInput
+  ): [Village]!
+  allSupportPlans(
+    take: Int
+    filter: String
+    orderBy: SupportPlanOrderByInput
+  ): [SupportPlan]!
+  allHeads(take: Int, filter: String, orderBy: HeadOrderByInput): [Head]!
+  allCoordinators(
+    take: Int
+    filter: String
+    orderBy: CoordinatorOrderByInput
+  ): [Coordinator]!
+  allUsers(take: Int, filter: String, orderBy: UserOrderByInput): [User]!
+  allAccountMaintainences: [AccountMaintainence]!
+
+  getDonorsByCoordinatorId(coordinatorId: ID!): [Donor]!
+  getOrphansByDonorId(donorId: ID!): [Orphan]!
+
+  getActiveProjects: [Project]!
+
+  getProjectDocumentsByProjectId(projectId: ID!): [ProjectDocument]!
+
+  getSupportPlansByProjectId(projectId: ID!): [SupportPlan]!
+
+  getOrphansByProjectId(projectId: ID!): [Orphan]!
+
+  getSupportPlansByCoordinatorId(coordinatorId: ID!): [SupportPlan]!
+  getVillagesByCoordinatorId(coordinatorId: ID!): [Village]!
+
+  getAllGuardiansByProjectId(projectId: ID!): [Guardian]!
+  getAllOrphansByProjectId(projectId: ID!): [Orphan]!
+
+  getProjectsByCoordinatorId(coordinatorId: ID!): [Project]!
+
+  getFinancialRecordsByOrphanId(orphanId: ID!): [FinancialRecord]!
+
+  getAllProjects: [Project]!
+
+  getIndividualPaymentsByPaymentId(paymentId: ID!): [IndividualPayment]!
+  getPaymentsBySupportPlanId(supportPlanId: ID!): [Payment]!
+
+  getVillagesByProjectId(projectId: ID!): [Village!]!
+
+  getProjectActivitiesBySocialWorkerId(socialWorkerId: ID!): [ProjectActivity]
+  getDailyActivitiesByProjectActivityId(
+    projectActivityId: ID!
+    fromDate: DateTime
+    toDate: DateTime
+  ): [DailyActivity]
+  getProjectActivitiesByProjectId(projectId: ID!): [ProjectActivity]
+
+  generateOrphanPaymentHistoryReport(
+    input: OrphanPaymentHistoryReportInput!
+  ): OrphanPaymentHistoryReport
+}
+
+type Mutation {
+  createDonor(
+    companyName: String!
+    nameInitials: String!
+    userId: ID!
+    coordinators: [ID]
+    orphans: [ID]
+    supportPlans: [ID]
+  ): Donor!
+
+  updateDonor(
+    id: ID!
+    companyName: String
+    nameInitials: String
+    userId: ID
+    coordinators: [ID]
+    orphans: [ID]
+    supportPlans: [ID]
+  ): Donor!
+
+  createFather(
+    firstName: String!
+    lastName: String!
+    dateOfDeath: DateTime!
+    causeOfDeath: String!
+    dateOfBirth: DateTime
+    deathCertificateUrl: String!
+    orphans: [ID]
+  ): Father!
+
+  updateFather(
+    id: ID!
+    firstName: String
+    lastName: String
+    dateOfDeath: DateTime
+    causeOfDeath: String
+    dateOfBirth: DateTime
+    deathCertificateUrl: String
+    orphans: [ID]
+  ): Father!
+
+  createGuardian(
+    firstName: String!
+    middleName: String!
+    lastName: String!
+    gender: guardianGender!
+    dateOfBirth: DateTime!
+    relationToOrphan: guardianRelationToOrphan!
+    email: String!
+    mobileNumber: String!
+    telephoneNumber: String
+    nationality: guardianNationality!
+    idCardUrl: String!
+    confirmationLetterUrl: String
+    legalConfirmationLetterUrl: String
+    orphans: [ID]
+  ): Guardian!
+
+  updateGuardian(
+    id: ID!
+    firstName: String
+    middleName: String
+    lastName: String
+    gender: guardianGender
+    dateOfBirth: DateTime
+    relationToOrphan: guardianRelationToOrphan
+    email: String
+    mobileNumber: String
+    telephoneNumber: String
+    nationality: guardianNationality
+    idCardUrl: String
+    confirmationLetterUrl: String
+    legalConfirmationLetterUrl: String
+    orphans: [ID]
+  ): Guardian!
+
+  createMother(
+    firstName: String!
+    middleName: String!
+    lastName: String!
+    vitalStatus: motherVitalStatus!
+    dateOfBirth: DateTime
+    dateOfDeath: DateTime
+    causeOfDeath: String
+    mobileNumber: String!
+    maritalStatus: motherMaritalStatus
+    monthlyExpense: Float!
+    jobs: [ID]
+    orphans: [ID]
+  ): Mother!
+
+  updateMother(
+    id: ID!
+    firstName: String
+    middleName: String
+    lastName: String
+    vitalStatus: motherVitalStatus
+    dateOfBirth: DateTime
+    dateOfDeath: DateTime
+    causeOfDeath: String
+    mobileNumber: String
+    maritalStatus: motherMaritalStatus
+    monthlyExpense: Float
+    jobs: [ID]
+    orphans: [ID]
+  ): Mother!
+
+  createMotherJob(
+    jobTitle: String
+    monthlyIncome: Float
+    initDate: DateTime
+    termDate: DateTime
+    motherId: ID
+  ): MotherJob!
+
+  updateMotherJob(
+    id: ID!
+    jobTitle: String
+    monthlyIncome: Float
+    initDate: DateTime
+    termDate: DateTime
+    motherId: ID
+  ): MotherJob!
+
+  createRegion(name: String!): Region!
+
+  updateRegion(id: ID!, name: String, zones: [ID]): Region!
+
+  createZone(name: String!, regionId: ID!): Zone!
+
+  updateZone(id: ID!, name: String, regionId: ID, districts: [ID]): Zone!
+
+  createDistrict(name: String!, zoneId: ID!): District!
+
+  updateDistrict(
+    id: ID!
+    name: String
+    zoneId: ID
+    villages: [ID]
+    socialWorkers: [ID]
+  ): District!
+
+  createVillage(name: String, districtId: ID, projects: [ID]): Village!
+
+  updateVillage(
+    id: ID!
+    name: String
+    socialWorkerId: ID
+    districtId: ID
+    projects: [ID]
+    orphans: [ID]
+  ): Village!
+
+  createOrphan(
+    orphanCode: String
+    firstName: String!
+    gender: orphanGender!
+    placeOfBirth: String!
+    dateOfBirth: DateTime!
+    spokenLanguages: String
+    gradeAgeMismatchReason: String
+    hobbies: String
+    religion: orphanReligion
+    idCardUrl: String
+    passportUrl: String
+    birthCertificateUrl: String!
+    accountNumber: String
+    currentBalance: Float
+    fatherId: ID
+    guardianId: ID
+    house_propertyId: ID
+    motherId: ID
+    villageId: ID
+    socialWorkerId: ID
+    supportPlans: [ID]
+    sponsorshipStatuses: [ID]
+    financialRecords: [ID]
+    educationalRecords: [ID]
+    documents: [ID]
+    healthStatuses: [ID]
+    photos: [ID]
+    letters: [ID]
+    donors: [ID]
+    siblings: [ID]
+    siblingOf: [ID]
+  ): Orphan!
+
+  createOrphanWithBaselineData(
+    orphanCode: String
+    firstName: String!
+    gender: orphanGender!
+    placeOfBirth: String!
+    dateOfBirth: DateTime!
+    spokenLanguages: String
+    gradeAgeMismatchReason: String
+    hobbies: String
+    religion: orphanReligion
+    idCardUrl: String
+    passportUrl: String
+    birthCertificateUrl: String!
+    accountNumber: String
+    currentBalance: Float
+    father: FatherCreateInput!
+    mother: MotherCreateInput!
+    guardian: GuardianCreateInput!
+    house_property: House_propertyCreateInput!
+    firstHealthStatus: HealthStatusCreateInput!
+    firstPhotos: OrphanPhotoCreateInput!
+    firstEducationalRecord: EducationalRecordCreateInput!
+    villageId: ID!
+  ): Orphan!
+
+  updateOrphan(
+    id: ID!
+    orphanCode: String
+    firstName: String
+    gender: orphanGender
+    placeOfBirth: String
+    dateOfBirth: DateTime
+    spokenLanguages: String
+    gradeAgeMismatchReason: String
+    hobbies: String
+    religion: orphanReligion
+    idCardUrl: String
+    passportUrl: String
+    birthCertificateUrl: String
+    accountNumber: String
+    currentBalance: Float
+    fatherId: ID
+    guardianId: ID
+    house_propertyId: ID
+    motherId: ID
+    villageId: ID
+    socialWorkerId: ID
+    supportPlans: [ID]
+    sponsorshipStatuses: [ID]
+    financialRecords: [ID]
+    educationalRecords: [ID]
+    documents: [ID]
+    healthStatuses: [ID]
+    photos: [ID]
+    letters: [ID]
+    donors: [ID]
+    siblings: [ID]
+    siblingOf: [ID]
+  ): Orphan!
+
+  createSocialWorker(
+    firstName: String!
+    middleName: String!
+    lastName: String!
+    gender: socialWorkerGender
+    dateOfBirth: DateTime
+    mobileNumber: String!
+    startDate: DateTime
+    endDate: DateTime
+    userId: ID!
+    districts: [ID]
+    villages: [ID]
+    orphans: [ID]
+  ): SocialWorker!
+
+  updateSocialWorker(
+    id: ID!
+    firstName: String
+    middleName: String
+    lastName: String
+    gender: socialWorkerGender
+    dateOfBirth: DateTime
+    mobileNumber: String
+    startDate: DateTime
+    endDate: DateTime
+    userId: ID
+    districts: [ID]
+    villages: [ID]
+    orphans: [ID]
+  ): SocialWorker!
+
+  createEducationalRecord(
+    enrollmentStatus: educationEnrollmentStatus!
+    schoolName: String
+    typeOfSchool: educationTypeOfSchool
+    year: String
+    level: educationLevel
+    reason: String
+    yearDivision: ERYearDivision
+    quarter: ERQuarter
+    semester: ERSemester
+    totalMark: Float
+    numberOfSubjects: Int
+    average: Float
+    rank: Int
+    reportCardUrl: String
+    semesterGPA: Float
+    cumulativeGPA: Float
+    orphanId: ID!
+  ): EducationalRecord!
+
+  updateEducationalRecord(
+    id: ID!
+    enrollmentStatus: educationEnrollmentStatus
+    schoolName: String
+    typeOfSchool: educationTypeOfSchool
+    year: String
+    level: educationLevel
+    reason: String
+    yearDivision: ERYearDivision
+    quarter: ERQuarter
+    semester: ERSemester
+    totalMark: Float
+    numberOfSubjects: Int
+    average: Float
+    rank: Int
+    reportCardUrl: String
+    semesterGPA: Float
+    cumulativeGPA: Float
+    orphanId: ID
+  ): EducationalRecord!
+
+  createFinancialRecord(
+    transactionDate: DateTime
+    transactionType: FRTransactionType
+    amount: Float
+    reason: FRReason
+    specialCaseReason: String
+    orphanId: ID!
+  ): FinancialRecord!
+
+  updateFinancialRecord(
+    id: ID!
+    transactionDate: DateTime
+    transactionType: FRTransactionType
+    amount: Float
+    reason: FRReason
+    specialCaseReason: String
+    orphanId: ID
+  ): FinancialRecord!
+
+  createOrphanDocument(
+    documentUrl: String!
+    documentType: OrphanDocumentType!
+    orphanId: ID!
+  ): OrphanDocument!
+
+  updateOrphanDocument(
+    id: ID!
+    documentUrl: String
+    documentType: OrphanDocumentType
+    orphanId: ID
+  ): OrphanDocument!
+
+  createHouse_property(
+    housingSituation: String!
+    houseType: String
+    otherProperty: String
+    orphans: [ID]
+  ): House_property!
+
+  updateHouse_property(
+    id: ID!
+    housingSituation: String
+    houseType: String
+    otherProperty: String
+    orphans: [ID]
+  ): House_property!
+
+  createOrphanPhoto(
+    photoPortraitUrl: String!
+    photoLongUrl: String
+    orphanId: ID!
+  ): OrphanPhoto!
+
+  updateOrphanPhoto(
+    id: ID!
+    photoPortraitUrl: String
+    photoLongUrl: String
+    orphanId: ID!
+  ): OrphanPhoto!
+
+  createHealthStatus(
+    healthDescription: String!
+    psychologicalStatus: orphanPsychologicalStatus
+    orphanId: ID!
+  ): HealthStatus!
+
+  updateHealthStatus(
+    id: ID!
+    healthDescription: String
+    psychologicalStatus: orphanPsychologicalStatus
+    orphanId: ID
+  ): HealthStatus!
+
+  createOrphanLetter(
+    originalThankyouLetterUrl: String
+    translatedThankyouLetterUrl: String
+    orphanId: ID!
+  ): OrphanLetter!
+
+  updateOrphanLetter(
+    id: ID!
+    originalThankyouLetterUrl: String
+    translatedThankyouLetterUrl: String
+    orphanId: ID
+  ): OrphanLetter!
+
+  createSponsorshipStatus(
+    status: sponsorshipStatus
+    date: DateTime!
+    reason: String
+    orphanId: ID!
+  ): SponsorshipStatus!
+
+  updateSponsorshipStatus(
+    id: ID!
+    status: sponsorshipStatus
+    date: DateTime
+    reason: String
+    orphanId: ID!
+  ): SponsorshipStatus!
+
+  createProjectActivity(input: ProjectActivityCreateInput!): ProjectActivity!
+  updateProjectActivity(input: ProjectActivityUpdateInput!): ProjectActivity!
+
+  createDailyActivity(input: DailyActivityCreateInput!): DailyActivity!
+  updateDailyActivity(input: DailyActivityUpdateInput!): DailyActivity!
+
+  createProject(
+    number: String!
+    startDate: DateTime
+    endDate: DateTime
+    maximumNumberOfBeneficiaries: Int!
+    durationInYears: Int!
+    location: [ID]
+    grandTotalBudget: Float!
+    administrativeCost: Float!
+    supportPlans: [ID]
+    coordinators: [ID]
+    projectDocuments: [ID]
+    incomeGeneratingActivities: [ID]
+  ): Project!
+
+  createProjectWithProposal(
+    number: String!
+    startDate: DateTime
+    endDate: DateTime
+    maximumNumberOfBeneficiaries: Int!
+    durationInYears: Int!
+    location: [ID]
+    grandTotalBudget: Float!
+    administrativeCost: Float!
+    # supportPlans: [ID]
+    coordinators: [ID]
+    proposalUrl: String!
+  ): Project!
+
+  updateProject(
+    id: ID!
+    number: String
+    maximumNumberOfBenficiaries: Int
+    status: String
+    location: [ID]
+  ): Project!
+
+  createProjectDocument(
+    documentUrl: String!
+    documentType: projectDocumentType!
+    projectId: ID!
+  ): ProjectDocument!
+
+  updateProjectDocument(
+    id: ID!
+    documentUrl: String
+    documentType: projectDocumentType
+    projectId: ID
+  ): ProjectDocument!
+
+  createIncomeGeneratingActivity(
+    beneficiaryType: String! # guardian or orphan
+    activityType: String!
+    firstName: String!
+    middleName: String!
+    lastName: String!
+    budget: Float!
+    title: String!
+    description: String!
+    startDate: DateTime
+    endDate: DateTime
+    status: String! # active/ongoning, awaitngFunding ...
+    projectId: ID!
+    photos: [IncomeGeneratingActivityPhotoInput]
+  ): IncomeGeneratingActivity!
+
+  updateIncomeGeneratingActivity(
+    id: ID!
+    beneficiaryType: String # guardian or orphan
+    activityType: String
+    firstName: String
+    middleName: String
+    lastName: String
+    budget: Float
+    title: String
+    description: String
+    startDate: DateTime
+    endDate: DateTime
+    status: String # active/ongoning, awaitngFunding ...
+    projectId: ID
+    photos: [ID]
+  ): IncomeGeneratingActivity!
+
+  createIncomeGeneratingActivityPhoto(
+    photoUrl: String!
+    incomeGeneratingActivityId: ID!
+  ): IncomeGeneratingActivityPhoto!
+
+  createPayment(
+    endDate: DateTime
+    startDate: DateTime
+    paymentInPrimaryForeignCurrency: Float
+    primaryForeignCurrency: String
+    primaryExchangeRate: Float
+    paymentInSecondaryForeignCurrency: Float
+    secondaryForeignCurrency: String
+    secondaryExchangeRate: Float
+    grossPaymentInDomesticCurrency: Float
+    adminFeeInDomesticCurrency: Float
+    netPaymentInDomesticCurrency: Float
+    paymentPeriodInMonths: Int
+    supportPlanId: ID!
+  ): Payment!
+
+  updatePayment(
+    id: ID
+    endDate: DateTime
+    startDate: DateTime
+    paymentInPrimaryForeignCurrency: Float
+    primaryForeignCurrency: String
+    primaryExchangeRate: Float
+    paymentInSecondaryForeignCurrency: Float
+    secondaryForeignCurrency: String
+    secondaryExchangeRate: Float
+    grossPaymentInDomesticCurrency: Float
+    adminFeeInDomesticCurrency: Float
+    netPaymentInDomesticCurrency: Float
+    paymentPeriodInMonths: Int
+    supportPlanId: ID
+  ): Payment!
+
+  createIndividualPayment(
+    depositInPrimaryForeignCurrency: Float
+    depositInSecondaryForeignCurrency: Float
+    grossDepositInDomesticCurrency: Float!
+    adminFeeInDomesticCurrency: Float!
+    netDepositInDomesticCurrency: Float!
+    orphanId: ID!
+    paymentId: ID!
+  ): IndividualPayment!
+
+  createSupportPlan(
+    name: String!
+    adminFeePercentage: Float!
+    paymentInterval: String! # monlthly, quarterly, semi-annually, annually
+    totalFund: Float
+    startDate: DateTime
+    endDate: DateTime
+    donorId: ID
+    projectId: ID
+    payments: [ID]
+    orphans: [ID]
+  ): SupportPlan!
+
+  updateSupportPlan(
+    id: ID!
+    name: String
+    adminFeePercentage: Float
+    paymentInterval: String # monlthly, quarterly, semi-annually, annually
+    totalFund: Float
+    startDate: DateTime
+    endDate: DateTime
+    donorId: ID
+    projectId: ID
+    payments: [ID]
+    orphans: [ID]
+  ): SupportPlan!
+
+  createHead(
+    firstName: String!
+    middleName: String!
+    lastName: String!
+    userId: ID!
+  ): Head!
+
+  updateHead(
+    id: ID!
+    firstName: String
+    middleName: String
+    lastName: String
+    userId: ID
+  ): Head!
+
+  createCoordinator(
+    firstName: String!
+    middleName: String!
+    lastName: String!
+    userId: ID!
+  ): Coordinator!
+
+  updateCoordinator(
+    id: ID!
+    firstName: String
+    middleName: String
+    lastName: String
+    userId: ID
+    donors: [ID]
+  ): Coordinator!
+
+  createUser(
+    role: userRoles!
+    email: String!
+    password: String
+    coordinator: ID
+    head: ID
+    socialWorker: ID
+    donor: ID
+  ): User!
+
+  updateUser(id: ID!, role: userRoles, email: String, password: String): User!
+
+  register(role: userRoles, email: String!, password: String!): AuthPayload!
+  login(email: String!, password: String!): AuthPayload!
+  logout: Boolean!
+
+  createAccountMaintainence(
+    type: accountMaintainenceType!
+    status: accountMaintainenceStatus!
+    role: userRoles!
+    firstName: String!
+    middleName: String!
+    lastName: String!
+    email: String!
+    mobileNumber: String!
+  ): AccountMaintainence!
+
+  updateAccountMaintainence(
+    id: ID!
+    status: accountMaintainenceStatus
+  ): AccountMaintainence!
+}
+
+type AuthPayload {
+  user: User!
+}
+
+type Donor {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  companyName: String!
+  nameInitials: String!
+  user: User!
+  coordinators: [Coordinator]
+  orphans: [Orphan]
+  supportPlans: [SupportPlan]
+}
+
+type EducationalRecord {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  enrollmentStatus: educationEnrollmentStatus!
+  schoolName: String
+  typeOfSchool: educationTypeOfSchool
+  year: String
+  level: educationLevel
+  reason: String
+  yearDivision: ERYearDivision
+  quarter: ERQuarter
+  semester: ERSemester
+  totalMark: Float
+  numberOfSubjects: Int
+  average: Float
+  rank: Int
+  reportCardUrl: String
+  semesterGPA: Float
+  cumulativeGPA: Float
+  orphan: Orphan
+}
+
+type Father {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  firstName: String!
+  lastName: String!
+  dateOfDeath: DateTime!
+  causeOfDeath: String!
+  dateOfBirth: DateTime
+  deathCertificateUrl: String!
+  orphans: [Orphan]
+}
+
+type Guardian {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  firstName: String!
+  middleName: String!
+  lastName: String!
+  gender: guardianGender!
+  dateOfBirth: DateTime!
+  relationToOrphan: guardianRelationToOrphan!
+  email: String!
+  mobileNumber: String!
+  telephoneNumber: String
+  nationality: guardianNationality!
+  idCardUrl: String!
+  confirmationLetterUrl: String
+  legalConfirmationLetterUrl: String
+  orphans: [Orphan]
+}
+
+type Mother {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  firstName: String!
+  middleName: String!
+  lastName: String!
+  vitalStatus: motherVitalStatus!
+  dateOfBirth: DateTime
+  dateOfDeath: DateTime
+  causeOfDeath: String
+  mobileNumber: String!
+  maritalStatus: motherMaritalStatus
+  monthlyExpense: Float!
+  jobs: [MotherJob]
+  orphans: [Orphan]
+}
+
+type MotherJob {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  jobTitle: String
+  monthlyIncome: String
+  startDate: DateTime
+  endDate: DateTime
+  mother: Mother
+}
+
+type Region {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  name: String!
+  zones: [Zone]
+}
+
+type Zone {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  name: String!
+  region: Region
+  districts: [District]
+}
+
+type District {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  name: String!
+  zone: Zone
+  villages: [Village]
+  socialWorkers: [SocialWorker]
+}
+
+type Village {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  name: String
+  socialWorker: SocialWorker
+  district: District
+  orphans: [Orphan]
+  projects: [Project]
+}
+
+type Orphan {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  orphanCode: String
+  firstName: String!
+  gender: orphanGender!
+  placeOfBirth: String!
+  dateOfBirth: DateTime!
+  spokenLanguages: String
+  gradeAgeMismatchReason: String
+  hobbies: String
+  religion: orphanReligion
+  idCardUrl: String
+  passportUrl: String
+  birthCertificateUrl: String!
+  accountNumber: String
+  currentBalance: Float
+  father: Father
+  guardian: Guardian
+  house_property: House_property
+  mother: Mother
+  village: Village
+  socialWorker: SocialWorker
+  coordinator: Coordinator
+  supportPlans: [SupportPlan]
+  individualPayments: [IndividualPayment]
+  sponsorshipStatuses: [SponsorshipStatus]
+  financialRecords: [FinancialRecord]
+  educationalRecords: [EducationalRecord]
+  documents: [OrphanDocument]
+  healthStatuses: [HealthStatus]
+  photos: [OrphanPhoto]
+  letters: [OrphanLetter]
+  donors: [Donor]
+  siblings: [Orphan]
+  siblingOf: [Orphan]
+}
+
+type SocialWorker {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  firstName: String!
+  middleName: String!
+  lastName: String!
+  gender: socialWorkerGender
+  dateOfBirth: DateTime
+  mobileNumber: String!
+  startDate: DateTime
+  endDate: DateTime
+  user: User!
+  districts: [District]
+  villages: [Village]
+  orphans: [Orphan]
+  projectActivities: [ProjectActivity]
+}
+
+type FinancialRecord {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  transactionDate: DateTime
+  transactionType: FRTransactionType
+  amount: Float
+  reason: FRReason
+  specialCaseReason: String
+  orphan: Orphan
+}
+
+type OrphanDocument {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  documentUrl: String!
+  documentType: OrphanDocumentType!
+  orphan: Orphan
+}
+
+enum OrphanDocumentType {
+  medicalCertificate
+  educationalCertificate
+}
+
+type House_property {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  housingSituation: String!
+  houseType: String
+  otherProperty: String
+  orphans: [Orphan]
+}
+
+type OrphanPhoto {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  photoPortraitUrl: String!
+  photoLongUrl: String
+  orphan: Orphan
+}
+
+type HealthStatus {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  healthDescription: String!
+  psychologicalStatus: orphanPsychologicalStatus
+  orphan: Orphan
+}
+
+type OrphanLetter {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  originalThankyouLetterUrl: String
+  translatedThankyouLetterUrl: String
+  orphan: Orphan
+}
+
+type SponsorshipStatus {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  status: sponsorshipStatus
+  date: DateTime!
+  reason: String
+  orphan: Orphan
+}
+
+type ProjectActivity {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  title: String!
+  category: String!
+  unitOfMeasurement: String!
+  planOfAYear: String!
+  planOfSixMonths: String!
+  planOfAQuarter: String!
+  planOfAMonth: String!
+  project: Project!
+  socialWorker: SocialWorker!
+  dailyActivities: [DailyActivity]
+}
+
+type DailyActivity {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  planOfADay: Float!
+  accomplishmentAmount: Float!
+  accomplishmentPercentage: Float!
+  projectActivity: ProjectActivity!
+}
+
+type Project {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  number: String!
+  startDate: DateTime
+  endDate: DateTime
+  maximumNumberOfBeneficiaries: Int!
+  durationInYears: Int!
+  location: [Village]!
+  grandTotalBudget: Float!
+  administrativeCost: Float!
+  status: String
+  supportPlans: [SupportPlan]
+  coordinators: [Coordinator]
+  projectDocuments: [ProjectDocument]
+  projectActivities: [ProjectActivity]
+  incomeGeneratingActivities: [IncomeGeneratingActivity]
+}
+
+type ProjectDocument {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  documentUrl: String!
+  documentType: projectDocumentType!
+  project: Project
+}
+
+type IncomeGeneratingActivity {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  beneficiaryType: String! # guardian or orphan
+  activityType: String!
+  firstName: String!
+  middleName: String!
+  lastName: String!
+  budget: Float!
+  title: String!
+  description: String!
+  startDate: DateTime
+  endDate: DateTime
+  status: String! # active/ongoning, awaitngFunding ...
+  project: Project
+  photos: [IncomeGeneratingActivityPhoto]
+}
+
+type IncomeGeneratingActivityPhoto {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  photoUrl: String!
+  incomeGeneratingActivity: IncomeGeneratingActivity
+}
+
+type Payment {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  endDate: DateTime
+  startDate: DateTime
+  paymentInPrimaryForeignCurrency: Float
+  primaryForeignCurrency: String
+  primaryExchangeRate: Float
+  paymentInSecondaryForeignCurrency: Float
+  secondaryForeignCurrency: String
+  secondaryExchangeRate: Float
+  grossPaymentInDomesticCurrency: Float
+  adminFeeInDomesticCurrency: Float
+  netPaymentInDomesticCurrency: Float
+  paymentPeriodInMonths: Int
+  supportPlan: SupportPlan
+  individualPayments: [IndividualPayment]
+}
+
+type IndividualPayment {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  depositInPrimaryForeignCurrency: Float
+  depositInSecondaryForeignCurrency: Float
+  grossDepositInDomesticCurrency: Float
+  adminFeeInDomesticCurrency: Float
+  netDepositInDomesticCurrency: Float
+  orphan: Orphan
+  payment: Payment
+}
+
+type SupportPlan {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  name: String!
+  adminFeePercentage: Float!
+  paymentInterval: String! # monlthly, quarterly, semi-annually, annually
+  totalFund: Float!
+  startDate: DateTime
+  endDate: DateTime
+  donor: Donor
+  project: Project
+  payments: [Payment]
+  orphans: [Orphan]
+}
+
+type Head {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  firstName: String!
+  middleName: String!
+  lastName: String!
+  user: User!
+}
+
+type Coordinator {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  firstName: String!
+  middleName: String!
+  lastName: String!
+  user: User!
+  donors: [Donor]
+  orphans: [Orphan]
+}
+
+type User {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  role: userRoles!
+  email: String!
+  password: String
+  coordinator: Coordinator
+  head: Head
+  socialWorker: SocialWorker
+  donor: Donor
+}
+
+type AccountMaintainence {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  type: accountMaintainenceType!
+  status: accountMaintainenceStatus!
+  role: userRoles!
+  firstName: String!
+  middleName: String!
+  lastName: String!
+  email: String!
+  mobileNumber: String!
+}
+
+type OrphanPaymentHistoryReport {
+  orphan: Orphan!
+  financialRecords: [FinancialRecord]!
+}
+
+enum accountMaintainenceStatus {
+  pending
+  approved
+  rejected
+}
+
+enum accountMaintainenceType {
+  register
+  passwordRecovery
+}
+
+enum orphanGender {
+  M
+  F
+}
+
+enum orphanReligion {
+  Christianity
+  Islam
+  Buddhism
+  Hinduism
+  Judaism
+  Other
+}
+
+enum orphanPsychologicalStatus {
+  isolated
+  stressed
+  unsociable
+  overlysociable
+  normal
+}
+
+enum sponsorshipStatus {
+  new
+  processing
+  pending
+  active
+  graduated
+}
+
+enum projectDocumentType {
+  proposal
+  amendedProposal
+  yearlyPaln
+  amendedYearlyPlan
+  midTermEvaluation
+  amendedMidTermEvaluation
+  terminalEvaluation
+  amendedTerminalEvaluation
+}
+
+enum socialWorkerGender {
+  M
+  F
+}
+
+enum guardianGender {
+  M
+  F
+}
+
+enum guardianRelationToOrphan {
+  mother
+  grandmother
+  grandfather
+  sister
+  brother
+  uncle
+  aunt
+  cousin
+  niece
+  nephew
+  legalGuardian
+  other
+}
+
+enum guardianNationality {
+  Djiboutian
+  Ethiopian
+  Eritrean
+  Kenyan
+  Somali
+  South_Sudanese
+  Sudanese
+}
+
+enum motherMaritalStatus {
+  married
+  widow
+  N_A
+}
+
+enum motherVitalStatus {
+  alive
+  passed
+}
+
+enum educationEnrollmentStatus {
+  enrolled
+  unenrolled
+  droppedout
+}
+
+enum educationTypeOfSchool {
+  private
+  public
+  N_A
+}
+
+enum educationLevel {
+  religiousEducation
+  preSchool
+  primary_elementary
+  junior
+  highschool
+  underGraduate
+  postGraduate
+  N_A
+}
+
+enum ERYearDivision {
+  semester
+  quarter_term
+}
+
+enum ERQuarter {
+  first
+  second
+  third
+  fourth
+}
+
+enum ERSemester {
+  first
+  second
+}
+
+enum FRTransactionType {
+  withdrawal
+  deposit
+  assign
+  re_assign
+}
+
+enum FRReason {
+  ASFC
+  RSFC
+  AAB
+  AFB
+  NPB
+  EW
+  HW
+  NW
+  SCW
+}
+
+enum userRoles {
+  Admin
+  Head
+  Coordinator
+  Donor
+  SocialWorker
+  Guest
+}
+
+enum Sort {
+  asc
+  desc
+}
+
+input DonorOrderByInput {
+  id: Sort
+  created_at: Sort
+  updated_at: Sort
+  companyName: Sort
+  nameInitials: Sort
+}
+
+input GuardianOrderByInput {
+  id: Sort
+  created_at: Sort
+  updated_at: Sort
+  firstName: Sort
+  middleName: Sort
+  lastName: Sort
+  gender: Sort
+  dateOfBirth: Sort
+  relationToOrphan: Sort
+  email: Sort
+  mobileNumber: Sort
+  telephoneNumber: Sort
+}
+
+input MotherOrderByInput {
+  id: Sort
+  created_at: Sort
+  updated_at: Sort
+  firstName: Sort
+  middleName: Sort
+  lastName: Sort
+  vitalStatus: Sort
+  dateOfBirth: Sort
+  dateOfDeath: Sort
+  causeOfDeath: Sort
+  mobileNumber: Sort
+  maritalStatus: Sort
+  monthlyExpense: Sort
+}
+
+input OrphanOrderByInput {
+  id: Sort
+  created_at: Sort
+  updated_at: Sort
+  firstName: Sort
+  gender: Sort
+  placeOfBirth: Sort
+  dateOfBirth: Sort
+  spokenLanguages: Sort
+  gradeAgeMismatchReason: Sort
+  hobbies: Sort
+  religion: Sort
+  healthDescription: Sort
+  psychologicalStatus: Sort
+  accountNumber: Sort
+  currentBalance: Sort
+}
+
+input SocialWorkerOrderByInput {
+  id: Sort
+  created_at: Sort
+  updated_at: Sort
+  firstName: Sort
+  middleName: Sort
+  lastName: Sort
+  gender: Sort
+  mobileNumber: Sort
+  email: Sort
+  initDate: Sort
+  termDate: Sort
+}
+
+input RegionOrderByInput {
+  id: Sort
+  created_at: Sort
+  updated_at: Sort
+  name: Sort
+}
+
+input ZoneOrderByInput {
+  id: Sort
+  created_at: Sort
+  updated_at: Sort
+  name: Sort
+}
+
+input DistrictOrderByInput {
+  id: Sort
+  created_at: Sort
+  updated_at: Sort
+  name: Sort
+}
+
+input VillageOrderByInput {
+  id: Sort
+  created_at: Sort
+  updated_at: Sort
+  registrationDate: Sort
+  name: Sort
+}
+
+input SupportPlanOrderByInput {
+  id: Sort
+  created_at: Sort
+  updated_at: Sort
+  collectiveFund_fc: Sort
+  individualFund_fc: Sort
+  foreignCurrency: String
+  supportPeriod: Sort
+  adminFeePercentage: Sort
+  exchangeRate: Sort
+  individualFund_brr: Sort
+  adminFee_brr: Sort
+  netPayment_brr: Sort
+  initDate: Sort
+  termDate: Sort
+}
+
+input HeadOrderByInput {
+  firstName: Sort
+  middleName: Sort
+  lastName: Sort
+}
+
+input CoordinatorOrderByInput {
+  id: Sort
+  created_at: Sort
+  updated_at: Sort
+  firstName: Sort
+  middleName: Sort
+  lastName: Sort
+}
+
+input UserOrderByInput {
+  id: Sort
+  created_at: Sort
+  updated_at: Sort
+  role: Sort
+  email: Sort
+}
+
+input FatherCreateInput {
+  firstName: String!
+  lastName: String!
+  dateOfDeath: DateTime!
+  causeOfDeath: String!
+  dateOfBirth: DateTime
+  deathCertificateUrl: String!
+}
+
+input MotherCreateInput {
+  firstName: String!
+  middleName: String!
+  lastName: String!
+  vitalStatus: motherVitalStatus!
+  dateOfBirth: DateTime
+  dateOfDeath: DateTime
+  causeOfDeath: String
+  mobileNumber: String
+  maritalStatus: motherMaritalStatus
+  monthlyExpense: Float
+}
+
+input GuardianCreateInput {
+  firstName: String!
+  middleName: String!
+  lastName: String!
+  gender: guardianGender!
+  dateOfBirth: DateTime!
+  relationToOrphan: guardianRelationToOrphan!
+  email: String!
+  mobileNumber: String!
+  telephoneNumber: String
+  nationality: guardianNationality!
+  idCardUrl: String!
+  confirmationLetterUrl: String
+  legalConfirmationLetterUrl: String
+}
+
+input House_propertyCreateInput {
+  housingSituation: String!
+  houseType: String
+  otherProperty: String
+}
+
+input HealthStatusCreateInput {
+  healthDescription: String!
+  psychologicalStatus: orphanPsychologicalStatus
+}
+
+input OrphanPhotoCreateInput {
+  photoPortraitUrl: String!
+  photoLongUrl: String
+}
+
+input EducationalRecordCreateInput {
+  enrollmentStatus: educationEnrollmentStatus!
+  schoolName: String
+  typeOfSchool: educationTypeOfSchool
+  year: String
+  level: educationLevel
+  reason: String
+}
+
+input IncomeGeneratingActivityPhotoInput {
+  photoUrl: String!
+}
+
+input ProjectActivityCreateInput {
+  title: String!
+  category: String!
+  unitOfMeasurement: String!
+  planOfAYear: String!
+  planOfSixMonths: String!
+  planOfAQuarter: String!
+  planOfAMonth: String!
+  projectId: ID!
+  socialWorkerId: ID!
+}
+
+input ProjectActivityUpdateInput {
+  id: ID!
+  title: String
+  category: String
+  unitOfMeasurement: String
+  planOfAYear: String
+  planOfSixMonths: String
+  planOfAQuarter: String
+  planOfAMonth: String
+}
+
+input DailyActivityCreateInput {
+  planOfADay: Float!
+  accomplishmentAmount: Float!
+  accomplishmentPercentage: Float!
+  projectActivityId: ID!
+}
+
+input DailyActivityUpdateInput {
+  id: ID!
+  planOfADay: Float
+  accomplishmentAmount: Float
+  accomplishmentPercentage: Float
+}
+
+input OrphanPaymentHistoryReportInput {
+  orphanId: ID!
+  startDate: DateTime
+  endDate: DateTime
+}
