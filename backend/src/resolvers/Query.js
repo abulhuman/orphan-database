@@ -889,6 +889,47 @@ async function generateOrphanPaymentHistoryReport(
   throw new AuthenticationError()
 }
 
+async function generateDonorPaymentHistoryReport(
+  _parent,
+  { input },
+  { prisma, req },
+  _info
+) {
+  if (getUser(req).userId) {
+    const { donorId } = input
+    const donor = prisma.donor.findUniqueOrThrow({
+      where: {
+        id: parseInt(donorId)
+      }
+    })
+    const supportPlans = prisma.supportPlan.findMany({
+      where: {
+        donorId: parseInt(donorId)
+      }
+    })
+    const promiseAll = await Promise.all([donor, supportPlans])
+    const data = { donor: promiseAll[0], supportPlans: promiseAll[1] }
+
+    if (input.startDate && !input.endDate) {
+      input.endDate = new Date()
+    } else if (!input.startDate && input.endDate) {
+      input.startDate = data.donor.created_at
+    } else if (!input.startDate && !input.endDate) {
+      input.endDate = new Date()
+      input.startDate = data.donor.created_at
+    }
+
+    data.supportPlans = data.supportPlans.filter(
+      (supportPlan) =>
+        new Date(supportPlan.startDate) <= new Date(input.endDate) &&
+        new Date(supportPlan.startDate) > new Date(input.startDate)
+    )
+
+    return data
+  }
+  throw new AuthenticationError()
+}
+
 module.exports = {
   orphan,
   father,
@@ -959,5 +1000,6 @@ module.exports = {
   getProjectActivitiesBySocialWorkerId,
   getDailyActivitiesByProjectActivityId,
   getProjectActivitiesByProjectId,
-  generateOrphanPaymentHistoryReport
+  generateOrphanPaymentHistoryReport,
+  generateDonorPaymentHistoryReport
 }

@@ -107,7 +107,11 @@ type Query {
 
   generateOrphanPaymentHistoryReport(
     input: OrphanPaymentHistoryReportInput!
-  ): OrphanPaymentHistoryReport
+  ): OrphanPaymentHistoryReport!
+
+  generateDonorPaymentHistoryReport(
+    input: DonorPaymentHistoryReportInput!
+  ): DonorPaymentHistoryReport!
 }
 
 type Mutation {
@@ -1213,6 +1217,11 @@ type OrphanPaymentHistoryReport {
   financialRecords: [FinancialRecord]!
 }
 
+type DonorPaymentHistoryReport {
+  donor: Donor!
+  supportPlans: [SupportPlan]!
+}
+
 enum accountMaintainenceStatus {
   pending
   approved
@@ -1630,6 +1639,12 @@ input DailyActivityUpdateInput {
 
 input OrphanPaymentHistoryReportInput {
   orphanId: ID!
+  startDate: DateTime
+  endDate: DateTime
+}
+
+input DonorPaymentHistoryReportInput {
+  donorId: ID!
   startDate: DateTime
   endDate: DateTime
 }
