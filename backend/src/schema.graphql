@@ -285,7 +285,6 @@ type Mutation {
     passportUrl: String
     birthCertificateUrl: String!
     accountNumber: String
-    currentBalance: Float
     fatherId: ID
     guardianId: ID
     house_propertyId: ID
@@ -319,7 +318,6 @@ type Mutation {
     passportUrl: String
     birthCertificateUrl: String!
     accountNumber: String
-    currentBalance: Float
     father: FatherCreateInput!
     mother: MotherCreateInput!
     guardian: GuardianCreateInput!
@@ -345,7 +343,6 @@ type Mutation {
     passportUrl: String
     birthCertificateUrl: String
     accountNumber: String
-    currentBalance: Float
     fatherId: ID
     guardianId: ID
     house_propertyId: ID
@@ -905,6 +902,15 @@ type Village {
   projects: [Project]
 }
 
+type CurrentOrphanData {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  balance: Float
+  sponsorshipStatus: String
+  orphan: Orphan
+}
+
 type Orphan {
   id: ID!
   created_at: DateTime
@@ -922,7 +928,6 @@ type Orphan {
   passportUrl: String
   birthCertificateUrl: String!
   accountNumber: String
-  currentBalance: Float
   father: Father
   guardian: Guardian
   house_property: House_property
@@ -942,6 +947,7 @@ type Orphan {
   donors: [Donor]
   siblings: [Orphan]
   siblingOf: [Orphan]
+  currentOrphanData: CurrentOrphanData
 }
 
 type SocialWorker {
@@ -1456,7 +1462,6 @@ input OrphanOrderByInput {
   healthDescription: Sort
   psychologicalStatus: Sort
   accountNumber: Sort
-  currentBalance: Sort
 }
 
 input SocialWorkerOrderByInput {

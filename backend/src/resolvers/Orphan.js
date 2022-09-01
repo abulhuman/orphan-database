@@ -1,74 +1,77 @@
-
 function father({ id }, _args, { prisma }) {
-  return prisma.orphan.findUnique({ where: { id } }).father();
+  return prisma.orphan.findUnique({ where: { id } }).father()
 }
 
 function guardian({ id }, _args, { prisma }) {
-  return prisma.orphan.findUnique({ where: { id } }).guardian();
+  return prisma.orphan.findUnique({ where: { id } }).guardian()
 }
 
 function house_property({ id }, _args, { prisma }) {
-  return prisma.orphan.findUnique({ where: { id } }).house_property();
+  return prisma.orphan.findUnique({ where: { id } }).house_property()
 }
 
 function mother({ id }, _args, { prisma }) {
-  return prisma.orphan.findUnique({ where: { id } }).mother();
+  return prisma.orphan.findUnique({ where: { id } }).mother()
 }
 
 function village({ id }, _args, { prisma }) {
-  return prisma.orphan.findUnique({ where: { id } }).village();
+  return prisma.orphan.findUnique({ where: { id } }).village()
 }
 
 function socialWorker({ id }, _args, { prisma }) {
-  return prisma.orphan.findUnique({ where: { id } }).socialWorker();
+  return prisma.orphan.findUnique({ where: { id } }).socialWorker()
 }
 
 function coordinator({ id }, _args, { prisma }) {
-  return prisma.orphan.findUnique({ where: { id } }).coordinator();
+  return prisma.orphan.findUnique({ where: { id } }).coordinator()
 }
 
 function supportPlans({ id }, _args, { prisma }) {
-  return prisma.orphan.findUnique({ where: { id } }).supportPlans();
+  return prisma.orphan.findUnique({ where: { id } }).supportPlans()
 }
 
 function individualPayments({ id }, _args, { prisma }) {
-  return prisma.orphan.findUnique({ where: { id } }).individualPayments();
+  return prisma.orphan.findUnique({ where: { id } }).individualPayments()
 }
 
 function financialRecords({ id }, _args, { prisma }) {
-  return prisma.orphan.findUnique({ where: { id } }).financialRecords();
+  return prisma.orphan.findUnique({ where: { id } }).financialRecords()
 }
 
 function educationalRecords({ id }, _args, { prisma }) {
-  return prisma.orphan.findUnique({ where: { id } }).educationalRecords();
+  return prisma.orphan.findUnique({ where: { id } }).educationalRecords()
 }
 
 function documents({ id }, _args, { prisma }) {
-  return prisma.orphan.findUnique({ where: { id } }).documents();
+  return prisma.orphan.findUnique({ where: { id } }).documents()
 }
 
 function healthStatuses({ id }, _args, { prisma }) {
-  return prisma.orphan.findUnique({ where: { id } }).healthStatuses();
+  return prisma.orphan.findUnique({ where: { id } }).healthStatuses()
 }
 
 function photos({ id }, _args, { prisma }) {
-  return prisma.orphan.findUnique({ where: { id } }).photos();
+  return prisma.orphan.findUnique({ where: { id } }).photos()
 }
 
 function sponsorshipStatuses({ id }, _args, { prisma }) {
-  return prisma.orphan.findUnique({ where: { id } }).sponsorshipStatuses();
+  return prisma.orphan.findUnique({ where: { id } }).sponsorshipStatuses()
 }
 
 function donors({ id }, _args, { prisma }) {
-  return prisma.orphan.findUnique({ where: { id } }).donors();
+  return prisma.orphan.findUnique({ where: { id } }).donors()
 }
 
 function siblings({ id }, _args, { prisma }) {
-  return prisma.orphan.findUnique({ where: { id } }).siblings();
+  return prisma.orphan.findUnique({ where: { id } }).siblings()
 }
 
 function siblingOf({ id }, _args, { prisma }) {
-  return prisma.orphan.findUnique({ where: { id } }).siblingOf();
+  return prisma.orphan.findUnique({ where: { id } }).siblingOf()
+}
+
+function currentOrphanData({ id }, _args, { prisma }) {
+  return prisma.orphan.findUnique({ where: { id } }).currentOrphanData()
 }
 
 module.exports = {
@@ -89,5 +92,6 @@ module.exports = {
   sponsorshipStatuses,
   donors,
   siblings,
-  siblingOf
-};
+  siblingOf,
+  currentOrphanData
+}

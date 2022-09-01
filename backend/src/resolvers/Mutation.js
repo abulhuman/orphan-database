@@ -5,7 +5,6 @@ const {
   updateImage,
   AuthorizationError
 } = require('../utils')
-const { userRoles_enum } = require('@prisma/client')
 
 async function createDonor(_parent, args, { prisma, req }, _info) {
   if (getUser(req).userId) {
@@ -709,11 +708,12 @@ async function createOrphanWithBaselineData(
       sponsorshipStatuses: {
         create: {
           status: 'new',
-          reason: 'new registreation successful',
+          reason: 'new registration',
           date: new Date()
         }
       },
-      village: { connect: { id: parseInt(args.villageId) } }
+      village: { connect: { id: parseInt(args.villageId) } },
+      currentOrphanData: { create: { sponsorshipStatus: 'new' } }
     }
     delete OrphanCreateInput.firstHealthStatus
     delete OrphanCreateInput.firstPhotos
@@ -1016,9 +1016,26 @@ async function createFinancialRecord(_parent, args, { prisma, req }, _info) {
       orphan: { connect: { id: parseInt(args.orphanId) } }
     }
     delete FinancialRecordCreateInput.orphanId
-    return await prisma.financialRecord.create({
+    const newFinancialRecordPromise = prisma.financialRecord.create({
       data: FinancialRecordCreateInput
     })
+
+    const promiseAll = await Promise.all([
+      newFinancialRecordPromise,
+      prisma.currentOrphanData.update({
+        where: {
+          orphanId: parseInt(args.orphanId)
+        },
+        data: {
+          updated_at: new Date().toISOString(),
+          balance:
+            args.transactionType === 'withdrawal'
+              ? { decrement: parseFloat(args.amount) }
+              : { increment: parseFloat(args.amount) }
+        }
+      })
+    ])
+    return promiseAll[0]
   }
   throw new AuthenticationError()
 }
@@ -1198,9 +1215,24 @@ async function createSponsorshipStatus(_parent, args, { prisma, req }, _info) {
       orphan: { connect: { id: parseInt(args.orphanId) } }
     }
     delete SponsorshipStatusCreateInput.orphanId
-    return await prisma.sponsorshipStatus.create({
+
+    const newSponsorShipStatusPromise = prisma.sponsorshipStatus.create({
       data: SponsorshipStatusCreateInput
     })
+
+    const promiseAll = await Promise.all([
+      newSponsorShipStatusPromise,
+      prisma.currentOrphanData.update({
+        where: {
+          orphanId: parseInt(args.orphanId)
+        },
+        data: {
+          updated_at: new Date().toISOString(),
+          sponsorshipStatus: args.status
+        }
+      })
+    ])
+    return promiseAll[0]
   }
   throw new AuthenticationError()
 }
