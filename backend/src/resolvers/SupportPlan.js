@@ -10,8 +10,13 @@ function orphans({ id }, _args, { prisma }) {
   return prisma.supportPlan.findUnique({ where: { id } }).orphans();
 }
 
+function payments({ id }, _args, { prisma }) {
+  return prisma.supportPlan.findUnique({ where: { id } }).payments();
+}
+
 module.exports = {
   donor,
   project,
-  orphans
+  orphans,
+  payments
 };
