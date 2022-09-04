@@ -116,6 +116,17 @@ type Query {
   generateProjectPaymentHistoryReport(
     input: ProjectPaymentHistoryReportInput!
   ): ProjectPaymentHistoryReport!
+
+  generateOrphanStatusReport(
+    reportBeneficiary: ReportBeneficiaryEnum
+    status: SponsorshipStatusEnum
+    beneficiaryId: ID!
+  ): [Orphan]!
+}
+
+enum ReportBeneficiaryEnum {
+  DONOR
+  PROJECT
 }
 
 type Mutation {
@@ -521,7 +532,7 @@ type Mutation {
   ): OrphanLetter!
 
   createSponsorshipStatus(
-    status: sponsorshipStatus
+    status: SponsorshipStatusEnum
     date: DateTime!
     reason: String
     orphanId: ID!
@@ -529,7 +540,7 @@ type Mutation {
 
   updateSponsorshipStatus(
     id: ID!
-    status: sponsorshipStatus
+    status: SponsorshipStatusEnum
     date: DateTime
     reason: String
     orphanId: ID!
@@ -1036,7 +1047,7 @@ type SponsorshipStatus {
   id: ID!
   created_at: DateTime
   updated_at: DateTime
-  status: sponsorshipStatus
+  status: SponsorshipStatusEnum
   date: DateTime!
   reason: String
   orphan: Orphan
@@ -1270,12 +1281,13 @@ enum orphanPsychologicalStatus {
   normal
 }
 
-enum sponsorshipStatus {
-  new
-  processing
-  pending
-  active
-  graduated
+enum SponsorshipStatusEnum {
+  NEW
+  PROCESSING
+  PENDING
+  ACTIVE
+  GRADUATED
+  TERMINATED
 }
 
 enum projectDocumentType {
@@ -1376,8 +1388,8 @@ enum ERSemester {
 }
 
 enum FRTransactionType {
-  withdrawal
-  deposit
+  WITHDRAWAL
+  DEPOSIT
   assign
   re_assign
 }
