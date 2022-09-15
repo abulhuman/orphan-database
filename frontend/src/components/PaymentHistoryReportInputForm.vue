@@ -7,8 +7,45 @@
     <v-card-text>
       <v-form lazy-validation ref="showReportForm">
         <v-row>
+          <!-- Report type -->
+          <v-col cols="12" class="mt-4 mb-n4 pb-0">
+            <v-select
+              v-model="reportType"
+              :items="reportOptions"
+              item-text="text"
+              item-value="value"
+              label="Type"
+              dense
+              outlined
+              @change="handleReportTypeChange"
+            ></v-select>
+          </v-col>
+          <!-- Orphan select -->
+          <v-col v-if="showOrphanSelect" cols="12" class="mt-4 mb-n4 pb-0">
+            <v-select
+              v-model="selectedOrphan"
+              :items="orphanOptions"
+              :item-text="orphanFullName"
+              item-value="id"
+              label="Select Orphan"
+              dense
+              outlined
+            ></v-select>
+          </v-col>
+          <!-- Donor select -->
+          <v-col v-if="showDonorSelect" cols="12" class="mt-4 mb-n4 pb-0">
+            <v-select
+              v-model="selectedDonor"
+              :items="donorOptions"
+              item-text="nameInitials"
+              item-value="id"
+              label="SelectDonor"
+              dense
+              outlined
+            ></v-select>
+          </v-col>
           <!-- Start date field -->
-          <v-col cols="12" class="pb-0">
+          <v-col cols="12" class="py-0">
             <v-menu
               ref="fromDateRef"
               v-model="fromDateMenu"
@@ -107,13 +144,42 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
+  props: {
+    projectId: {
+      type: String,
+      required: true
+    }
+  },
+
   data() {
     return {
       fromDateMenu: false,
       endDateMenu: false,
       fromDate: null,
       toDate: null,
+      reportType: null,
+      reportOptions: [
+        {
+          text: 'Orphan Payment History Report',
+          value: 'orphanPHR'
+        },
+        {
+          text: 'Donor Payment History Report',
+          value: 'donorPHR'
+        },
+        {
+          text: 'Project Payment History Report',
+          value: 'projectPHR'
+        }
+      ],
+      showOrphanSelect: false,
+      selectedOrphan: null,
+      orphanOptions: [],
+      showDonorSelect: false,
+      selectedDonor: null,
+      donorOptions: [],
       rules: {
         required: (v) => !!v || 'Required'
       }
@@ -133,8 +199,80 @@ export default {
 
   methods: {
     handleNext() {
-      console.log(this.fromDate, this.toDate);
-      this.$emit('closePHRInputForm');
+      this.$emit('closePHRInputForm', {
+        startDate: this.fromDate,
+        endDate: this.toDate,
+        reportType: this.reportType,
+        orphanId: this.selectedOrphan,
+        donorId: this.selectedDonor
+      });
+    },
+    orphanFullName(orphan) {
+      return (
+        `${orphan.firstName
+          .substr(0, 1)
+          .toUpperCase()}${orphan.firstName.substr(1)}` +
+        ` ${orphan.father.firstName
+          .substr(0, 1)
+          .toUpperCase()}${orphan.father.firstName.substr(1)}` +
+        ` ${orphan.father.lastName
+          .substr(0, 1)
+          .toUpperCase()}${orphan.father.lastName.substr(1)}`
+      );
+    },
+    async handleReportTypeChange() {
+      this.showOrphanSelect = false;
+      this.showDonorSelect = false;
+      this.selectedDonor = null;
+      this.selectedOrphan = null;
+
+      if (this.reportType === 'orphanPHR') {
+        this.showOrphanSelect = true;
+        this.orphanOptions = await this.fetchOrphansByProjectId(this.projectId);
+      } else if (this.reportType === 'donorPHR') {
+        this.showDonorSelect = true;
+        this.donorOptions = await this.fetchDonorsByProjectId(this.projectId);
+      }
+    },
+    async fetchOrphansByProjectId(projectId) {
+      const orphans = await axios.post('/graphql', {
+        query: `query getOrphansByProjectId ($projectId: ID!) {
+                  getOrphansByProjectId (projectId: $projectId) {
+                    id
+                    orphanCode
+                    firstName
+                    father {
+                      firstName
+                      lastName
+                    }
+                  }
+                }`,
+        variables: {
+          projectId
+        }
+      });
+
+      return orphans.data.data.getOrphansByProjectId;
+    },
+    async fetchDonorsByProjectId(projectId) {
+      const supportPlans = await axios.post('/graphql', {
+        query: `query getSupportPlanByProjectId ($projectId: ID!) {
+                getSupportPlansByProjectId (projectId: $projectId) {
+                  donor {
+                    id
+                    nameInitials
+                    companyName
+                  }
+                }
+              }`,
+        variables: {
+          projectId
+        }
+      });
+
+      return supportPlans.data.data.getSupportPlansByProjectId.map(
+        (supportPlan) => supportPlan.donor
+      );
     }
   }
 };
