@@ -11,12 +11,13 @@
       @toggleChangeStatusDialog="toggleChangeStatus($event)"
       @toogleChangeOrphanListValue="toggleOrphanList($event)"
     />
-    <!-- village select Dialog -->
+    <!-- Select village Dialog -->
     <v-dialog v-model="showVillagesSelectionDialog" width="30%" persistent>
       <v-card>
         <v-card-title class="justify-center">
           Choose Village
         </v-card-title>
+        <!-- Select village body -->
         <v-form ref="villageSelect" v-model="validVillageChoice">
           <v-responsive min-width="200" max-width="200" class="pl-0 mx-auto">
             <v-select
@@ -33,6 +34,7 @@
             </v-select>
           </v-responsive>
         </v-form>
+        <!-- Select village action -->
         <v-card-actions class="justify-end">
           <v-btn text class="red--text" @click="cancelVillagesChoice"
             >Cancel</v-btn
@@ -48,6 +50,7 @@
       </v-card>
     </v-dialog>
 
+    <!-- Orphan registration stepper -->
     <v-fab-transition>
       <!-- <NewOrphanRegistrationModel
         :newOrphanDialog="newOrphanDialog"
@@ -61,15 +64,18 @@
         @dialogClosed="newOrphanDialog = $event"
       />
     </v-fab-transition>
-    <!-- StatusChange select Dialog -->
+
+    <!-- Change status choice Dialog -->
     <v-dialog v-model="showStatusChangeSelectionDialog" width="60%">
       <v-card>
         <v-card-title class="justify-center pb-5">
           Change Orphan Status Form Current To Desired Status
         </v-card-title>
+        <!-- Status change body -->
         <v-card-text class="pb-0">
           <v-form ref="statusSelect" v-model="validStatusSelect">
             <v-row class="justify-center">
+              <!-- Old orphan status -->
               <v-col cols="5" class="pb-0">
                 <v-responsive
                   min-width="200"
@@ -92,11 +98,14 @@
                   </v-select>
                 </v-responsive>
               </v-col>
+
               <v-col cols="1" align="center" class="pt-5">
                 <v-icon class="justify-center">
                   mdi-arrow-right-thick
                 </v-icon>
               </v-col>
+
+              <!-- New orphan status -->
               <v-col cols="5" class="pb-0">
                 <v-responsive
                   min-width="200"
@@ -122,6 +131,7 @@
             </v-row>
           </v-form>
         </v-card-text>
+        <!-- Status change action -->
         <v-card-actions class="justify-end">
           <v-btn text class="red--text" @click="cancelStatusChangeSelection"
             >Cancel</v-btn
@@ -234,13 +244,14 @@
                     class="px-3 mt-0"
                   ></v-switch>
                 </v-col>
-                <!-- status change dialog -->
+                <!-- Change status dialog -->
                 <v-col class="mt-n4 pr-7" align="right">
                   <v-dialog
                     transition="dialog-bottom-transition"
                     persistent
                     max-width="450"
                   >
+                    <!-- Change status dialog activator -->
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
                         color="primary"
@@ -250,6 +261,7 @@
                         >Change Status</v-btn
                       >
                     </template>
+                    <!-- Change status dialog body -->
                     <template v-slot:default="dialog">
                       <v-card max-width="">
                         <v-card-title class="">
@@ -291,6 +303,7 @@
                 </v-col>
               </v-row>
             </template>
+            <!-- Customize columns -->
             <template v-slot:item.fullName="{ item }">
               {{ fullName(item) }}
             </template>
@@ -311,9 +324,8 @@
               <orphan-detail :details="item" />
             </template> -->
           </v-data-table>
-          <!-- becomes visble when full name is edited -->
           <!-- TODO: # Impliment a loding functionality -->
-          <!--       # maybe server side validation also -->
+          <!-- Full name column edit confirmation message -->
           <v-snackbar v-model="snack" :timeout="3000" :color="snackColor">
             {{ snackText }}
 
@@ -380,24 +392,7 @@
                         <span>Project documents</span>
                       </v-tooltip>
 
-                      <!-- Payment history reports dialog trigger -->
-                      <v-tooltip top>
-                        <template
-                          #activator="{ on: onTooltip, attrs: tooltipAttrs }"
-                        >
-                          <v-btn
-                            class="mr-1"
-                            v-bind="{ ...tooltipAttrs }"
-                            v-on="{ ...onTooltip }"
-                            @click="openPaymentHistoryReportDialog(item)"
-                          >
-                            <v-icon>mdi-chart-box-outline</v-icon>
-                            <!-- alternative icon -->
-                            <!-- <v-icon>mdi-chart-timeline-variant</v-icon> -->
-                          </v-btn>
-                        </template>
-                        <span>Payment History Reports</span>
-                      </v-tooltip>
+                      <payment-history-report :projectId="item.id" />
 
                       <!-- Project activities dialog trigger -->
                       <v-tooltip top>
@@ -552,17 +547,6 @@
                 </v-card>
               </v-row>
 
-              <!-- Payment history reports dialog -->
-              <v-dialog
-                v-model="showPaymentHistoryReportInputForm"
-                width="24em"
-              >
-                <payment-history-report-input-form
-                  :projectId="selectedProjectId"
-                  @closePHRInputForm="handlePHRDialogClose"
-                />
-              </v-dialog>
-
               <!-- Project activities dialog -->
               <v-dialog v-model="showProjectActivitiesTable">
                 <ProjectActivitiesTable
@@ -595,7 +579,7 @@ import AppNavBar from '@/components/AppNavBar';
 import SupportPlanTable from '../components/SupportPlanTable.vue';
 import ProjectActivitiesTable from '../components/ProjectActivitiesTable.vue';
 import OrphanRegistrationStepper from '../components/OrphanRegistrationStepper.vue';
-import PaymentHistoryReportInputForm from '../components/PaymentHistoryReportInputForm.vue';
+import PaymentHistoryReport from '../components/PaymentHistoryReport.vue';
 
 export default {
   components: {
@@ -604,7 +588,7 @@ export default {
     SupportPlanTable,
     ProjectActivitiesTable,
     OrphanRegistrationStepper,
-    PaymentHistoryReportInputForm
+    PaymentHistoryReport
   },
 
   data: () => ({
@@ -697,10 +681,12 @@ export default {
     showOrphans: false,
     selectedOrphanIds: { ids: [] }
   }),
+
   created() {
     this.initialize();
     this.initializeProjects();
   },
+
   watch: {
     async showVillagesSelectionDialog(val) {
       if (val === true) {
@@ -1114,15 +1100,6 @@ export default {
       return item.name;
     },
 
-    // payment history report methods
-    openPaymentHistoryReportDialog(project) {
-      this.selectedProjectId = project.id;
-
-      this.showPaymentHistoryReportInputForm = true;
-    },
-    handlePHRDialogClose() {
-      this.showPaymentHistoryReportInputForm = false;
-    },
     handleProjectActivitiesTable() {
       this.showProjectActivitiesTable = false;
     },
