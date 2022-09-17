@@ -392,6 +392,7 @@
                         <span>Project documents</span>
                       </v-tooltip>
 
+                      <!-- Project history report dialog trigger -->
                       <payment-history-report :projectId="item.id" />
 
                       <!-- Project activities dialog trigger -->

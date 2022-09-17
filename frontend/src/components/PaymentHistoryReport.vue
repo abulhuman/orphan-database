@@ -22,15 +22,19 @@
         @closePHRInputForm="handlePHRDialogClose"
       />
     </v-dialog>
+    <v-dialog v-model="showPaymentHistoryReportTable" width="38em">
+      <payment-history-report-table :phrInput="phrInput" />
+    </v-dialog>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
 import PaymentHistoryReportInputForm from './PaymentHistoryReportInputForm';
+import PaymentHistoryReportTable from './PaymentHistoryReportTable.vue';
 export default {
   components: {
-    PaymentHistoryReportInputForm
+    PaymentHistoryReportInputForm,
+    PaymentHistoryReportTable
   },
 
   props: {
@@ -41,7 +45,9 @@ export default {
   },
   data() {
     return {
-      showPaymentHistoryReportInputForm: false
+      showPaymentHistoryReportInputForm: false,
+      showPaymentHistoryReportTable: false,
+      phrInput: {}
     };
   },
 
@@ -51,7 +57,11 @@ export default {
     },
     handlePHRDialogClose(phrInput) {
       this.showPaymentHistoryReportInputForm = false;
-      console.log(phrInput);
+
+      phrInput['projectId'] = this.projectId;
+      this.phrInput = phrInput;
+
+      this.showPaymentHistoryReportTable = true;
     }
   }
 };
