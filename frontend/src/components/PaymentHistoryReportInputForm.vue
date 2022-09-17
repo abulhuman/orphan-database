@@ -5,7 +5,7 @@
     </v-card-title>
     <v-divider></v-divider>
     <v-card-text>
-      <v-form lazy-validation ref="showReportForm">
+      <v-form lazy-validation ref="phrInputForm">
         <v-row>
           <!-- Report type -->
           <v-col cols="12" class="mt-4 mb-n4 pb-0">
@@ -18,6 +18,7 @@
               dense
               outlined
               @change="handleReportTypeChange"
+              :rules="[rules.required]"
             ></v-select>
           </v-col>
           <!-- Orphan select -->
@@ -30,6 +31,7 @@
               label="Select Orphan"
               dense
               outlined
+              :rules="[rules.required]"
             ></v-select>
           </v-col>
           <!-- Donor select -->
@@ -42,6 +44,7 @@
               label="SelectDonor"
               dense
               outlined
+              :rules="[rules.required]"
             ></v-select>
           </v-col>
           <!-- Start date field -->
@@ -63,7 +66,7 @@
                   readonly
                   v-bind="attrs"
                   v-on="on"
-                  :rules="[rules.required]"
+                  :rules="[rules.required, rules.isDate]"
                 ></v-text-field>
               </template>
               <v-date-picker
@@ -107,7 +110,7 @@
                   readonly
                   v-bind="attrs"
                   v-on="on"
-                  :rules="[rules.required]"
+                  :rules="[rules.required, rules.isDate]"
                 ></v-text-field>
               </template>
               <v-date-picker
@@ -181,17 +184,19 @@ export default {
       selectedDonor: null,
       donorOptions: [],
       rules: {
-        required: (v) => !!v || 'Required'
+        required: (value) => !!value || 'This field is Required',
+        isDate: (value) =>
+          new Date(value).toString() !== 'Invalid Date' || 'Invalid Date'
       }
     };
   },
 
   watch: {
-    // ### Changes the date picker's first card after click in years instead of dates
+    // ### Shows year view when the date picker is opened as opposed to the default date view
     // fromDateMenu(val) {
     //   val &&
     //     setTimeout(() => (this.$refs.fromDatePicker.activePicker = 'YEAR'));
-    // },
+    // }
     // endDateMenu(val) {
     //   val && setTimeout(() => (this.$refs.endDatePicker.activePicker = 'YEAR'));
     // }
@@ -199,13 +204,15 @@ export default {
 
   methods: {
     handleNext() {
-      this.$emit('closePHRInputForm', {
-        startDate: this.fromDate,
-        endDate: this.toDate,
-        reportType: this.reportType,
-        orphanId: this.selectedOrphan,
-        donorId: this.selectedDonor
-      });
+      if (this.$refs.phrInputForm.validate()) {
+        this.$emit('closePHRInputForm', {
+          startDate: this.fromDate,
+          endDate: this.toDate,
+          reportType: this.reportType,
+          orphanId: this.selectedOrphan,
+          donorId: this.selectedDonor
+        });
+      }
     },
     orphanFullName(orphan) {
       return (
