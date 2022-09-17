@@ -20,7 +20,7 @@
           </v-col>
           <!-- Arrow icon -->
           <v-col cols="1" class="d-flex justify-center pt-0">
-            <v-icon>mdi-arrow-right-thick</v-icon>
+            <v-icon color="primary" size="30">mdi-arrow-right-thick</v-icon>
           </v-col>
           <!-- End date field -->
           <v-col cols="5" class="pb-0">
@@ -95,6 +95,8 @@
           ></v-text-field>
         </v-col>
       </v-row>
+
+      <!-- OrphanPHR table -->
       <v-sheet class="overflow-y-auto overflow-x-hidden" max-height="50vh">
         <v-data-table
           :headers="phrHeaders"
@@ -102,12 +104,20 @@
           item-key="id"
           multi-sort
         >
-          <!-- Customize table top -->
-          <!-- <template #top>
-            
-          </template> -->
+          <!-- Customize Payment date column -->
           <template #item.transactionDate="{ item }">
             {{ formatDate(item.transactionDate) }}
+          </template>
+
+          <!-- Customize table footer -->
+          <template #body.append>
+            <tr class="grey lighten-2 font-weight-bold text-uppercase">
+              <td>total</td>
+              <td class="text-end">
+                {{ totalPayment }}
+              </td>
+              <!-- <td colspan="4"></td> -->
+            </tr>
           </template>
         </v-data-table>
       </v-sheet>
@@ -120,8 +130,8 @@ import axios from 'axios';
 export default {
   props: {
     orphanPHRInput: {
-      type: Object
-      // required: true
+      type: Object,
+      required: true
       // default() {
       //   return {
       //     orphanId: '1',
@@ -143,7 +153,8 @@ export default {
         orphanName: '',
         guardianName: '',
         guardianNumber: ''
-      }
+      },
+      totalPayment: 0
     };
   },
 
@@ -177,6 +188,13 @@ export default {
       this.phrOrphanInfo.guardianNumber = ophr.orphan.guardian.mobileNumber;
 
       this.phrRows = ophr.financialRecords;
+
+      this.totalPayment = this.phrRows.reduce(
+        (acc, cur) => (acc += cur.amount),
+        0
+      );
+
+      // console.log(this.phrRows);
     },
 
     orphanFullName(orphan) {
