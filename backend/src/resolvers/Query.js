@@ -881,7 +881,7 @@ async function generateOrphanPaymentHistoryReport(
     data.financialRecords = data.financialRecords.filter(
       (record) =>
         new Date(record.transactionDate) <= new Date(input.endDate) &&
-        new Date(record.transactionDate) > new Date(input.startDate)
+        new Date(record.transactionDate) >= new Date(input.startDate)
     )
 
     return data
@@ -922,7 +922,7 @@ async function generateDonorPaymentHistoryReport(
     data.supportPlans = data.supportPlans.filter(
       (supportPlan) =>
         new Date(supportPlan.startDate) <= new Date(input.endDate) &&
-        new Date(supportPlan.startDate) > new Date(input.startDate)
+        new Date(supportPlan.startDate) >= new Date(input.startDate)
     )
 
     return data
@@ -963,7 +963,7 @@ async function generateProjectPaymentHistoryReport(
     data.supportPlans = data.supportPlans.filter(
       (supportPlan) =>
         new Date(supportPlan.startDate) <= new Date(input.endDate) &&
-        new Date(supportPlan.startDate) > new Date(input.startDate)
+        new Date(supportPlan.startDate) >= new Date(input.startDate)
     )
 
     return data
