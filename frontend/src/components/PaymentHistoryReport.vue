@@ -54,7 +54,7 @@ export default {
 
   computed: {
     tableWidth() {
-      return this.phrInput === 'orphanPHR' ? '38em' : '70em';
+      return this.phrInput.reportType === 'orphanPHR' ? '38em' : '70em';
     }
   },
 
