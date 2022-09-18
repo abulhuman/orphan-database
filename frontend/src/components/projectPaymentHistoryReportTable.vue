@@ -201,15 +201,14 @@ export default {
       console.log('pphr', pphr);
 
       this.phrProjectInfo.number = pphr.project.number;
-      this.phrProjectInfo.donors = pphr.supportPlans.map(
-        (supportPlan) => supportPlan.donor
-      );
-      // .reduce((donors, donor) => {
-      //   if (!donors.some((val) => val.id === donor.id)) {
-      //     donors.push(donor);
-      //   }
-      //   return donors;
-      // }, []);
+      this.phrProjectInfo.donors = pphr.supportPlans
+        .map((supportPlan) => supportPlan.donor)
+        .reduce((donors, donor) => {
+          if (!donors.some((val) => val.id === donor.id)) {
+            donors.push(donor);
+          }
+          return donors;
+        }, []);
 
       this.phrRows = pphr.supportPlans.reduce((prev, supportPlan) => {
         for (const payment of supportPlan.payments) {
