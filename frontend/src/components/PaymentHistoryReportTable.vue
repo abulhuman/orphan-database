@@ -6,8 +6,8 @@
     />
     <project-payment-history-report-table
       v-if="phrInput.reportType === 'projectPHR'"
+      :projectPHRInput="phrInput"
     />
-    <!-- :projectPHRInput="phrInput" -->
   </div>
 </template>
 

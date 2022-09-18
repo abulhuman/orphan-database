@@ -56,7 +56,7 @@
               append-icon="mdi-calendar-end"
             ></v-text-field>
           </v-col>
-          <!-- Download icon -->
+          <!-- Download button -->
           <v-col cols="2" class="d-flex justify-center ml-n1 pt-3">
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
@@ -73,6 +73,7 @@
           </v-col>
         </v-row>
       </v-banner>
+
       <!-- ProjectPHR table -->
       <v-sheet class="overflow-y-auto overflow-x-hidden" max-height="50vh">
         <v-data-table
@@ -105,14 +106,7 @@ export default {
   props: {
     projectPHRInput: {
       type: Object,
-      // required: true,
-      default() {
-        return {
-          projectId: '1',
-          startDate: '2021-01-01T02:33:19.196Z',
-          endDate: '2027-09-15T02:33:19.196Z'
-        };
-      }
+      required: true
     }
   },
 
