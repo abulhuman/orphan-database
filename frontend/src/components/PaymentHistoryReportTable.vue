@@ -8,17 +8,23 @@
       v-if="phrInput.reportType === 'projectPHR'"
       :projectPHRInput="phrInput"
     />
+    <donor-payment-history-report-table
+      v-if="phrInput.reportType === 'donorPHR'"
+      :donorPHRInput="phrInput"
+    />
   </div>
 </template>
 
 <script>
+import DonorPaymentHistoryReportTable from './DonorPaymentHistoryReportTable.vue';
 import OrphanPaymentHistoryReportTable from './OrphanPaymentHistoryReportTable.vue';
 import ProjectPaymentHistoryReportTable from './projectPaymentHistoryReportTable.vue';
 
 export default {
   components: {
     OrphanPaymentHistoryReportTable,
-    ProjectPaymentHistoryReportTable
+    ProjectPaymentHistoryReportTable,
+    DonorPaymentHistoryReportTable
   },
 
   props: {
