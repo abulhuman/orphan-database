@@ -5,7 +5,7 @@
     </v-card-title>
     <v-card-text>
       <!-- Report Info -->
-      <v-banner @click:icon="initialize">
+      <v-banner>
         <v-row class="mb-n6">
           <!-- Start date field -->
           <v-col cols="5" class="pb-0">

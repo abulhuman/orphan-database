@@ -75,7 +75,6 @@
                 label="Date"
                 no-title
                 scrollable
-                :max="new Date().toISOString().substr(0, 10)"
               >
                 <v-spacer></v-spacer>
                 <v-btn text color="primary" @click="fromDateMenu = false">
@@ -118,7 +117,6 @@
                 v-model="toDate"
                 no-title
                 scrollable
-                :max="new Date().toISOString().substr(0, 10)"
               >
                 <v-spacer></v-spacer>
                 <v-btn text color="primary" @click="endDateMenu = false">

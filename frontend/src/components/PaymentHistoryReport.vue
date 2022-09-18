@@ -22,7 +22,7 @@
         @closePHRInputForm="handlePHRDialogClose"
       />
     </v-dialog>
-    <v-dialog v-model="showPaymentHistoryReportTable" width="38em">
+    <v-dialog v-model="showPaymentHistoryReportTable" :width="tableWidth">
       <payment-history-report-table :phrInput="phrInput" />
     </v-dialog>
   </div>
@@ -43,12 +43,19 @@ export default {
       required: true
     }
   },
+
   data() {
     return {
       showPaymentHistoryReportInputForm: false,
       showPaymentHistoryReportTable: false,
       phrInput: {}
     };
+  },
+
+  computed: {
+    tableWidth() {
+      return this.phrInput.reportType === 'orphanPHR' ? '38em' : '70em';
+    }
   },
 
   methods: {
