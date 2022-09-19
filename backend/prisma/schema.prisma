@@ -174,7 +174,7 @@ model CurrentOrphanData {
   created_at        DateTime? @default(now())
   updated_at        DateTime?
   balance           Float?
-  sponsorshipStatus String?   @default("NEW")
+  sponsorshipStatus String?   @default("new")
   orphan            Orphan    @relation(fields: [orphanId], references: [id])
   orphanId          Int       @unique
 
@@ -384,7 +384,7 @@ model Project {
   durationInYears              Int
   grandTotalBudget             Float                      @default(0)
   administrativeCost           Float
-  status                       String                     @default("NEW")
+  status                       String                     @default("new")
   incomeGeneratingActivities   IncomeGeneratingActivity[]
   projectActivities            ProjectActivity[]
   projectDocuments             ProjectDocument[]

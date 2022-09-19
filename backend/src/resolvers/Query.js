@@ -1022,21 +1022,6 @@ async function generateOrphanStatusReport(
           })
         : ProjectOrphans
 
-    // if (input.startDate && !input.endDate) {
-    //   input.endDate = new Date()
-    // } else if (!input.startDate && input.endDate) {
-    //   input.startDate = data.project.created_at
-    // } else if (!input.startDate && !input.endDate) {
-    //   input.endDate = new Date()
-    //   input.startDate = data.project.created_at
-    // }
-
-    // data.supportPlans = data.supportPlans.filter(
-    //   (supportPlan) =>
-    //     new Date(supportPlan.startDate) <= new Date(input.endDate) &&
-    //     new Date(supportPlan.startDate) > new Date(input.startDate)
-    // )
-
     return orphans
   }
   throw new AuthenticationError()

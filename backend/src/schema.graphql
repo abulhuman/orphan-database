@@ -1282,12 +1282,12 @@ enum orphanPsychologicalStatus {
 }
 
 enum SponsorshipStatusEnum {
-  NEW
-  PROCESSING
-  PENDING
-  ACTIVE
-  GRADUATED
-  TERMINATED
+  new
+  processing
+  pending
+  active
+  graduated
+  terminated
 }
 
 enum projectDocumentType {
@@ -1388,8 +1388,8 @@ enum ERSemester {
 }
 
 enum FRTransactionType {
-  WITHDRAWAL
-  DEPOSIT
+  withdrawal
+  deposit
   assign
   re_assign
 }
