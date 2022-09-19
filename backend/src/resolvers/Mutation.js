@@ -1022,11 +1022,16 @@ async function createFinancialRecord(_parent, args, { prisma, req }, _info) {
 
     const promiseAll = await Promise.all([
       newFinancialRecordPromise,
-      prisma.currentOrphanData.update({
+      prisma.currentOrphanData.upsert({
         where: {
           orphanId: parseInt(args.orphanId)
         },
-        data: {
+        create: {
+          balance: args?.balance ? args?.balance : 0,
+          sponsorshipStatus: args?.status ? args?.status : 'new',
+          orphanId: parseInt(args.orphanId)
+        },
+        update: {
           updated_at: new Date().toISOString(),
           balance:
             args.transactionType === 'withdrawal'
@@ -1222,13 +1227,18 @@ async function createSponsorshipStatus(_parent, args, { prisma, req }, _info) {
 
     const promiseAll = await Promise.all([
       newSponsorShipStatusPromise,
-      prisma.currentOrphanData.update({
+      prisma.currentOrphanData.upsert({
         where: {
           orphanId: parseInt(args.orphanId)
         },
-        data: {
+        create: {
+          balance: args?.balance ? args?.balance : 0,
+          sponsorshipStatus: args?.status ? args?.status : 'new',
+          orphanId: parseInt(args.orphanId)
+        },
+        update: {
           updated_at: new Date().toISOString(),
-          sponsorshipStatus: args.status
+          sponsorshipStatus: args?.status ? args?.status : 'new',
         }
       })
     ])

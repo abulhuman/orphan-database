@@ -971,6 +971,62 @@ async function generateProjectPaymentHistoryReport(
   throw new AuthenticationError()
 }
 
+async function generateOrphanStatusReport(
+  _parent,
+  { beneficiaryId, reportBeneficiary, status },
+  { prisma, req },
+  _info
+) {
+  if (getUser(req).userId) {
+    const statusWhere = {
+      currentOrphanData: {
+        sponsorshipStatus: {
+          equals: status
+        }
+      }
+    }
+    let ProjectOrphans =
+      reportBeneficiary === 'DONOR'
+        ? []
+        : (
+            await prisma.project.findUniqueOrThrow({
+              where: { id: parseInt(beneficiaryId) },
+              select: {
+                location: {
+                  select: {
+                    orphans: { where: { ...statusWhere } }
+                  }
+                }
+              }
+            })
+          )?.location
+
+    ProjectOrphans = ProjectOrphans.map((loc_or) => (loc_or = loc_or.orphans))
+    ProjectOrphans = ProjectOrphans.flat(2)
+
+    const orphans =
+      reportBeneficiary === 'DONOR'
+        ? await prisma.orphan.findMany({
+            where: {
+              AND: [
+                {
+                  donors: {
+                    some: {
+                      id: parseInt(beneficiaryId)
+                    }
+                  }
+                },
+                statusWhere
+              ]
+            }
+          })
+        : ProjectOrphans
+
+    return orphans
+  }
+  throw new AuthenticationError()
+}
+
 module.exports = {
   orphan,
   father,
@@ -1043,5 +1099,6 @@ module.exports = {
   getProjectActivitiesByProjectId,
   generateOrphanPaymentHistoryReport,
   generateDonorPaymentHistoryReport,
-  generateProjectPaymentHistoryReport
+  generateProjectPaymentHistoryReport,
+  generateOrphanStatusReport
 }
