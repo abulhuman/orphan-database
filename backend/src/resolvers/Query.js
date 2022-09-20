@@ -881,7 +881,7 @@ async function generateOrphanPaymentHistoryReport(
     data.financialRecords = data.financialRecords.filter(
       (record) =>
         new Date(record.transactionDate) <= new Date(input.endDate) &&
-        new Date(record.transactionDate) > new Date(input.startDate)
+        new Date(record.transactionDate) >= new Date(input.startDate)
     )
 
     return data
@@ -922,7 +922,7 @@ async function generateDonorPaymentHistoryReport(
     data.supportPlans = data.supportPlans.filter(
       (supportPlan) =>
         new Date(supportPlan.startDate) <= new Date(input.endDate) &&
-        new Date(supportPlan.startDate) > new Date(input.startDate)
+        new Date(supportPlan.startDate) >= new Date(input.startDate)
     )
 
     return data
@@ -963,10 +963,66 @@ async function generateProjectPaymentHistoryReport(
     data.supportPlans = data.supportPlans.filter(
       (supportPlan) =>
         new Date(supportPlan.startDate) <= new Date(input.endDate) &&
-        new Date(supportPlan.startDate) > new Date(input.startDate)
+        new Date(supportPlan.startDate) >= new Date(input.startDate)
     )
 
     return data
+  }
+  throw new AuthenticationError()
+}
+
+async function generateOrphanStatusReport(
+  _parent,
+  { beneficiaryId, reportBeneficiary, status },
+  { prisma, req },
+  _info
+) {
+  if (getUser(req).userId) {
+    const statusWhere = {
+      currentOrphanData: {
+        sponsorshipStatus: {
+          equals: status
+        }
+      }
+    }
+    let ProjectOrphans =
+      reportBeneficiary === 'DONOR'
+        ? []
+        : (
+            await prisma.project.findUniqueOrThrow({
+              where: { id: parseInt(beneficiaryId) },
+              select: {
+                location: {
+                  select: {
+                    orphans: { where: { ...statusWhere } }
+                  }
+                }
+              }
+            })
+          )?.location
+
+    ProjectOrphans = ProjectOrphans.map((loc_or) => (loc_or = loc_or.orphans))
+    ProjectOrphans = ProjectOrphans.flat(2)
+
+    const orphans =
+      reportBeneficiary === 'DONOR'
+        ? await prisma.orphan.findMany({
+            where: {
+              AND: [
+                {
+                  donors: {
+                    some: {
+                      id: parseInt(beneficiaryId)
+                    }
+                  }
+                },
+                statusWhere
+              ]
+            }
+          })
+        : ProjectOrphans
+
+    return orphans
   }
   throw new AuthenticationError()
 }
@@ -1043,5 +1099,6 @@ module.exports = {
   getProjectActivitiesByProjectId,
   generateOrphanPaymentHistoryReport,
   generateDonorPaymentHistoryReport,
-  generateProjectPaymentHistoryReport
+  generateProjectPaymentHistoryReport,
+  generateOrphanStatusReport
 }
