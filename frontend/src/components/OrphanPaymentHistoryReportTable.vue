@@ -37,7 +37,14 @@
           <v-col cols="1" class="d-flex justify-center mt-n2 ml-n1 pt-0">
             <v-tooltip top nudge-bottom="20">
               <template v-slot:activator="{ on, attrs }">
-                <v-icon color="primary" size="38" dark v-bind="attrs" v-on="on">
+                <v-icon
+                  color="primary"
+                  size="38"
+                  dark
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="downloadOrphanPaymentHistoryReport"
+                >
                   mdi-download-circle
                   <!-- mdi-export -->
                 </v-icon>
@@ -127,6 +134,11 @@
 
 <script>
 import axios from 'axios';
+import XLSX from 'xlsx';
+import XLSXStyle from 'cptable-fixed-xlsx-style';
+// import XLSXStyle from 'xlsx-style';
+import { saveAs } from 'file-saver';
+
 export default {
   props: {
     orphanPHRInput: {
@@ -197,6 +209,278 @@ export default {
       // console.log(this.phrRows);
     },
 
+    downloadOrphanPaymentHistoryReport() {
+      const {
+        orphanCode,
+        orphanName,
+        guardianName,
+        guardianNumber
+      } = this.phrOrphanInfo;
+
+      let jsonExportData = [
+        ['Charity and Development Association (CDA)', null, null, null],
+        [
+          `Orphan Payment History Report from ${this.startDate} to ${this.endDate}`,
+          null,
+          null,
+          null
+        ],
+        [
+          `Code: ${orphanCode}`,
+          `Name: ${orphanName}`,
+          `Guardian: ${guardianName}`,
+          `Guardian Mobile: ${guardianNumber}`
+        ]
+      ];
+
+      jsonExportData.push(this.phrHeaders.map((header) => header.text));
+
+      const exportTableDate = this.phrRows.map((row) => {
+        let modifiedRow = [];
+
+        modifiedRow[0] = this.formatDate(row.transactionDate);
+        modifiedRow[1] = row.amount;
+
+        return modifiedRow;
+      });
+
+      jsonExportData.push(...exportTableDate);
+      jsonExportData.push(['Total', this.totalPayment]);
+
+      const workBook = XLSX.utils.book_new();
+      const workSheet = XLSX.utils.aoa_to_sheet(jsonExportData);
+
+      // handle merges
+      workSheet['!merges'] = [
+        { s: { r: 0, c: 0 }, e: { r: 0, c: 3 } },
+        { s: { r: 1, c: 0 }, e: { r: 1, c: 3 } }
+      ];
+
+      // sets the width of colns
+      workSheet['!cols'] = [
+        { wpx: 150 }, // A
+        { wpx: 200 }, // B
+        { wpx: 220 }, // C
+        { wpx: 200 } // D
+      ];
+
+      // sets the first 2 rows bold and centered
+      for (let i = 1; i <= 2; i++) {
+        workSheet[`A${i}`].s = {
+          font: {
+            bold: true
+          },
+          alignment: {
+            horizontal: 'center',
+            vertical: 'center'
+          }
+        };
+      }
+
+      // sets the 3rd row elments to bold
+      for (let i = 0; i <= 3; i++) {
+        const char = String.fromCharCode(65 + i);
+        workSheet[`${char}3`].s = {
+          font: {
+            bold: true
+          },
+          alignment: {
+            horizontal: 'right'
+          }
+        };
+      }
+
+      // sets border to the table
+      for (const key in workSheet) {
+        const flag = key.localeCompare('A4', undefined, { numeric: true });
+
+        if (flag < 0 || key === 'B3' || key === 'C3' || key === 'D3') continue;
+
+        workSheet[key].s = {
+          alignment: {
+            horizontal: 'left',
+            wrapText: true
+          },
+          border: {
+            top: {
+              style: 'thin',
+              color: '000000'
+            },
+            bottom: {
+              style: 'thin',
+              color: '000000'
+            },
+            left: {
+              style: 'thin',
+              color: '000000'
+            },
+            right: {
+              style: 'thin',
+              color: '000000'
+            }
+          }
+        };
+      }
+
+      // sets the 2nd col of the table to align right
+      for (const key in workSheet) {
+        const flag = key.localeCompare('B4', undefined, { numeric: true });
+
+        if (flag < 0 || !key.includes('B')) continue;
+
+        workSheet[key].s = {
+          alignment: {
+            horizontal: 'right'
+          },
+          border: {
+            top: {
+              style: 'thin',
+              color: '000000'
+            },
+            bottom: {
+              style: 'thin',
+              color: '000000'
+            },
+            left: {
+              style: 'thin',
+              color: '000000'
+            },
+            right: {
+              style: 'thin',
+              color: '000000'
+            }
+          }
+        };
+      }
+
+      // sets the 4th row to bold
+      for (let i = 0; i <= 1; i++) {
+        const char = String.fromCharCode(65 + i);
+
+        if (workSheet[`${char}4`] !== undefined) {
+          workSheet[`${char}4`].s = {
+            font: {
+              bold: true
+            },
+            border: {
+              top: {
+                style: 'thin',
+                color: '000000'
+              },
+              bottom: {
+                style: 'thin',
+                color: '000000'
+              },
+              left: {
+                style: 'thin',
+                color: '000000'
+              },
+              right: {
+                style: 'thin',
+                color: '000000'
+              }
+            }
+          };
+        }
+
+        // sets the 4th row 2nd col to align right
+        if (workSheet[`${char}4`] !== undefined) {
+          workSheet[`B4`].s = {
+            font: {
+              bold: true
+            },
+            alignment: {
+              horizontal: 'right'
+            },
+            border: {
+              top: {
+                style: 'thin',
+                color: '000000'
+              },
+              bottom: {
+                style: 'thin',
+                color: '000000'
+              },
+              left: {
+                style: 'thin',
+                color: '000000'
+              },
+              right: {
+                style: 'thin',
+                color: '000000'
+              }
+            }
+          };
+        }
+      }
+
+      // sets the last row to bold
+      for (let i = 0; i <= 1; i++) {
+        const char = String.fromCharCode(65 + i);
+
+        if (workSheet[`${char}${jsonExportData.length}`] !== undefined) {
+          workSheet[`${char}${jsonExportData.length}`].s = {
+            font: {
+              bold: true
+            },
+            border: {
+              top: {
+                style: 'thin',
+                color: '000000'
+              },
+              bottom: {
+                style: 'thin',
+                color: '000000'
+              },
+              left: {
+                style: 'thin',
+                color: '000000'
+              },
+              right: {
+                style: 'thin',
+                color: '000000'
+              }
+            }
+          };
+        }
+      }
+
+      // creates an output buffer
+      function s2ab(s) {
+        if (typeof ArrayBuffer !== 'undefined') {
+          const buf = new ArrayBuffer(s.length);
+          const view = new Uint8Array(buf);
+          for (let i = 0; i !== s.length; ++i) {
+            view[i] = s.charCodeAt(i) & 0xff;
+          }
+          return buf;
+        } else {
+          const buf = new Array(s.length);
+          for (let i = 0; i !== s.length; ++i) {
+            buf[i] = s.charCodeAt(i) & 0xff;
+          }
+          return buf;
+        }
+      }
+
+      XLSX.utils.book_append_sheet(
+        workBook,
+        workSheet,
+        'Orphan Payment History Report'
+      );
+
+      // XLSX.writeFile(workBook, "orphanTest.xlsx");
+      const wbOut = XLSXStyle.write(workBook, {
+        bookSST: false,
+        type: 'binary'
+      });
+
+      saveAs(
+        new Blob([s2ab(wbOut)], { type: '' }),
+        'OrphanPaymentHistoryReport.xlsx'
+      );
+    },
+
     orphanFullName(orphan) {
       return (
         `${orphan.firstName
@@ -226,7 +510,9 @@ export default {
     },
 
     formatDate(isoDate) {
-      return new Date(isoDate).toDateString();
+      const dateStringArray = new Date(isoDate).toDateString().split(' ');
+      dateStringArray.shift();
+      return dateStringArray.join(' ');
     },
 
     async fetchOrphanPaymentHistoryReport(orphanId, startDate, endDate) {
