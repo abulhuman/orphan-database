@@ -10,6 +10,7 @@
       @toggleSupportPlanComponent="toggleSupportPlanTable($event)"
       @toggleChangeStatusDialog="toggleChangeStatus($event)"
       @toogleChangeOrphanListValue="toggleOrphanList($event)"
+      @toggleShowReport="toggleShowReport($event)"
     />
     <!-- Select village Dialog -->
     <v-dialog v-model="showVillagesSelectionDialog" width="30%" persistent>
@@ -349,6 +350,11 @@
       </v-fab-transition>
     </template>
 
+    <!-- Report Page -->
+    <template v-if="showReport">
+      <report-page  />
+    </template>
+
     <template v-else>
       <v-row v-if="!showOrphans" justify="center" no-gutters>
         <!-- Project Main card -->
@@ -574,13 +580,14 @@
 <style scoped></style>
 
 <script>
-import axios from 'axios';
-import OrphanList from '@/views/OrphanList.vue';
-import AppNavBar from '@/components/AppNavBar';
-import SupportPlanTable from '../components/SupportPlanTable.vue';
-import ProjectActivitiesTable from '../components/ProjectActivitiesTable.vue';
-import OrphanRegistrationStepper from '../components/OrphanRegistrationStepper.vue';
-import PaymentHistoryReport from '../components/PaymentHistoryReport.vue';
+import axios from 'axios'
+import OrphanList from '@/views/OrphanList.vue'
+import AppNavBar from '@/components/AppNavBar'
+import SupportPlanTable from '../components/SupportPlanTable.vue'
+import ProjectActivitiesTable from '../components/ProjectActivitiesTable.vue'
+import OrphanRegistrationStepper from '../components/OrphanRegistrationStepper.vue'
+import PaymentHistoryReport from '../components/PaymentHistoryReport.vue'
+import ReportPage from '../components/ReportPage.vue'
 
 export default {
   components: {
@@ -589,7 +596,8 @@ export default {
     SupportPlanTable,
     ProjectActivitiesTable,
     OrphanRegistrationStepper,
-    PaymentHistoryReport
+    PaymentHistoryReport,
+    ReportPage
   },
 
   data: () => ({
@@ -663,6 +671,7 @@ export default {
     showProjectActivitiesTable: false,
     showPaymentHistoryReportInputForm: false,
     showStatusChangeSelectionDialog: false,
+    showReport: true,
     validStatusSelect: false,
     currentStatus: '',
     currentStatusOptions: [
@@ -684,14 +693,14 @@ export default {
   }),
 
   created() {
-    this.initialize();
-    this.initializeProjects();
+    this.initialize()
+    this.initializeProjects()
   },
 
   watch: {
     async showVillagesSelectionDialog(val) {
       if (val === true) {
-        this.selectedOrphanVillageOptions = [];
+        this.selectedOrphanVillageOptions = []
 
         const villages = await axios
           .post('/graphql', {
@@ -706,36 +715,36 @@ export default {
             }
           })
           .then((res) => res.data.data.getVillagesByCoordinatorId)
-          .catch((err) => console.warn(err));
+          .catch((err) => console.warn(err))
 
-        this.selectedOrphanVillageOptions = [...villages];
+        this.selectedOrphanVillageOptions = [...villages]
       }
     },
     currentStatus(val) {
       if (val === 'new')
         this.changedStatusOptions = this.changedStatusOptions.filter(
           (cur) => cur.value === 'graduated'
-        );
+        )
       else {
         const processingIndex = this.changedStatusOptions.findIndex((elmt) => {
-          return elmt.value === 'processing';
-        });
+          return elmt.value === 'processing'
+        })
         if (processingIndex === -1) {
           this.changedStatusOptions.unshift({
             text: 'Processing',
             value: 'processing'
-          });
+          })
         }
       }
     },
     singleOrphanSelect() {
       this.selectSwitch =
-        this.singleOrphanSelect === true ? 'Single Orphan' : 'Multiple Orphans';
+        this.singleOrphanSelect === true ? 'Single Orphan' : 'Multiple Orphans'
     }
   },
   methods: {
     initialize() {
-      console.log('routerCoordinatorId: ', typeof this.$route.params.id);
+      console.log('routerCoordinatorId: ', typeof this.$route.params.id)
       axios
         .post('/graphql', {
           query: `query coordinator($id: ID!) {
@@ -765,21 +774,21 @@ export default {
         // .then(res => console.log(res.data.data.coordinator))
         .then((res) => res.data.data.coordinator)
         .then((coordinator) => {
-          this.coordinator = Object.assign({}, coordinator);
+          this.coordinator = Object.assign({}, coordinator)
           this.coordinatorUser = Object.assign(
             this.coordinatorUser,
             coordinator.user
-          );
-          this.donors = [...this.coordinator.donors];
+          )
+          this.donors = [...this.coordinator.donors]
 
           for (const property in this.coordinatorUser) {
             if (Object.hasOwnProperty.call(this.coordinator, property)) {
-              this.coordinatorUser[property] = coordinator[property];
+              this.coordinatorUser[property] = coordinator[property]
             }
           }
           // console.log('coordinator', this.coordinator);
         })
-        .catch((err) => console.warn(err));
+        .catch((err) => console.warn(err))
     },
     getAllOrphans() {
       return axios
@@ -804,7 +813,7 @@ export default {
         }`
         })
         .then((res) => res.data.data.allOrphans)
-        .catch((err) => console.warn(err));
+        .catch((err) => console.warn(err))
     },
     initializeProjects() {
       axios
@@ -850,24 +859,27 @@ export default {
         })
         .then((res) => res.data.data.getProjectsByCoordinatorId)
         .then((projects) => (this.projects = [...projects]))
-        .catch((err) => console.warn(err));
+        .catch((err) => console.warn(err))
     },
     toggleNewOrphanDialog(val) {
-      this.showVillagesSelectionDialog = val;
+      this.showVillagesSelectionDialog = val
     },
     toggleSupportPlanTable(val) {
-      console.log(val);
+      console.log(val)
       // this.showSupportPlanTable = val;
     },
     toggleChangeStatus(val) {
-      this.showStatusChangeSelectionDialog = val;
+      this.showStatusChangeSelectionDialog = val
     },
     toggleOrphanList(val) {
-      this.showOrphans = val;
+      this.showOrphans = val
+    },
+    toggleShowReport(val) {
+      this.showReport = val
     },
     addNewOrphan(newOrphanId) {
-      console.log(`adding new orphan`, newOrphanId);
-      this.selectedOrphanIds.ids.push(parseInt(newOrphanId));
+      console.log(`adding new orphan`, newOrphanId)
+      this.selectedOrphanIds.ids.push(parseInt(newOrphanId))
     },
     // custom search function based on selected columns
     orphanSearchFilter(value, search, item) {
@@ -875,33 +887,33 @@ export default {
         if (this.orphanFilterValue.length > 0) {
           for (const filterVal of this.orphanFilterValue) {
             if (filterVal === this.headers[0].text) {
-              return item.id.indexOf(search) !== -1;
+              return item.id.indexOf(search) !== -1
             } else if (filterVal === this.headers[1].text) {
               return (
                 this.fullName(item)
                   .toLowerCase()
                   .indexOf(search.toLowerCase()) !== -1
-              );
+              )
             } else if (filterVal === this.headers[2].text) {
               return (
                 this.calcAge(item)
                   .toString()
                   .indexOf(search) !== -1
-              );
+              )
             } else if (filterVal === this.headers[3].text) {
               return (
                 item.gender.toLowerCase().indexOf(search.toLowerCase()) !== -1
-              );
+              )
             } else if (filterVal === this.headers[4].text) {
               return (
                 this.calcSponsorshipStatus(item)
                   .toLowerCase()
                   .indexOf(search.toLowerCase()) !== -1
-              );
+              )
             } else if (filterVal === this.headers[5].text) {
-              return this.calcSponsoredDate(item).indexOf(search) !== -1;
+              return this.calcSponsoredDate(item).indexOf(search) !== -1
             } else {
-              return -1;
+              return -1
             }
           }
         } else {
@@ -912,7 +924,7 @@ export default {
               .toString()
               .toLowerCase()
               .indexOf(search) !== -1
-          );
+          )
         }
       }
     },
@@ -927,17 +939,17 @@ export default {
         ` ${item.father.lastName
           .substr(0, 1)
           .toUpperCase()}${item.father.lastName.substr(1)}`
-      );
+      )
     },
     calcAge(item) {
       return (
         new Date().getUTCFullYear() -
         new Date(Date.parse(item.dateOfBirth.toString())).getUTCFullYear()
-      );
+      )
     },
     calcSponsorshipStatus(item) {
       return item.sponsorshipStatuses[item.sponsorshipStatuses.length - 1]
-        .status;
+        .status
     },
     calcSponsoredDate(item) {
       const options = {
@@ -945,74 +957,74 @@ export default {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
-      };
+      }
       return new Date(
         Date.parse(
           item.sponsorshipStatuses[
             item.sponsorshipStatuses.length - 1
           ].date.toString()
         )
-      ).toLocaleDateString(undefined, options);
+      ).toLocaleDateString(undefined, options)
     },
     chooseVillages() {
       if (this.$refs.villageSelect.validate()) {
-        this.villageChoiceClose();
+        this.villageChoiceClose()
         // don't reset here. coz selectedOrphanVillage is passed as a prop to other components
         // this.villageChoiceReset();
-        this.selectedOrphanVillageOptions = [];
-        this.newOrphanDialog = true;
+        this.selectedOrphanVillageOptions = []
+        this.newOrphanDialog = true
       } else {
         // handle error and show some kind of notification
       }
     },
     cancelVillagesChoice() {
-      this.selectedOrphanVillage = '';
-      this.villageChoiceClose();
-      this.villageChoiceReset();
+      this.selectedOrphanVillage = ''
+      this.villageChoiceClose()
+      this.villageChoiceReset()
     },
     villageChoiceClose() {
-      this.showVillagesSelectionDialog = false;
+      this.showVillagesSelectionDialog = false
     },
     villageChoiceReset() {
-      this.$refs.villageSelect.reset();
+      this.$refs.villageSelect.reset()
     },
 
     async confirmStatusChangeSelection() {
       if (this.$refs.statusSelect.validate()) {
-        const allOrphans = await this.getAllOrphans();
+        const allOrphans = await this.getAllOrphans()
         this.orphans = allOrphans.filter((orphan) => {
-          const statuses = orphan.sponsorshipStatuses;
-          return statuses[statuses.length - 1].status === this.currentStatus;
-        });
-        this.statusChangeSelectionClose();
-        this.changeStatusOrphanDialog = true;
+          const statuses = orphan.sponsorshipStatuses
+          return statuses[statuses.length - 1].status === this.currentStatus
+        })
+        this.statusChangeSelectionClose()
+        this.changeStatusOrphanDialog = true
       } else {
         // handle error and show some kind of notification
       }
     },
     cancelStatusChangeSelection() {
-      this.statusChangeSelectionClose();
-      this.statusChangeSelectionReset();
+      this.statusChangeSelectionClose()
+      this.statusChangeSelectionReset()
     },
     statusChangeSelectionClose() {
-      this.showStatusChangeSelectionDialog = false;
+      this.showStatusChangeSelectionDialog = false
     },
     statusChangeSelectionReset() {
-      this.$refs.statusSelect.reset();
+      this.$refs.statusSelect.reset()
     },
     removeSelectedOrphanFilter(item) {
-      this.orphanFilterValue.splice(this.orphanFilterValue.indexOf(item), 1);
-      this.orphanFilterValue = [...this.orphanFilterValue];
+      this.orphanFilterValue.splice(this.orphanFilterValue.indexOf(item), 1)
+      this.orphanFilterValue = [...this.orphanFilterValue]
     },
     cancelStatusChange(dialog) {
-      dialog.value = false;
+      dialog.value = false
     },
     async confirmStatusChange(dialog) {
       for (const orphan of this.selectedOrphans) {
-        const orphanId = orphan.id;
-        await this.createSponsorshipStatus(orphanId, this.changedStatus);
+        const orphanId = orphan.id
+        await this.createSponsorshipStatus(orphanId, this.changedStatus)
       }
-      dialog.value = false;
+      dialog.value = false
     },
     createSponsorshipStatus(orphanId, status) {
       return axios
@@ -1049,19 +1061,19 @@ export default {
           }
         })
         .then((res) => res.data.data.createSponsorshipStatus)
-        .catch((err) => console.warn(err));
+        .catch((err) => console.warn(err))
     },
 
     openSupportPlanDialog(project) {
-      this.selectedProjectId = project.id;
+      this.selectedProjectId = project.id
 
-      this.showSupportPlanTable = true;
+      this.showSupportPlanTable = true
     },
 
     openProjectActivitiesDialog(project) {
-      this.selectedProjectId = project.id;
+      this.selectedProjectId = project.id
 
-      this.showProjectActivitiesTable = true;
+      this.showProjectActivitiesTable = true
     },
     async createProjectDocuments(documentUrl, documentType, projectId) {
       return axios
@@ -1087,22 +1099,22 @@ export default {
           }
         })
         .then((res) => res.data.data.createProjectDocuments)
-        .catch((err) => console.warn(err));
+        .catch((err) => console.warn(err))
     },
 
     cancelSupportPlan() {
-      this.$refs.supportPlanForm.reset();
+      this.$refs.supportPlanForm.reset()
     },
 
     donorText_Value(item) {
-      return item.nameInitials;
+      return item.nameInitials
     },
     villageText_Value(item) {
-      return item.name;
+      return item.name
     },
 
     handleProjectActivitiesTable() {
-      this.showProjectActivitiesTable = false;
+      this.showProjectActivitiesTable = false
     },
 
     // -------------------------------------
@@ -1110,27 +1122,27 @@ export default {
     save() {
       // send the edited data to the server after validation via the rule/s prop
       // maybe impliment a loding functionality
-      this.snack = true;
-      this.snackColor = 'success';
-      this.snackText = 'Data saved';
+      this.snack = true
+      this.snackColor = 'success'
+      this.snackText = 'Data saved'
     },
     cancel() {
       // nothing happens keep the current changes
-      this.snack = true;
-      this.snackColor = 'error';
-      this.snackText = 'Canceled';
+      this.snack = true
+      this.snackColor = 'error'
+      this.snackText = 'Canceled'
     },
     open() {
       // maybe fireup validation functions
-      this.snack = true;
-      this.snackColor = 'info';
-      this.snackText = 'Dialog opened';
+      this.snack = true
+      this.snackColor = 'info'
+      this.snackText = 'Dialog opened'
     },
     close() {
       // this comes at the very last of the process so:
       // notify the user weither the operation was successful or keep/write to the log functionality
-      console.log('Dialog closed');
+      console.log('Dialog closed')
     }
   }
-};
+}
 </script>
