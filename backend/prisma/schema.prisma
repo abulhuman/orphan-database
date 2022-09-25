@@ -170,13 +170,14 @@ model Village {
 }
 
 model CurrentOrphanData {
-  id                Int       @id @default(autoincrement())
-  created_at        DateTime? @default(now())
-  updated_at        DateTime?
-  balance           Float?
-  sponsorshipStatus String?   @default("new")
-  orphan            Orphan    @relation(fields: [orphanId], references: [id])
-  orphanId          Int       @unique
+  id                  Int               @id @default(autoincrement())
+  created_at          DateTime?         @default(now())
+  updated_at          DateTime?
+  balance             Float?
+  sponsorshipStatus   SponsorshipStatus @relation(fields: [sponsorshipStatusId], references: [id])
+  orphan              Orphan            @relation(fields: [orphanId], references: [id])
+  orphanId            Int               @unique
+  sponsorshipStatusId Int               @unique
 
   @@map("currentOrphanData")
 }
@@ -328,14 +329,15 @@ model OrphanPhoto {
 }
 
 model SponsorshipStatus {
-  id         Int       @id @default(autoincrement())
-  created_at DateTime? @default(now())
-  updated_at DateTime?
-  status     String?
-  date       DateTime  @default(dbgenerated("'1970-01-01 00:00:00'::timestamp without time zone"))
-  reason     String?
-  orphanId   Int?
-  orphan     Orphan?   @relation("orphanTosponsorshipstatus", fields: [orphanId], references: [id])
+  id                Int                @id @default(autoincrement())
+  created_at        DateTime?          @default(now())
+  updated_at        DateTime?
+  status            String?
+  date              DateTime           @default(dbgenerated("'1970-01-01 00:00:00'::timestamp without time zone"))
+  reason            String?
+  orphanId          Int?
+  orphan            Orphan?            @relation("orphanTosponsorshipstatus", fields: [orphanId], references: [id])
+  currentOrphanData CurrentOrphanData?
 
   @@map("sponsorshipstatus")
 }

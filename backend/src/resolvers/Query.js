@@ -981,7 +981,7 @@ async function generateOrphanStatusReport(
     const statusWhere = {
       currentOrphanData: {
         sponsorshipStatus: {
-          equals: status
+          status: { equals: status }
         }
       }
     }

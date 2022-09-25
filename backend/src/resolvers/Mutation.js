@@ -1221,7 +1221,7 @@ async function createSponsorshipStatus(_parent, args, { prisma, req }, _info) {
     }
     delete SponsorshipStatusCreateInput.orphanId
 
-    const newSponsorShipStatusPromise = prisma.sponsorshipStatus.create({
+    const newSponsorShipStatusPromise = await prisma.sponsorshipStatus.create({
       data: SponsorshipStatusCreateInput
     })
 
@@ -1233,12 +1233,12 @@ async function createSponsorshipStatus(_parent, args, { prisma, req }, _info) {
         },
         create: {
           balance: args?.balance ? args?.balance : 0,
-          sponsorshipStatus: args?.status ? args?.status : 'new',
+          sponsorshipStatusId: parseInt(newSponsorShipStatusPromise.id),
           orphanId: parseInt(args.orphanId)
         },
         update: {
           updated_at: new Date().toISOString(),
-          sponsorshipStatus: args?.status ? args?.status : 'new',
+          sponsorshipStatusId: parseInt(newSponsorShipStatusPromise.id)
         }
       })
     ])

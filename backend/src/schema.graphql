@@ -918,7 +918,7 @@ type CurrentOrphanData {
   created_at: DateTime
   updated_at: DateTime
   balance: Float
-  sponsorshipStatus: String
+  sponsorshipStatus: SponsorshipStatus
   orphan: Orphan
 }
 
