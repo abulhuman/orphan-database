@@ -23,8 +23,8 @@ model Donor {
 }
 
 model EducationalRecord {
-  id               Int       @id @default(autoincrement())
-  created_at       DateTime? @default(now())
+  id               Int               @id @default(autoincrement())
+  created_at       DateTime?         @default(now())
   updated_at       DateTime?
   enrollmentStatus String
   schoolName       String?
@@ -43,7 +43,8 @@ model EducationalRecord {
   semesterGPA      Float?
   cumulativeGPA    Float?
   orphanId         Int?
-  orphan           Orphan?   @relation("educationToorphan", fields: [orphanId], references: [id])
+  orphan           Orphan?           @relation("educationToorphan", fields: [orphanId], references: [id])
+  latestOrphanData LatestOrphanData?
 
   @@map("educationalRecord")
 }
@@ -182,6 +183,18 @@ model CurrentOrphanData {
   @@map("currentOrphanData")
 }
 
+model LatestOrphanData {
+  id                  Int               @id @default(autoincrement())
+  created_at          DateTime?         @default(now())
+  updated_at          DateTime?
+  educationalRecord   EducationalRecord @relation(fields: [educationalRecordId], references: [id])
+  orphan              Orphan            @relation(fields: [orphanId], references: [id])
+  orphanId            Int               @unique
+  educationalRecordId Int               @unique
+
+  @@map("latestOrphanData")
+}
+
 model Orphan {
   id                     Int                 @id @default(autoincrement())
   created_at             DateTime?           @default(now())
@@ -227,6 +240,7 @@ model Orphan {
   siblings               Orphan[]            @relation("orphan_sibling")
   siblingOf              Orphan[]            @relation("orphan_sibling")
   currentOrphanData      CurrentOrphanData?
+  latestOrphanData       LatestOrphanData?
 
   @@map("orphan")
 }

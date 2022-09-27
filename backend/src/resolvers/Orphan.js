@@ -74,6 +74,10 @@ function currentOrphanData({ id }, _args, { prisma }) {
   return prisma.orphan.findUnique({ where: { id } }).currentOrphanData()
 }
 
+function latestOrphanData({ id }, _args, { prisma }) {
+  return prisma.orphan.findUnique({ where: { id } }).latestOrphanData()
+}
+
 module.exports = {
   house_property,
   photos,
@@ -93,5 +97,6 @@ module.exports = {
   donors,
   siblings,
   siblingOf,
-  currentOrphanData
+  currentOrphanData,
+  latestOrphanData
 }
