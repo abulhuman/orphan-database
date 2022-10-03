@@ -922,6 +922,14 @@ type CurrentOrphanData {
   orphan: Orphan
 }
 
+type LatestOrphanData {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  educationalRecord: EducationalRecord
+  orphan: Orphan
+}
+
 type Orphan {
   id: ID!
   created_at: DateTime
@@ -959,6 +967,7 @@ type Orphan {
   siblings: [Orphan]
   siblingOf: [Orphan]
   currentOrphanData: CurrentOrphanData
+  latestOrphanData: LatestOrphanData
 }
 
 type SocialWorker {
