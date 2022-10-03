@@ -1041,7 +1041,20 @@ async function getTotalNumberOfOrphans(
 ) {
   AuthGuard(req)
   const where = {
-    currentSponsorshipStatus: filter?.status,
+    currentOrphanData: {
+      sponsorshipStatus: {
+        status: {
+          equals: filter?.status
+        }
+      }
+    },
+    latestOrphanData: {
+      educationalRecord: {
+        level: { equals: filter?.education?.level },
+        year: { equals: filter?.education?.year },
+        enrollmentStatus: { equals: filter?.education?.enrollmentStatus }
+      }
+    },
     gender: { equals: filter?.gender },
     dateOfBirth: filter?.age ? ageFilterWhere(filter.age) : {},
     village: filter?.village

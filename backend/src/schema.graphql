@@ -137,6 +137,7 @@ input FindOrphanFilter {
   gender: orphanGender
   age: Int
   location: LocationFilter
+  education: EducationFilter
 }
 
 input LocationFilter {
@@ -144,6 +145,12 @@ input LocationFilter {
   zone: String
   district: String
   village: String
+}
+
+input EducationFilter {
+  level: educationLevel
+  year: String
+  enrollmentStatus: educationEnrollmentStatus
 }
 
 type Mutation {
