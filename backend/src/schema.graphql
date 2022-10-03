@@ -128,7 +128,6 @@ type Query {
 enum ReportBeneficiaryEnum {
   DONOR
   PROJECT
-
 }
 
 # This works as expected for age >= 1; it will be ineffective for age < 1
@@ -138,6 +137,7 @@ input FindOrphanFilter {
   age: Int
   location: LocationFilter
   education: EducationFilter
+  donor: DonorFilter
 }
 
 input LocationFilter {
@@ -151,6 +151,11 @@ input EducationFilter {
   level: educationLevel
   year: String
   enrollmentStatus: educationEnrollmentStatus
+}
+
+input DonorFilter {
+  companyName: String
+  nameInitials: String
 }
 
 type Mutation {

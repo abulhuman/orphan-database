@@ -1071,7 +1071,17 @@ async function getTotalNumberOfOrphans(
                         : {}
                     }
               }
+        },
+    donors: {
+      some: {
+        nameInitials: {
+          equals: filter?.donor?.nameInitials
+        },
+        companyName: {
+          equals: filter?.donor?.companyName
         }
+      }
+    }
   }
   return await prisma.orphan.count({ where: filter ? where : {} })
 }
