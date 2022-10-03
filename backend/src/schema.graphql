@@ -105,12 +105,35 @@ type Query {
   ): [DailyActivity]
   getProjectActivitiesByProjectId(projectId: ID!): [ProjectActivity]
 
+  generateOrphanPaymentHistoryReport(
+    input: OrphanPaymentHistoryReportInput!
+  ): OrphanPaymentHistoryReport!
+
+  generateDonorPaymentHistoryReport(
+    input: DonorPaymentHistoryReportInput!
+  ): DonorPaymentHistoryReport!
+
+  generateProjectPaymentHistoryReport(
+    input: ProjectPaymentHistoryReportInput!
+  ): ProjectPaymentHistoryReport!
+
+  generateOrphanStatusReport(
+    reportBeneficiary: ReportBeneficiaryEnum
+    status: SponsorshipStatusEnum
+    beneficiaryId: ID!
+  ): [Orphan]!
   getTotalNumberOfOrphans(filter: FindOrphanFilter): Int
+}
+
+enum ReportBeneficiaryEnum {
+  DONOR
+  PROJECT
+
 }
 
 # This works as expected for age >= 1; it will be ineffective for age < 1
 input FindOrphanFilter {
-  status: sponsorshipStatus
+  status: SponsorshipStatusEnum
   gender: orphanGender
   age: Int
   location: LocationFilter
@@ -290,7 +313,6 @@ type Mutation {
     passportUrl: String
     birthCertificateUrl: String!
     accountNumber: String
-    currentBalance: Float
     fatherId: ID
     guardianId: ID
     house_propertyId: ID
@@ -324,7 +346,6 @@ type Mutation {
     passportUrl: String
     birthCertificateUrl: String!
     accountNumber: String
-    currentBalance: Float
     father: FatherCreateInput!
     mother: MotherCreateInput!
     guardian: GuardianCreateInput!
@@ -350,7 +371,6 @@ type Mutation {
     passportUrl: String
     birthCertificateUrl: String
     accountNumber: String
-    currentBalance: Float
     fatherId: ID
     guardianId: ID
     house_propertyId: ID
@@ -529,7 +549,7 @@ type Mutation {
   ): OrphanLetter!
 
   createSponsorshipStatus(
-    status: sponsorshipStatus
+    status: SponsorshipStatusEnum
     date: DateTime!
     reason: String
     orphanId: ID!
@@ -537,7 +557,7 @@ type Mutation {
 
   updateSponsorshipStatus(
     id: ID!
-    status: sponsorshipStatus
+    status: SponsorshipStatusEnum
     date: DateTime
     reason: String
     orphanId: ID!
@@ -910,6 +930,23 @@ type Village {
   projects: [Project]
 }
 
+type CurrentOrphanData {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  balance: Float
+  sponsorshipStatus: SponsorshipStatus
+  orphan: Orphan
+}
+
+type LatestOrphanData {
+  id: ID!
+  created_at: DateTime
+  updated_at: DateTime
+  educationalRecord: EducationalRecord
+  orphan: Orphan
+}
+
 type Orphan {
   id: ID!
   created_at: DateTime
@@ -927,8 +964,6 @@ type Orphan {
   passportUrl: String
   birthCertificateUrl: String!
   accountNumber: String
-  currentBalance: Float
-  currentSponsorshipStatus: String
   father: Father
   guardian: Guardian
   house_property: House_property
@@ -948,6 +983,8 @@ type Orphan {
   donors: [Donor]
   siblings: [Orphan]
   siblingOf: [Orphan]
+  currentOrphanData: CurrentOrphanData
+  latestOrphanData: LatestOrphanData
 }
 
 type SocialWorker {
@@ -1036,7 +1073,7 @@ type SponsorshipStatus {
   id: ID!
   created_at: DateTime
   updated_at: DateTime
-  status: sponsorshipStatus
+  status: SponsorshipStatusEnum
   date: DateTime!
   reason: String
   orphan: Orphan
@@ -1222,6 +1259,21 @@ type AccountMaintainence {
   mobileNumber: String!
 }
 
+type OrphanPaymentHistoryReport {
+  orphan: Orphan!
+  financialRecords: [FinancialRecord]!
+}
+
+type DonorPaymentHistoryReport {
+  donor: Donor!
+  supportPlans: [SupportPlan]!
+}
+
+type ProjectPaymentHistoryReport {
+  project: Project!
+  supportPlans: [SupportPlan]!
+}
+
 enum accountMaintainenceStatus {
   pending
   approved
@@ -1255,12 +1307,13 @@ enum orphanPsychologicalStatus {
   normal
 }
 
-enum sponsorshipStatus {
+enum SponsorshipStatusEnum {
   new
   processing
   pending
   active
   graduated
+  terminated
 }
 
 enum projectDocumentType {
@@ -1447,7 +1500,6 @@ input OrphanOrderByInput {
   healthDescription: Sort
   psychologicalStatus: Sort
   accountNumber: Sort
-  currentBalance: Sort
 }
 
 input SocialWorkerOrderByInput {
@@ -1635,4 +1687,22 @@ input DailyActivityUpdateInput {
   planOfADay: Float
   accomplishmentAmount: Float
   accomplishmentPercentage: Float
+}
+
+input OrphanPaymentHistoryReportInput {
+  orphanId: ID!
+  startDate: DateTime
+  endDate: DateTime
+}
+
+input DonorPaymentHistoryReportInput {
+  donorId: ID!
+  startDate: DateTime
+  endDate: DateTime
+}
+
+input ProjectPaymentHistoryReportInput {
+  projectId: ID!
+  startDate: DateTime
+  endDate: DateTime
 }

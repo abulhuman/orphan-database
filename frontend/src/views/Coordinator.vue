@@ -10,13 +10,15 @@
       @toggleSupportPlanComponent="toggleSupportPlanTable($event)"
       @toggleChangeStatusDialog="toggleChangeStatus($event)"
       @toogleChangeOrphanListValue="toggleOrphanList($event)"
+      @toggleShowReport="toggleShowReport($event)"
     />
-    <!-- village select Dialog -->
+    <!-- Select village Dialog -->
     <v-dialog v-model="showVillagesSelectionDialog" width="30%" persistent>
       <v-card>
         <v-card-title class="justify-center">
           Choose Village
         </v-card-title>
+        <!-- Select village body -->
         <v-form ref="villageSelect" v-model="validVillageChoice">
           <v-responsive min-width="200" max-width="200" class="pl-0 mx-auto">
             <v-select
@@ -33,6 +35,7 @@
             </v-select>
           </v-responsive>
         </v-form>
+        <!-- Select village action -->
         <v-card-actions class="justify-end">
           <v-btn text class="red--text" @click="cancelVillagesChoice"
             >Cancel</v-btn
@@ -48,6 +51,7 @@
       </v-card>
     </v-dialog>
 
+    <!-- Orphan registration stepper -->
     <v-fab-transition>
       <!-- <NewOrphanRegistrationModel
         :newOrphanDialog="newOrphanDialog"
@@ -61,15 +65,18 @@
         @dialogClosed="newOrphanDialog = $event"
       />
     </v-fab-transition>
-    <!-- StatusChange select Dialog -->
+
+    <!-- Change status choice Dialog -->
     <v-dialog v-model="showStatusChangeSelectionDialog" width="60%">
       <v-card>
         <v-card-title class="justify-center pb-5">
           Change Orphan Status Form Current To Desired Status
         </v-card-title>
+        <!-- Status change body -->
         <v-card-text class="pb-0">
           <v-form ref="statusSelect" v-model="validStatusSelect">
             <v-row class="justify-center">
+              <!-- Old orphan status -->
               <v-col cols="5" class="pb-0">
                 <v-responsive
                   min-width="200"
@@ -92,11 +99,14 @@
                   </v-select>
                 </v-responsive>
               </v-col>
+
               <v-col cols="1" align="center" class="pt-5">
                 <v-icon class="justify-center">
                   mdi-arrow-right-thick
                 </v-icon>
               </v-col>
+
+              <!-- New orphan status -->
               <v-col cols="5" class="pb-0">
                 <v-responsive
                   min-width="200"
@@ -122,6 +132,7 @@
             </v-row>
           </v-form>
         </v-card-text>
+        <!-- Status change action -->
         <v-card-actions class="justify-end">
           <v-btn text class="red--text" @click="cancelStatusChangeSelection"
             >Cancel</v-btn
@@ -234,13 +245,14 @@
                     class="px-3 mt-0"
                   ></v-switch>
                 </v-col>
-                <!-- status change dialog -->
+                <!-- Change status dialog -->
                 <v-col class="mt-n4 pr-7" align="right">
                   <v-dialog
                     transition="dialog-bottom-transition"
                     persistent
                     max-width="450"
                   >
+                    <!-- Change status dialog activator -->
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
                         color="primary"
@@ -250,6 +262,7 @@
                         >Change Status</v-btn
                       >
                     </template>
+                    <!-- Change status dialog body -->
                     <template v-slot:default="dialog">
                       <v-card max-width="">
                         <v-card-title class="">
@@ -291,6 +304,7 @@
                 </v-col>
               </v-row>
             </template>
+            <!-- Customize columns -->
             <template v-slot:item.fullName="{ item }">
               {{ fullName(item) }}
             </template>
@@ -311,9 +325,8 @@
               <orphan-detail :details="item" />
             </template> -->
           </v-data-table>
-          <!-- becomes visble when full name is edited -->
           <!-- TODO: # Impliment a loding functionality -->
-          <!--       # maybe server side validation also -->
+          <!-- Full name column edit confirmation message -->
           <v-snackbar v-model="snack" :timeout="3000" :color="snackColor">
             {{ snackText }}
 
@@ -327,8 +340,7 @@
       </v-card>
     </v-dialog>
 
-    <!-- <orphan-registration-stepper /> -->
-
+    <!-- Support plan table -->
     <template v-if="showSupportPlanTable">
       <v-fab-transition>
         <support-plan-table
@@ -338,13 +350,10 @@
       </v-fab-transition>
     </template>
 
-    <!-- <template v-else-if="showProjectActivitiesTable">
-      <v-btn>X</v-btn>
-      <ProjectActivitiesTable
-        :projectId="selectedProjectId"
-        @closeProjectActivitiesTable="showProjectActivitiesTable = $event"
-      />
-    </template> -->
+    <!-- Report Page -->
+    <template v-if="showReport">
+      <report-page  />
+    </template>
 
     <template v-else>
       <v-row v-if="!showOrphans" justify="center" no-gutters>
@@ -367,18 +376,19 @@
               </v-col>
               <!-- Project Card lists -->
               <v-row class="d-flex justify-space-around">
-                <!-- <v-col class="" cols=""> -->
                 <v-card
                   v-for="(item, idx) in projects"
                   :key="idx"
                   class="mb-8"
                   max-width="450"
                 >
+                  <!-- Project card header -->
                   <v-img
                     height="200px"
                     src="../assets/brandi-redd-aJTiW00qqtI-unsplash.jpg"
                   >
                     <v-col cols="12" class="ma-0 mt-3 d-flex justify-end">
+                      <!-- Project documents button -->
                       <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
                           <v-btn class="mr-1" v-bind="attrs" v-on="on">
@@ -388,33 +398,27 @@
                         <span>Project documents</span>
                       </v-tooltip>
 
-                      <v-dialog v-model="showProjectActivitiesTable">
-                        <template
-                          #activator="{on: onDialog, attrs: dialogAttrs }"
-                        >
-                          <v-tooltip top>
-                            <template
-                              #activator="{ on:onTooltip, attrs:tooltipAttrs }"
-                            >
-                              <v-btn
-                                class="mr-1"
-                                v-bind="{ ...dialogAttrs, ...tooltipAttrs }"
-                                v-on="{ ...onTooltip, ...onDialog }"
-                                @click="openProjectActivitiesDialog(item)"
-                              >
-                                <v-icon>mdi-format-list-numbered</v-icon>
-                              </v-btn>
-                            </template>
-                            <span>Project activities</span>
-                          </v-tooltip></template
-                        >
-                        <ProjectActivitiesTable
-                          :projectId="selectedProjectId"
-                          @closeProjectActivitiesTable="
-                            showProjectActivitiesTable = false"
-                        />
-                      </v-dialog>
+                      <!-- Project history report dialog trigger -->
+                      <payment-history-report :projectId="item.id" />
 
+                      <!-- Project activities dialog trigger -->
+                      <v-tooltip top>
+                        <template
+                          #activator="{ on:onTooltip, attrs:tooltipAttrs }"
+                        >
+                          <v-btn
+                            class="mr-1"
+                            v-bind="{ ...tooltipAttrs }"
+                            v-on="{ ...onTooltip }"
+                            @click="openProjectActivitiesDialog(item)"
+                          >
+                            <v-icon>mdi-format-list-numbered</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Project activities</span>
+                      </v-tooltip>
+
+                      <!-- Support plans button -->
                       <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
                           <v-btn
@@ -422,13 +426,15 @@
                             v-on="on"
                             @click="openSupportPlanDialog(item)"
                           >
-                            <v-icon>mdi-calendar-month</v-icon>
+                            <v-icon>mdi-hand-coin-outline</v-icon>
+                            <!-- Alternative icon -->
                             <!-- <v-icon>mdi-handshake-outline</v-icon> -->
                           </v-btn>
                         </template>
                         <span>Support plans</span>
                       </v-tooltip>
                     </v-col>
+                    <!-- Project title -->
                     <v-col cols="12" class="d-flex mt-12">
                       <v-card-title
                         class="justify-start"
@@ -438,11 +444,12 @@
                       </v-card-title>
                     </v-col>
                   </v-img>
-                  <!-- Middle part of the card -->
+                  <!-- Project card body -->
                   <v-card-text
                     class="text--primary ml-0"
                     style="font-size: 1.3em"
                   >
+                    <!-- From/to section -->
                     <v-col cols="12">
                       <v-row>
                         <v-icon size="60" color="teal">mdi-calendar</v-icon>
@@ -479,6 +486,7 @@
                         </v-col>
                       </v-row>
                     </v-col>
+                    <!-- Total budget section -->
                     <v-col cols="12">
                       <v-row>
                         <v-icon size="60" color="orange"
@@ -496,9 +504,10 @@
 
                   <v-divider class="mx-6"></v-divider>
 
-                  <!-- Footer Part of the card -->
+                  <!-- Project card footer -->
                   <v-card-text>
                     <v-row class="ma-0">
+                      <!-- Beneficiaries -->
                       <v-col class="text-center">
                         <v-icon size="40" color="orange"
                           >mdi-account-group</v-icon
@@ -514,7 +523,7 @@
                       </v-col>
 
                       <v-divider class="my-4" vertical></v-divider>
-
+                      <!-- status -->
                       <v-col class="text-center">
                         <v-icon size="40" color="orange"
                           >mdi-check-circle</v-icon
@@ -528,7 +537,7 @@
                       </v-col>
 
                       <v-divider class="my-4" vertical></v-divider>
-
+                      <!-- Villages -->
                       <v-col class="text-center">
                         <v-icon size="40" color="orange">mdi-home-group</v-icon>
                         <v-card-title
@@ -543,12 +552,21 @@
                     </v-row>
                   </v-card-text>
                 </v-card>
-                <!-- </v-col> -->
               </v-row>
+
+              <!-- Project activities dialog -->
+              <v-dialog v-model="showProjectActivitiesTable">
+                <ProjectActivitiesTable
+                  :projectId="selectedProjectId"
+                  @closeProjectActivitiesTable="handleProjectActivitiesTable"
+                />
+              </v-dialog>
             </v-card-text>
           </v-card>
         </v-col>
       </v-row>
+
+      <!-- Orphan List -->
       <v-fab-transition v-else>
         <OrphanList
           :orphanIds="selectedOrphanIds"
@@ -568,6 +586,8 @@ import AppNavBar from '@/components/AppNavBar'
 import SupportPlanTable from '../components/SupportPlanTable.vue'
 import ProjectActivitiesTable from '../components/ProjectActivitiesTable.vue'
 import OrphanRegistrationStepper from '../components/OrphanRegistrationStepper.vue'
+import PaymentHistoryReport from '../components/PaymentHistoryReport.vue'
+import ReportPage from '../components/ReportPage.vue'
 
 export default {
   components: {
@@ -575,7 +595,9 @@ export default {
     AppNavBar,
     SupportPlanTable,
     ProjectActivitiesTable,
-    OrphanRegistrationStepper
+    OrphanRegistrationStepper,
+    PaymentHistoryReport,
+    ReportPage
   },
 
   data: () => ({
@@ -585,9 +607,6 @@ export default {
     singleOrphanSelect: false,
     selectedOrphans: [],
     selectSwitch: 'Multiple Orphans',
-    drawer: false, // constroles the sidebar
-    // test fields *****************
-    test: '',
     benched: 0,
     snack: false,
     snackColor: '',
@@ -650,7 +669,9 @@ export default {
     validVillageChoice: false,
     showSupportPlanTable: false,
     showProjectActivitiesTable: false,
+    showPaymentHistoryReportInputForm: false,
     showStatusChangeSelectionDialog: false,
+    showReport: true,
     validStatusSelect: false,
     currentStatus: '',
     currentStatusOptions: [
@@ -670,20 +691,12 @@ export default {
     showOrphans: false,
     selectedOrphanIds: { ids: [] }
   }),
+
   created() {
     this.initialize()
     this.initializeProjects()
   },
-  computed: {
-    // temporary filter for the notification panel
-    items() {
-      return Array.from({ length: this.length }, (k, v) => v + 1) // I don't know what this is doing exactly
-    },
-    length() {
-      return 7000
-    }
-    // used in new orphan dialog
-  },
+
   watch: {
     async showVillagesSelectionDialog(val) {
       if (val === true) {
@@ -733,7 +746,7 @@ export default {
     initialize() {
       console.log('routerCoordinatorId: ', typeof this.$route.params.id)
       axios
-        .post('/graphql/', {
+        .post('/graphql', {
           query: `query coordinator($id: ID!) {
                   coordinator(id: $id) {
                     id
@@ -773,7 +786,7 @@ export default {
               this.coordinatorUser[property] = coordinator[property]
             }
           }
-          // console.log("coordinator", this.coordinator);
+          // console.log('coordinator', this.coordinator);
         })
         .catch((err) => console.warn(err))
     },
@@ -861,15 +874,11 @@ export default {
     toggleOrphanList(val) {
       this.showOrphans = val
     },
-    // #
-    // goToOrphansTable() {
-    //   this.showOrphans = true;
-    //   this.selectedOrphanIds.ids = this.orphans.map((orphan) =>
-    //     parseInt(orphan.id)
-    //   );
-    // },
+    toggleShowReport(val) {
+      this.showReport = val
+    },
     addNewOrphan(newOrphanId) {
-      console.log(`adding new orhan`, newOrphanId)
+      console.log(`adding new orphan`, newOrphanId)
       this.selectedOrphanIds.ids.push(parseInt(newOrphanId))
     },
     // custom search function based on selected columns
@@ -1104,11 +1113,11 @@ export default {
       return item.name
     },
 
-    // -------------------------------------
-    sendTest() {
-      console.log(this.villages)
+    handleProjectActivitiesTable() {
+      this.showProjectActivitiesTable = false
     },
 
+    // -------------------------------------
     // used for the specific edit on orphan name and sponsoreship status
     save() {
       // send the edited data to the server after validation via the rule/s prop

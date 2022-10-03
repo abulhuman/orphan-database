@@ -50,6 +50,8 @@ const Coordinator = require('./resolvers/Coordinator')
 const User = require('./resolvers/User')
 const DailyActivity = require('./resolvers/DailyActivity')
 const ProjectActivity = require('./resolvers/ProjectActivity')
+const CurrentOrphanData = require('./resolvers/CurrentOrphanData')
+const LatestOrphanData = require('./resolvers/LatestOrphanData')
 
 const { getUser, convertImage } = require('./utils')
 const { GraphQLError } = require('graphql')
@@ -90,7 +92,9 @@ const resolvers = {
   Coordinator,
   User,
   DailyActivity,
-  ProjectActivity
+  ProjectActivity,
+  CurrentOrphanData,
+  LatestOrphanData
 }
 
 /** set corsOptions to enable cors in all the endpoints and the server.applyMiddleware() */

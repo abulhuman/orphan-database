@@ -5,7 +5,6 @@ const {
   updateImage,
   AuthorizationError
 } = require('../utils')
-const { userRoles_enum } = require('@prisma/client')
 
 async function createDonor(_parent, args, { prisma, req }, _info) {
   if (getUser(req).userId) {
@@ -709,7 +708,7 @@ async function createOrphanWithBaselineData(
       sponsorshipStatuses: {
         create: {
           status: 'new',
-          reason: 'new registration successful',
+          reason: 'new registration',
           date: new Date()
         }
       },
@@ -721,9 +720,32 @@ async function createOrphanWithBaselineData(
     delete OrphanCreateInput.firstEducationalRecord
     delete OrphanCreateInput.villageId
 
-    return await prisma.orphan.create({
-      data: OrphanCreateInput
+    const newOrphan = await prisma.orphan.create({
+      data: OrphanCreateInput,
+      include: { sponsorshipStatuses: true, educationalRecords: true }
     })
+
+    await prisma.orphan.update({
+      where: { id: parseInt(newOrphan.id) },
+      data: {
+        currentOrphanData: {
+          create: {
+            sponsorshipStatus: {
+              connect: { id: newOrphan.sponsorshipStatuses[0].id }
+            }
+          }
+        },
+        latestOrphanData: {
+          create: {
+            educationalRecord: {
+              connect: { id: newOrphan.educationalRecords[0].id }
+            }
+          }
+        }
+      }
+    })
+
+    return newOrphan
   }
   throw new AuthenticationError()
 }
@@ -967,9 +989,27 @@ async function createEducationalRecord(_parent, args, { prisma, req }, _info) {
       orphan: { connect: { id: parseInt(args.orphanId) } }
     }
     delete EducationalRecordCreateInput.orphanId
-    return await prisma.educationalRecord.create({
+    const newEducationalRecord = await prisma.educationalRecord.create({
       data: EducationalRecordCreateInput
     })
+
+    const promiseAll = await Promise.all([
+      newEducationalRecord,
+      prisma.latestOrphanData.upsert({
+        where: {
+          orphanId: parseInt(args.orphanId)
+        },
+        create: {
+          educationalRecordId: parseInt(newEducationalRecord.id),
+          orphanId: parseInt(args.orphanId)
+        },
+        update: {
+          updated_at: new Date().toISOString(),
+          educationalRecordId: parseInt(newEducationalRecord.id)
+        }
+      })
+    ])
+    return promiseAll[0]
   }
   throw new AuthenticationError()
 }
@@ -1017,9 +1057,31 @@ async function createFinancialRecord(_parent, args, { prisma, req }, _info) {
       orphan: { connect: { id: parseInt(args.orphanId) } }
     }
     delete FinancialRecordCreateInput.orphanId
-    return await prisma.financialRecord.create({
+    const newFinancialRecordPromise = prisma.financialRecord.create({
       data: FinancialRecordCreateInput
     })
+
+    const promiseAll = await Promise.all([
+      newFinancialRecordPromise,
+      prisma.currentOrphanData.upsert({
+        where: {
+          orphanId: parseInt(args.orphanId)
+        },
+        create: {
+          balance: args?.balance ? args?.balance : 0,
+          sponsorshipStatus: args?.status ? args?.status : 'new',
+          orphanId: parseInt(args.orphanId)
+        },
+        update: {
+          updated_at: new Date().toISOString(),
+          balance:
+            args.transactionType === 'withdrawal'
+              ? { decrement: parseFloat(args.amount) }
+              : { increment: parseFloat(args.amount) }
+        }
+      })
+    ])
+    return promiseAll[0]
   }
   throw new AuthenticationError()
 }
@@ -1194,21 +1256,34 @@ async function updateOrphanPhoto(_parent, args, { prisma, req }, _info) {
 
 async function createSponsorshipStatus(_parent, args, { prisma, req }, _info) {
   if (getUser(req).userId) {
-    const [newSponsorshipStatus, ...rest] = await prisma.$transaction([
-      prisma.sponsorshipStatus.create({
-        data: {
-          date: args.date,
-          status: args.status,
-          reason: args.reason,
-          orphan: { connect: { id: parseInt(args.orphanId) } }
+    const SponsorshipStatusCreateInput = {
+      ...args,
+      orphan: { connect: { id: parseInt(args.orphanId) } }
+    }
+    delete SponsorshipStatusCreateInput.orphanId
+
+    const newSponsorShipStatus = await prisma.sponsorshipStatus.create({
+      data: SponsorshipStatusCreateInput
+    })
+
+    const promiseAll = await Promise.all([
+      newSponsorShipStatus,
+      prisma.currentOrphanData.upsert({
+        where: {
+          orphanId: parseInt(args.orphanId)
+        },
+        create: {
+          balance: args?.balance ? args?.balance : 0,
+          sponsorshipStatusId: parseInt(newSponsorShipStatus.id),
+          orphanId: parseInt(args.orphanId)
+        },
+        update: {
+          updated_at: new Date().toISOString(),
+          sponsorshipStatusId: parseInt(newSponsorShipStatus.id)
         }
-      }),
-      prisma.orphan.update({
-        where: { id: parseInt(args.orphanId) },
-        data: { currentSponsorshipStatus: args.status }
       })
     ])
-    return newSponsorshipStatus
+    return promiseAll[0]
   }
   throw new AuthenticationError()
 }

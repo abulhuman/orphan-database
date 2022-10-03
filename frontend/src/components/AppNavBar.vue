@@ -53,6 +53,14 @@
         </v-btn>
       </template>
 
+      <!-- hack-start -->
+
+      <v-btn text @click="toggleShowReport" class="mr-0 py-8 black--text"
+        >Reports</v-btn
+      >
+
+      <!-- hack-end -->
+
       <!-- Donor part -->
       <!-- <template v-else-if="user.role === 'Donor'">
         <v-tooltip bottom nudge-top="8">
@@ -229,7 +237,7 @@
 </style>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'
 export default {
   props: {
     user: {
@@ -264,125 +272,128 @@ export default {
       isPending: false,
       isSponsored: false,
       isGraduated: false
-    };
+    }
   },
   watch: {
     dialog(val) {
-      this.isNewOrphan = val;
+      this.isNewOrphan = val
     },
     newOrphanView(val) {
-      this.isNewOrphan = val;
+      this.isNewOrphan = val
     },
     changeStatusDialogValue(val) {
-      this.isChangeStatus = val;
+      this.isChangeStatus = val
     },
     changeOrphanListValue(val) {
-      this.isOrphanList = val;
+      this.isOrphanList = val
     }
   },
   methods: {
     toggleNewOrphanDialog() {
       // because when the dialog closes this function don't get the memo so do it manually like a noob same goes for toggleChangeStatusDialog
-      if (this.newOrphanDialog === false) this.newOrphanDialog = !this.dialog;
-      this.$emit('toggleNewOrphanDialog', this.newOrphanDialog);
-      this.newOrphanDialog = !this.newOrphanDialog;
+      if (this.newOrphanDialog === false) this.newOrphanDialog = !this.dialog
+      this.$emit('toggleNewOrphanDialog', this.newOrphanDialog)
+      this.newOrphanDialog = !this.newOrphanDialog
 
-      this.isSupportPlan = false;
-      this.isOrphanList = false;
-      this.isChangeStatus = false;
+      this.isSupportPlan = false
+      this.isOrphanList = false
+      this.isChangeStatus = false
     },
     toggleOrphanListDialog() {
       if (this.orphanList === false)
-        this.orphanList = !this.changeOrphanListValue;
-      this.$emit('toogleChangeOrphanListValue', this.orphanList);
-      this.orphanList = !this.orphanList;
+        this.orphanList = !this.changeOrphanListValue
+      this.$emit('toogleChangeOrphanListValue', this.orphanList)
+      this.orphanList = !this.orphanList
 
-      this.isSupportPlan = false;
-      this.isChangeStatus = false;
-      this.isNewOrphan = false;
+      this.isSupportPlan = false
+      this.isChangeStatus = false
+      this.isNewOrphan = false
     },
     toggleSupportPlanComponent() {
-      console.log(this.supportPlanTable);
+      console.log(this.supportPlanTable)
       // if(this.supportPlanTable === false) this.supportPlanTable = true;
-      this.$emit('toggleSupportPlanComponent', this.supportPlanTable);
-      this.supportPlanTable = !this.supportPlanTable;
+      this.$emit('toggleSupportPlanComponent', this.supportPlanTable)
+      this.supportPlanTable = !this.supportPlanTable
 
-      this.isSupportPlan = !this.supportPlanTable;
-      this.isNewOrphan = false;
-      this.isOrphanList = false;
-      this.isChangeStatus = false;
+      this.isSupportPlan = !this.supportPlanTable
+      this.isNewOrphan = false
+      this.isOrphanList = false
+      this.isChangeStatus = false
     },
     toggleChangeStatusDialog() {
       if (this.changeStatusDialog === false)
-        this.changeStatusDialog = !this.changeStatusDialogValue;
-      this.$emit('toggleChangeStatusDialog', this.changeStatusDialog);
-      this.changeStatusDialog = !this.changeStatusDialog;
+        this.changeStatusDialog = !this.changeStatusDialogValue
+      this.$emit('toggleChangeStatusDialog', this.changeStatusDialog)
+      this.changeStatusDialog = !this.changeStatusDialog
 
-      this.isSupportPlan = false;
-      this.isOrphanList = false;
-      this.isNewOrphan = false;
+      this.isSupportPlan = false
+      this.isOrphanList = false
+      this.isNewOrphan = false
+    },
+    toggleShowReport() {
+      this.$emit('toggleShowReport', true)
     },
     displayName() {
       if (Object.hasOwnProperty.call(this.user, 'companyName')) {
-        return this.user.companyName;
-      } else return `${this.user.firstName} ${this.user.middleName}`;
+        return this.user.companyName
+      } else return `${this.user.firstName} ${this.user.middleName}`
     },
     displayNameInitials() {
       if (Object.hasOwnProperty.call(this.user, 'nameInitials')) {
-        return this.user.nameInitials;
+        return this.user.nameInitials
       } else
         return (
           this.user.firstName.slice(0, 1).toUpperCase() +
           this.user.middleName.slice(0, 1).toUpperCase()
-        );
+        )
     },
     closeAccountMenu() {
-      this.accountMenu = false;
+      this.accountMenu = false
     },
     logOut() {
-      (async () => {
-        const query = `mutation{logout}`;
-        const loggedOut = await axios.post('/graphql', { query });
-        console.log();
+      ;(async () => {
+        const query = `mutation{logout}`
+        const loggedOut = await axios.post('/graphql', { query })
+        console.log()
         if (loggedOut.data.data.logout) {
-          sessionStorage.clear();
-          this.$router.push('/');
+          sessionStorage.clear()
+          this.$router.push('/')
         }
-      })();
+      })()
     },
     // -------------Donor----------------
     processingActive() {
-      this.state = 'processing';
-      this.$emit('activeTab', this.state);
-      this.isProcessing = true;
-      this.isPending = false;
-      this.isSponsored = false;
-      this.isGraduated = false;
+      this.state = 'processing'
+      this.$emit('activeTab', this.state)
+      this.isProcessing = true
+      this.isPending = false
+      this.isSponsored = false
+      this.isGraduated = false
     },
     pendingActive() {
-      this.state = 'pending';
-      this.$emit('activeTab', this.state);
-      this.isProcessing = false;
-      this.isPending = true;
-      this.isSponsored = false;
-      this.isGraduated = false;
+      this.state = 'pending'
+      this.$emit('activeTab', this.state)
+      this.isProcessing = false
+      this.isPending = true
+      this.isSponsored = false
+      this.isGraduated = false
     },
     sponsoredActive() {
-      this.state = 'sponsored';
-      this.$emit('activeTab', this.state);
-      this.isProcessing = false;
-      this.isPending = false;
-      this.isSponsored = true;
-      this.isGraduated = false;
+      this.state = 'sponsored'
+      this.$emit('activeTab', this.state)
+      this.isProcessing = false
+      this.isPending = false
+      this.isSponsored = true
+      this.isGraduated = false
     },
     graduatedActive() {
-      this.state = 'graduated';
-      this.$emit('activeTab', this.state);
-      this.isProcessing = false;
-      this.isPending = false;
-      this.isSponsored = false;
-      this.isGraduated = true;
+      this.state = 'graduated'
+      this.$emit('activeTab', this.state)
+      this.isProcessing = false
+      this.isPending = false
+      this.isSponsored = false
+      this.isGraduated = true
     }
   }
-};
+}
 </script>
