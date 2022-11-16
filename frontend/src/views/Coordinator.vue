@@ -671,7 +671,7 @@ export default {
     showProjectActivitiesTable: false,
     showPaymentHistoryReportInputForm: false,
     showStatusChangeSelectionDialog: false,
-    showReport: true,
+    showReport: false,
     validStatusSelect: false,
     currentStatus: '',
     currentStatusOptions: [

@@ -73,7 +73,6 @@ router.beforeEach((to, from, next) => {
   // ! really messy route guarding
   if (isAuthenticated) {
     // for all logged in staff
-    console.log({ to })
     if (to.name === 'login') {
       next()
     }
