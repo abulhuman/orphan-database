@@ -175,10 +175,10 @@ model CurrentOrphanData {
   created_at          DateTime?         @default(now())
   updated_at          DateTime?
   balance             Float?
-  sponsorshipStatus   SponsorshipStatus @relation(fields: [sponsorshipStatusId], references: [id])
-  orphan              Orphan            @relation(fields: [orphanId], references: [id])
   orphanId            Int               @unique
   sponsorshipStatusId Int               @unique
+  orphan              Orphan            @relation(fields: [orphanId], references: [id])
+  sponsorshipStatus   SponsorshipStatus @relation(fields: [sponsorshipStatusId], references: [id])
 
   @@map("currentOrphanData")
 }
@@ -187,10 +187,10 @@ model LatestOrphanData {
   id                  Int               @id @default(autoincrement())
   created_at          DateTime?         @default(now())
   updated_at          DateTime?
-  educationalRecord   EducationalRecord @relation(fields: [educationalRecordId], references: [id])
-  orphan              Orphan            @relation(fields: [orphanId], references: [id])
   orphanId            Int               @unique
   educationalRecordId Int               @unique
+  educationalRecord   EducationalRecord @relation(fields: [educationalRecordId], references: [id])
+  orphan              Orphan            @relation(fields: [orphanId], references: [id])
 
   @@map("latestOrphanData")
 }
@@ -227,20 +227,20 @@ model Orphan {
   mother                 Mother?             @relation("motherToorphan", fields: [motherId], references: [id])
   socialWorker           SocialWorker?       @relation("orphanTosocialworker", fields: [socialWorkerId], references: [id])
   village                Village?            @relation("orphanTovillage", fields: [villageId], references: [id])
+  currentOrphanData      CurrentOrphanData?
   educationalRecords     EducationalRecord[] @relation("educationToorphan")
   financialRecords       FinancialRecord[]   @relation("financialrecordToorphan")
   healthStatuses         HealthStatus[]      @relation("healthstatusToorphan")
   individualPayments     IndividualPayment[]
+  latestOrphanData       LatestOrphanData?
   letters                OrphanLetter[]      @relation("orphanLetterToorphan")
   documents              OrphanDocument[]    @relation("orphanDocumentToorphan")
   photos                 OrphanPhoto[]       @relation("orphanToorphanphoto")
   sponsorshipStatuses    SponsorshipStatus[] @relation("orphanTosponsorshipstatus")
   donors                 Donor[]             @relation("donorToorphan")
   supportPlans           SupportPlan[]       @relation("orphanTosupportplan")
-  siblings               Orphan[]            @relation("orphan_sibling")
-  siblingOf              Orphan[]            @relation("orphan_sibling")
-  currentOrphanData      CurrentOrphanData?
-  latestOrphanData       LatestOrphanData?
+  orphan_B               Orphan[]            @relation("orphan_sibling")
+  orphan_A               Orphan[]            @relation("orphan_sibling")
 
   @@map("orphan")
 }

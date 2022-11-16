@@ -712,6 +712,7 @@ async function createOrphanWithBaselineData(
           date: new Date()
         }
       },
+      currentSponsorshipStatus: 'new',
       village: { connect: { id: parseInt(args.villageId) } }
     }
     delete OrphanCreateInput.firstHealthStatus

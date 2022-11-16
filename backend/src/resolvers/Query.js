@@ -1,6 +1,12 @@
 // Todo //! change all references of prisma enums to strings
-const { orphan_gender_enum, sponsorshipstatus_enum } = require('@prisma/client')
-const { getUser, AuthenticationError, AuthorizationError } = require('../utils')
+const {
+  getUser,
+  AuthenticationError,
+  AuthorizationError,
+  AuthGuard,
+  ageFilterWhere,
+  locationFilterWhere
+} = require('../utils')
 
 async function donor(_parent, { id }, { prisma, req }, _info) {
   if (getUser(req).userId) {
@@ -1027,6 +1033,59 @@ async function generateOrphanStatusReport(
   throw new AuthenticationError()
 }
 
+async function getTotalNumberOfOrphans(
+  _parent,
+  { filter },
+  { prisma, req },
+  _info
+) {
+  AuthGuard(req)
+  const where = {
+    currentOrphanData: {
+      sponsorshipStatus: {
+        status: {
+          equals: filter?.status
+        }
+      }
+    },
+    latestOrphanData: {
+      educationalRecord: {
+        level: { equals: filter?.education?.level },
+        year: { equals: filter?.education?.year },
+        enrollmentStatus: { equals: filter?.education?.enrollmentStatus }
+      }
+    },
+    gender: { equals: filter?.gender },
+    dateOfBirth: filter?.age ? ageFilterWhere(filter.age) : {},
+    village: filter?.village
+      ? locationFilterWhere(filter.village)
+      : {
+          district: filter?.district
+            ? locationFilterWhere(filter.district)
+            : {
+                zone: filter?.zone
+                  ? locationFilterWhere(filter.zone)
+                  : {
+                      region: filter?.region
+                        ? locationFilterWhere(filter.region)
+                        : {}
+                    }
+              }
+        },
+    donors: {
+      some: {
+        nameInitials: {
+          equals: filter?.donor?.nameInitials
+        },
+        companyName: {
+          equals: filter?.donor?.companyName
+        }
+      }
+    }
+  }
+  return await prisma.orphan.count({ where: filter ? where : {} })
+}
+
 module.exports = {
   orphan,
   father,
@@ -1100,5 +1159,6 @@ module.exports = {
   generateOrphanPaymentHistoryReport,
   generateDonorPaymentHistoryReport,
   generateProjectPaymentHistoryReport,
-  generateOrphanStatusReport
+  generateOrphanStatusReport,
+  getTotalNumberOfOrphans
 }

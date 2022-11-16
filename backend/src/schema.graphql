@@ -122,11 +122,40 @@ type Query {
     status: SponsorshipStatusEnum
     beneficiaryId: ID!
   ): [Orphan]!
+  getTotalNumberOfOrphans(filter: FindOrphanFilter): Int
 }
 
 enum ReportBeneficiaryEnum {
   DONOR
   PROJECT
+}
+
+# This works as expected for age >= 1; it will be ineffective for age < 1
+input FindOrphanFilter {
+  status: SponsorshipStatusEnum
+  gender: orphanGender
+  age: Int
+  location: LocationFilter
+  education: EducationFilter
+  donor: DonorFilter
+}
+
+input LocationFilter {
+  region: String
+  zone: String
+  district: String
+  village: String
+}
+
+input EducationFilter {
+  level: educationLevel
+  year: String
+  enrollmentStatus: educationEnrollmentStatus
+}
+
+input DonorFilter {
+  companyName: String
+  nameInitials: String
 }
 
 type Mutation {

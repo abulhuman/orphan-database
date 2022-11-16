@@ -17,14 +17,8 @@
                 <v-form v-if="!showReport">
                   <v-card elevation="0" max-width="500" class="ml-5">
                     <v-select
-                      :items="[
-                        {
-                          text: 'Status Report (Includes Termination Report)',
-                          value: 'status-report'
-                        }
-                      ]"
+                      :items="categories"
                       v-model="selected"
-                      @change="changedCategory"
                       label="Select a Report Category"
                     ></v-select>
                     <!-- { text: 'Donor', value: 'donor' }, -->
@@ -58,6 +52,7 @@
                 </v-form>
                 <orphan-table
                   v-else
+                  :title="{ grouping, beneficiaryId, beneficiaries }"
                   :orphans="orphans"
                   @back="showReport = false"
                 />
@@ -80,18 +75,21 @@ export default {
   data() {
     return {
       showReport: false,
+      categories: [
+        {
+          text: 'Status Report (Includes Termination Report)',
+          value: 'status-report'
+        }
+      ],
       selected: 'status-report',
-      grouping: 'Donor', //'Beneficiary',
+      grouping: 'Beneficiary',
       beneficiaries: [],
       beneficiaryId: null,
-      status: 'new', //null,
+      status: null,
       orphans: []
     }
   },
   methods: {
-    changedCategory() {
-      console.log(this.selected)
-    },
     async getDonors() {
       const query = `
               query GetAllDonors {
@@ -140,12 +138,7 @@ export default {
     async changedGrouping() {
       this.beneficiaries = await this.getBeneficiariesItems(this.grouping)
     },
-    changedStatus() {
-      console.log(this.selected)
-    },
     async generate() {
-      console.log(this.beneficiaryId)
-      console.log('Generator go BRRRRRRRRRRRRRRRRRRRRR')
       const query = `
           query OSR(
               $beneficiaryId: ID!
@@ -161,30 +154,28 @@ export default {
                     orphanCode
                     firstName
                     father{firstName lastName}
-                    guardian{firstName middleName lastName}
+                    guardian{firstName middleName lastName mobileNumber}
                     gender
-                    cod: currentOrphanData{
-                      ss: sponsorshipStatus
+                    currentOrphanData{
+                      sponsorshipStatus {
+                        status
+                        date
+                      }
                     }
-                    #financialRecords {
-                    #  amount
-                    #}
                   }
                 }
       `
       const variables = {
-        beneficiaryId: this.beneficiaryId,
+        beneficiaryId: +this.beneficiaryId,
         status: this.status,
         reportBeneficiary: this.grouping.toUpperCase()
       }
-      console.log({ variables })
       try {
         const orphans = await axios.post('/graphql', { query, variables })
         if (orphans.data.errors?.length)
           throw new Error(orphans.data.errors[0].message)
         this.orphans = orphans.data.data.generateOrphanStatusReport
         this.showReport = true
-        console.log(this.orphans)
       } catch (error) {
         console.log(error)
       }

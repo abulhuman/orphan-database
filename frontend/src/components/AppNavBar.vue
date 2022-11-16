@@ -271,7 +271,8 @@ export default {
       isProcessing: true,
       isPending: false,
       isSponsored: false,
-      isGraduated: false
+      isGraduated: false,
+      showReport: false
     }
   },
   watch: {
@@ -331,7 +332,8 @@ export default {
       this.isNewOrphan = false
     },
     toggleShowReport() {
-      this.$emit('toggleShowReport', true)
+      this.showReport = !this.showReport
+      this.$emit('toggleShowReport', this.showReport)
     },
     displayName() {
       if (Object.hasOwnProperty.call(this.user, 'companyName')) {
