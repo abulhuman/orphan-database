@@ -166,7 +166,7 @@ async function startApolloServer() {
   /** start server and listen for connections using the express application */
   await new Promise((resolve) => app.listen({ port: 3000 }, resolve))
 
-  console.log(`🚀 Server ready at http://localhost:3000${server.graphqlPath}`)
+  console.log(`🚀 Server ready at http://localhos:3000${server.graphqlPath}`)
 
   return { server, app }
 }
@@ -242,8 +242,8 @@ try {
      * Single Page Application (SPA, vue.js in our case)
      */
     app.use(history())
-
-    app.use(express.static('public'))
+	console.log('DEBUG: '+path.join(__dirname + '/../public'))
+    app.use('/',express.static(path.join(__dirname + '/../public')))
 
     /** post end points for image/pdf upload */
     app.post('/img/', cors(corsOptions), upload.single('image'), (req, res) => {

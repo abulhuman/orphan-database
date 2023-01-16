@@ -1030,7 +1030,7 @@ export default {
       return axios
         .post('/graphql', {
           query: `mutation createSponsorshipStatus(
-                  $status: sponsorshipStatus
+                  $status: SponsorshipStatusEnum
                   $date: DateTime!
                   $reason: String
                   $orphanId: ID!

@@ -239,8 +239,8 @@ model Orphan {
   sponsorshipStatuses    SponsorshipStatus[] @relation("orphanTosponsorshipstatus")
   donors                 Donor[]             @relation("donorToorphan")
   supportPlans           SupportPlan[]       @relation("orphanTosupportplan")
-  orphan_B               Orphan[]            @relation("orphan_sibling")
-  orphan_A               Orphan[]            @relation("orphan_sibling")
+  siblings               Orphan[]            @relation("orphan_sibling")
+  siblingOf               Orphan[]            @relation("orphan_sibling")
 
   @@map("orphan")
 }
