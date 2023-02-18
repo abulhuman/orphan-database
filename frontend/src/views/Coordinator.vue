@@ -582,7 +582,7 @@
 <script>
 import axios from 'axios'
 import OrphanList from '@/views/OrphanList.vue'
-import AppNavBar from '@/components/AppNavBar'
+import AppNavBar from '@/components/AppNavBar.vue'
 import SupportPlanTable from '../components/SupportPlanTable.vue'
 import ProjectActivitiesTable from '../components/ProjectActivitiesTable.vue'
 import OrphanRegistrationStepper from '../components/OrphanRegistrationStepper.vue'

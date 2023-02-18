@@ -619,7 +619,7 @@
 
 <script>
 import axios from "axios";
-import AppNavBar from "@/components/AppNavBar";
+import AppNavBar from "@/components/AppNavBar.vue";
 import OrphanDetail from "@/components/OrphanDetail.vue";
 
 export default {

@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import PaymentHistoryReportInputForm from './PaymentHistoryReportInputForm';
+import PaymentHistoryReportInputForm from './PaymentHistoryReportInputForm.vue';
 import PaymentHistoryReportTable from './PaymentHistoryReportTable.vue';
 export default {
   components: {
