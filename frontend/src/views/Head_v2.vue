@@ -156,43 +156,8 @@
                         ></v-text-field>
                       </v-responsive>
                     </v-col>
-                    <!-- Project location/village -->
-                    <v-col cols="12" md="6" sm="6">
-                      <v-responsive max-width="" class="mx-10 mb-n4">
-                        <v-select
-                          v-model="projectLocation"
-                          :items="allDistricts"
-                          :item-text="villageText_Value"
-                          :item-value="villageText_Value"
-                          :menu-props="{
-                            top: true,
-                            offsetY: true
-                          }"
-                          :rules="requiredRule"
-                          label="Locations*"
-                        ></v-select>
-                      </v-responsive>
-                    </v-col>
-                    <!-- Project coordinator -->
-                    <v-col cols="12" md="6" sm="6">
-                      <v-responsive max-width="" class="mx-10 mb-n4 ml-n5">
-                        <v-select
-                          v-model="projectCoordinator"
-                          :items="coordinatorsOptions"
-                          :item-text="coordinatorText_Value"
-                          :item-value="coordinatorText_Value"
-                          :menu-props="{
-                            top: true,
-                            offsetY: true
-                          }"
-                          :rules="requiredRule"
-                          multiple
-                          label="Coordinator*"
-                        ></v-select>
-                      </v-responsive>
-                    </v-col>
                     <!-- Project proposal insertion -->
-                    <v-col cols="12" md="12" sm="12">
+                    <v-col cols="12" md="6" sm="6">
                       <v-responsive max-width="" class="mx-10 mb-n4">
                         <v-file-input
                           ref="proposalInputRef"
@@ -255,6 +220,79 @@
                         </v-file-input>
                       </v-responsive>
                     </v-col>
+                    <!-- Project coordinator -->
+                    <v-col cols="12" md="6" sm="6">
+                      <v-responsive max-width="" class="mx-10 mb-n4 ml-n5">
+                        <v-select
+                          v-model="projectCoordinator"
+                          :items="coordinatorsOptions"
+                          :item-text="coordinatorText_Value"
+                          :item-value="coordinatorText_Value"
+                          :menu-props="{
+                            top: true,
+                            offsetY: true
+                          }"
+                          :rules="requiredRule"
+                          multiple
+                          label="Coordinator*"
+                        ></v-select>
+                      </v-responsive>
+                    </v-col>
+                  </v-row>
+                  <v-row
+                    ><!-- Project location/region -->
+                    <v-col cols="12" md="12" sm="12">
+                      <v-responsive max-width="" class="mx-10 mb-n4">
+                        <p class="text-lg-h6 ma-2">Locations</p>
+                        <v-select
+                          v-model="projectLocation.region"
+                          :items="allRegions || []"
+                          :menu-props="{
+                            top: true,
+                            offsetY: true
+                          }"
+                          :rules="requiredRule"
+                          label="Region*"
+                        ></v-select>
+                      </v-responsive>
+                    </v-col>
+                  </v-row>
+                  <v-row
+                    ><!-- Project location/zone -->
+                    <v-col cols="12" md="12" sm="12">
+                      <v-responsive max-width="" class="mx-10 mb-n4">
+                        <v-select
+                          v-model="projectLocation.zone"
+                          :items="projectLocation.region.zones || []"
+                          :menu-props="{
+                            top: true,
+                            offsetY: true
+                          }"
+                          :rules="requiredRule"
+                          label="Zone*"
+                        ></v-select>
+                      </v-responsive>
+                    </v-col>
+                  </v-row>
+                  <v-row
+                    ><!-- Project location/district -->
+                    <v-col cols="12" md="12" sm="12">
+                      <v-responsive max-width="" class="mx-10 mb-n4">
+                        <v-select
+                          v-model="projectLocation.districts"
+                          :items="projectLocation.zone.districts || []"
+                          :menu-props="{
+                            top: true,
+                            offsetY: true
+                          }"
+                          multiple
+                          :rules="requiredRule"
+                          label="District*"
+                        ></v-select>
+                      </v-responsive>
+                    </v-col>
+                  </v-row>
+                  <v-row class="mt-2">
                     <v-col align="right" class="mb-5">
                       <v-btn class="mr-5" @click="createProjectCancel"
                         >Cancel</v-btn
@@ -2139,7 +2177,7 @@
 
 <script>
 import axios from 'axios';
-import AppNavBar from '@/components/AppNavBar';
+import AppNavBar from '@/components/AppNavBar.vue';
 import { calculateAge } from '@/utils/utils';
 import { mapMutations } from 'vuex';
 
@@ -2210,7 +2248,12 @@ export default {
     projectTotalBudget: null,
     projectAdministrativeCost: null,
     projectProposalDialog: false,
-    projectLocation: null,
+    projectLocation: {
+      region: '',
+      zone: '',
+      districts: [],
+      villages: ''
+    },
     projectCoordinator: null,
     projectProposalFile: null,
     projectProposalPreview: null,
@@ -2256,6 +2299,7 @@ export default {
     socialWorkerVillageDisabled: false,
     villages: [],
     allDistricts: [],
+    allRegions: [],
     showDonorTree: false,
     showCoordinatorTree: false,
     showSocialWorkerTree: false,
@@ -2408,7 +2452,7 @@ export default {
     activeSocialWorkerTree: [],
     socialWorkersTree: []
   }),
-  created() {
+  async created() {
     this.initializeHead();
     this.initializeAccountMaintainenceLists();
     // table
@@ -2417,7 +2461,25 @@ export default {
     this.initializeZoneTable();
     this.initializeVillageTable();
     this.initializeCoordinatorSelect();
-    this.initializeRegionSelect();
+    this.allRegions = (await this.initializeRegionSelect()).map((region) => {
+      // refines the region object to be used in the select component
+      const customZones = region.zones.map((zone) => {
+        const customDistricts = zone.districts.map((district) => {
+          const customVillages = district.villages.map((village) => {
+            return { text: village.name, value: village };
+          });
+          return {
+            text: district.name,
+            value: { ...district, villages: customVillages }
+          };
+        });
+        return {
+          text: zone.name,
+          value: { ...zone, districts: customDistricts }
+        };
+      });
+      return { text: region.name, value: { ...region, zones: customZones } };
+    });
     this.initializeZoneSelect();
     this.initializeDistrictSelect();
     this.initializeVillageSelect();
@@ -2960,12 +3022,24 @@ export default {
         });
     },
     initializeRegionSelect() {
-      axios
+      return axios
         .post('/graphql', {
           query: `query {
                   allRegions {
                     id
                     name
+                    zones {
+                      id
+                      name
+                      districts {
+                        id
+                        name
+                        villages {
+                          id
+                          name
+                        }
+                      }
+                    }
                   }
                 }`
         })
@@ -2975,7 +3049,10 @@ export default {
           }
           return res.data.data.allRegions;
         })
-        .then((res) => this.regionOptions.push(...res))
+        .then((res) => {
+          this.regionOptions.push(...res);
+          return this.regionOptions;
+        })
         .catch((err) => {
           this.SET_SNACKBAR(true);
           this.SET_SNACKBAR_COLOR('error');
@@ -3129,7 +3206,7 @@ export default {
                         password: $password
                       ) {
                         user {
-                          id 
+                          id
                           role
                           password
                         }
@@ -3176,7 +3253,7 @@ export default {
                     middleName
                     lastName
                     user{
-                      id 
+                      id
                       role
                       email
                     }
@@ -3208,9 +3285,9 @@ export default {
       return await axios
         .post('/graphql/', {
           query: `mutation createDonor (
-                  $companyName: String!, 
-                  $nameInitials: String!, 
-                  $userId: ID!, 
+                  $companyName: String!,
+                  $nameInitials: String!,
+                  $userId: ID!,
                   $coordinators: [ID]
                   ) {
                   createDonor(
@@ -3482,25 +3559,17 @@ export default {
           )
         ).toISOString();
 
-        // check if the entered number is dublicate by using allProjects
+        // TODO: check if the entered number is duplicate by using allProjects
         // even better make it auto increment automatically
         // projectNumber
 
-        const selectedDistrict = this.allDistricts
-          .filter((district) => {
-            return district.name === this.projectLocation;
-          })
-          .map((district) => district.id);
+        
 
-        let locations = this.allDistricts.map((district) => {
-          if ((district.id = selectedDistrict[0])) {
-            return district.villages;
-          }
-        });
-
-        locations = locations.map((villages) =>
-          villages.map((village) => village.id)
-        )[0];
+        const locations = this.projectLocation.districts
+            .map((district) => district.villages)
+            .flat()
+            .map((villageItem) => villageItem.value.id);
+        
 
         const coordinators = [];
 
@@ -3555,12 +3624,15 @@ export default {
         );
 
         this.SET_SNACKBAR_TEXT(
-          `Successfully created project - ${project.number}.`
+          `Successfully created project - #${project.number}.`
         );
         this.SET_SNACKBAR_COLOR('success');
         this.SET_SNACKBAR('true');
 
         this.$refs.createProjectForm.reset();
+        this.projectLocation.region = {};
+        this.projectLocation.zone = {};
+        this.projectLocation.village = {};
         this.createProjectDialog = false;
       }
     },
@@ -3601,6 +3673,7 @@ export default {
                     coordinators: $coordinators
                   ) {
                     id
+                    number
                   }
                 }`,
           variables: {

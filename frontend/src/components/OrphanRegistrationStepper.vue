@@ -170,7 +170,7 @@ export default {
       type: Boolean
     },
     villageId: {
-      type: String
+      required: false
     }
   },
   data() {
@@ -223,7 +223,7 @@ export default {
       this.savePersonalData = true;
     },
     addPersonalInfo(updatedOrphan) {
-      // assings orphan data from the personal form to the orphan object
+      // assigns orphan data from the personal form to the orphan object
       this.orphan = Object.assign(this.orphan ?? {}, updatedOrphan);
       // this variables change enables for the proper functioning of the personal continue button
       this.savePersonalData = false;
@@ -232,7 +232,7 @@ export default {
       console.log('personalDone', updatedOrphan);
     },
     addPersonalRef(personalRef) {
-      this.persoanlRef = personalRef;
+      this.personalRef = personalRef;
     },
     handlePersonalError(error) {
       this.personalFormError = error;
@@ -249,7 +249,7 @@ export default {
     addEducationalInfo(updatedOrphan) {
       // set orphan to empty object literal if orphan object is null/undefined
       this.orphan = this.orphan ?? {};
-      // assings orphan educational data from the education form to the orphan object
+      // assigns orphan educational data from the education form to the orphan object
       this.orphan.educationalRecord = Object.assign(
         this.orphan.educationalRecord ?? {},
         updatedOrphan.educationalRecord
@@ -280,7 +280,7 @@ export default {
     addGuardianInfo(updatedOrphan) {
       // set orphan to empty object literal if orphan object is null or undefined
       this.orphan = this.orphan ?? {};
-      // assings orphan guardian data from the guardian form to the orphan object
+      // assigns orphan guardian data from the guardian form to the orphan object
       this.orphan.guardian = Object.assign(
         this.orphan.guardian ?? {},
         updatedOrphan.guardian
@@ -309,7 +309,7 @@ export default {
     addFamilyInfo(updatedOrphan) {
       // set orphan to empty object literal if orphan object is null or undefined
       this.orphan = this.orphan ?? {};
-      // assings orphan family data from the family form to the orphan object
+      // assigns orphan family data from the family form to the orphan object
       this.orphan.father = Object.assign(
         this.orphan.father ?? {},
         updatedOrphan.father
@@ -346,7 +346,7 @@ export default {
     async addDocumentInfo(documents) {
       // set orphan to empty object literal if orphan object is null or undefined
       this.orphan = this.orphan ?? {};
-      // assings orphan document data from the document form to the orphan object
+      // assigns orphan document data from the document form to the orphan object
 
       this.orphan.birthCertificateUrl = await axios
         .post(`/document/`, documents.orphanBirthCertificateFormData)
@@ -448,7 +448,7 @@ export default {
       this.SET_SNACKBAR(true);
 
       // reset all the dialogs
-      this.persoanlRef.reset();
+      this.personalRef.reset();
       this.educationalRef.reset();
       this.familyRef.reset();
       this.guardianRef.reset();

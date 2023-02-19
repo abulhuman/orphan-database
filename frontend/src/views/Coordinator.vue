@@ -1,4 +1,4 @@
-<template style="positon: relative;">
+<template style="position: relative;">
   <div>
     <AppNavBar
       :user="coordinatorUser"
@@ -13,28 +13,89 @@
       @toggleShowReport="toggleShowReport($event)"
     />
     <!-- Select village Dialog -->
-    <v-dialog v-model="showVillagesSelectionDialog" width="30%" persistent>
+    <v-dialog v-model="showVillagesSelectionDialog" width="30%">
       <v-card>
         <v-card-title class="justify-center">
-          Choose Village
+          Choose Location
         </v-card-title>
-        <!-- Select village body -->
-        <v-form ref="villageSelect" v-model="validVillageChoice">
-          <v-responsive min-width="200" max-width="200" class="pl-0 mx-auto">
-            <v-select
-              v-model="selectedOrphanVillage"
-              :items="selectedOrphanVillageOptions"
-              item-text="name"
-              item-value="id"
-              :menu-props="{ bottom: true, offsetY: true }"
-              solo
-              outlined
-              dense
-              :rules="[rules.required]"
-            >
-            </v-select>
-          </v-responsive>
-        </v-form>
+        <!-- Select location body -->
+        <v-card-text>
+          <v-form ref="villageSelect" v-model="validVillageChoice">
+            <v-row>
+              <v-col>
+                <v-responsive
+                  min-width="200"
+                  max-width="400"
+                  class="pl-0 mx-auto"
+                >
+                  <v-select
+                    v-model="selectedRegion"
+                    :items="allRegions"
+                    :menu-props="{ bottom: true, offsetY: true }"
+                    :rules="[rules.required]"
+                    label="Region*"
+                  >
+                  </v-select>
+                </v-responsive>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-responsive
+                  min-width="200"
+                  max-width="400"
+                  class="pl-0 mx-auto"
+                >
+                  <v-select
+                    v-model="selectedZone"
+                    :items="selectedRegion.zones"
+                    :menu-props="{ bottom: true, offsetY: true }"
+                    :rules="[rules.required]"
+                    label="Zone*"
+                  >
+                  </v-select>
+                </v-responsive>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-responsive
+                  min-width="200"
+                  max-width="400"
+                  class="pl-0 mx-auto"
+                >
+                  <v-select
+                    v-model="selectedDistrict"
+                    :items="selectedZone.districts"
+                    :menu-props="{ bottom: true, offsetY: true }"
+                    :rules="[rules.required]"
+                    label="District*"
+                    @change="modifyCoordinator_sVillages"
+                  >
+                  </v-select>
+                </v-responsive>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-responsive
+                  min-width="200"
+                  max-width="400"
+                  class="pl-0 mx-auto"
+                >
+                  <v-select
+                    v-model="selectedOrphanVillage"
+                    :items="coordinator_sVillages"
+                    :menu-props="{ bottom: true, offsetY: true }"
+                    :rules="[rules.villageRequired]"
+                    label="Village*"
+                  >
+                  </v-select>
+                </v-responsive>
+              </v-col>
+            </v-row>
+          </v-form>
+        </v-card-text>
         <!-- Select village action -->
         <v-card-actions class="justify-end">
           <v-btn text class="red--text" @click="cancelVillagesChoice"
@@ -61,7 +122,7 @@
       /> -->
       <orphan-registration-stepper
         :newOrphanDialog="newOrphanDialog"
-        :villageId="selectedOrphanVillage"
+        :villageId="selectedOrphanVillage.id"
         @dialogClosed="newOrphanDialog = $event"
       />
     </v-fab-transition>
@@ -305,27 +366,27 @@
               </v-row>
             </template>
             <!-- Customize columns -->
-            <template v-slot:item.fullName="{ item }">
+            <template v-slot:item[`fullName`]="{ item }">
               {{ fullName(item) }}
             </template>
-            <template v-slot:item.age="{ item }">
+            <template v-slot:item[`age`]="{ item }">
               {{ calcAge(item) }}
             </template>
-            <template v-slot:item.sponsorshipStatus="{ item }">
+            <template v-slot:item[`sponsorshipStatus`]="{ item }">
               {{ calcSponsorshipStatus(item) }}
             </template>
             <!-- TODO # fix this coz this is done not to change the header array of objects -->
             <!-- <template v-slot:header.sponsoredDate="{ header }">
               {{ changeSponsoredDateHeaderOfNew(header) }}
             </template> -->
-            <template v-slot:item.sponsoredDate="{ item }">
+            <template v-slot:item[`sponsoredDate`]="{ item }">
               {{ calcSponsoredDate(item) }}
             </template>
             <!-- <template v-slot:item.details="{ item }">
               <orphan-detail :details="item" />
             </template> -->
           </v-data-table>
-          <!-- TODO: # Impliment a loding functionality -->
+          <!-- TODO: # Implement a loading functionality -->
           <!-- Full name column edit confirmation message -->
           <v-snackbar v-model="snack" :timeout="3000" :color="snackColor">
             {{ snackText }}
@@ -352,7 +413,7 @@
 
     <!-- Report Page -->
     <template v-if="showReport">
-      <report-page  />
+      <report-page />
     </template>
 
     <template v-else>
@@ -580,14 +641,14 @@
 <style scoped></style>
 
 <script>
-import axios from 'axios'
-import OrphanList from '@/views/OrphanList.vue'
-import AppNavBar from '@/components/AppNavBar.vue'
-import SupportPlanTable from '../components/SupportPlanTable.vue'
-import ProjectActivitiesTable from '../components/ProjectActivitiesTable.vue'
-import OrphanRegistrationStepper from '../components/OrphanRegistrationStepper.vue'
-import PaymentHistoryReport from '../components/PaymentHistoryReport.vue'
-import ReportPage from '../components/ReportPage.vue'
+import axios from 'axios';
+import OrphanList from '@/views/OrphanList.vue';
+import AppNavBar from '@/components/AppNavBar.vue';
+import SupportPlanTable from '../components/SupportPlanTable.vue';
+import ProjectActivitiesTable from '../components/ProjectActivitiesTable.vue';
+import OrphanRegistrationStepper from '../components/OrphanRegistrationStepper.vue';
+import PaymentHistoryReport from '../components/PaymentHistoryReport.vue';
+import ReportPage from '../components/ReportPage.vue';
 
 export default {
   components: {
@@ -618,7 +679,7 @@ export default {
       'Id',
       'Village Name',
       'District',
-      'Registred on',
+      'Registered on',
       'Donor',
       'Social Worker'
     ],
@@ -659,12 +720,22 @@ export default {
     },
     projects: [],
     rules: {
-      required: (value) => !!value || 'Required.'
+      required: (value) => !!value || 'Required.',
+      villageRequired: (value) => value.id != null || 'Village is Required.'
     },
     selectedProjectId: null,
     newOrphanDialog: false,
     showVillagesSelectionDialog: false,
-    selectedOrphanVillage: '',
+    selectedRegion: {
+      zones: []
+    },
+    selectedZone: {
+      districts: []
+    },
+    selectedDistrict: {
+      villages: []
+    },
+    selectedOrphanVillage: { id: null },
     selectedOrphanVillageOptions: [],
     validVillageChoice: false,
     showSupportPlanTable: false,
@@ -689,18 +760,20 @@ export default {
     orphans: [],
     villages: [],
     showOrphans: false,
-    selectedOrphanIds: { ids: [] }
+    selectedOrphanIds: { ids: [] },
+    allRegions: [],
+    coordinator_sVillages: []
   }),
 
   created() {
-    this.initialize()
-    this.initializeProjects()
+    this.initialize();
+    this.initializeProjects();
   },
 
   watch: {
     async showVillagesSelectionDialog(val) {
       if (val === true) {
-        this.selectedOrphanVillageOptions = []
+        this.selectedOrphanVillageOptions = [];
 
         const villages = await axios
           .post('/graphql', {
@@ -715,36 +788,70 @@ export default {
             }
           })
           .then((res) => res.data.data.getVillagesByCoordinatorId)
-          .catch((err) => console.warn(err))
+          .catch((err) => console.warn(err));
 
-        this.selectedOrphanVillageOptions = [...villages]
+        this.selectedOrphanVillageOptions = [...villages];
       }
     },
     currentStatus(val) {
       if (val === 'new')
         this.changedStatusOptions = this.changedStatusOptions.filter(
           (cur) => cur.value === 'graduated'
-        )
+        );
       else {
-        const processingIndex = this.changedStatusOptions.findIndex((elmt) => {
-          return elmt.value === 'processing'
-        })
+        const processingIndex = this.changedStatusOptions.findIndex((emt) => {
+          return emt.value === 'processing';
+        });
         if (processingIndex === -1) {
           this.changedStatusOptions.unshift({
             text: 'Processing',
             value: 'processing'
-          })
+          });
         }
       }
     },
     singleOrphanSelect() {
       this.selectSwitch =
-        this.singleOrphanSelect === true ? 'Single Orphan' : 'Multiple Orphans'
+        this.singleOrphanSelect === true ? 'Single Orphan' : 'Multiple Orphans';
     }
   },
   methods: {
-    initialize() {
-      console.log('routerCoordinatorId: ', typeof this.$route.params.id)
+    modifyCoordinator_sVillages() {
+      this.selectedOrphanVillage = {};
+      const allVillages = this.selectedDistrict.villages.map(
+        (villageItem) => villageItem.value
+      );
+
+      // this code filters the allVillages array to return only the villages that match the selectedOrphanVillageOptions array
+      // the selectedOrphanVillageOptions array contains the ids of the selected villages (a.k.a. the villages in which the coordinator is involved)
+      // the allVillages array contains all the village objects
+      this.coordinator_sVillages = allVillages.filter((village) =>
+        this.selectedOrphanVillageOptions.some((coordinator_sVillage) => coordinator_sVillage.id === village.id)
+      );
+      this.coordinator_sVillages = this.coordinator_sVillages.map((village) => {
+        return { text: village.name, value: village };
+      });
+    },
+    async initialize() {
+      this.allRegions = (await this.getAllRegions()).map((region) => {
+        // refines the region object to be used in the select component
+        const customZones = region.zones.map((zone) => {
+          const customDistricts = zone.districts.map((district) => {
+            const customVillages = district.villages.map((village) => {
+              return { text: village.name, value: village };
+            });
+            return {
+              text: district.name,
+              value: { ...district, villages: customVillages }
+            };
+          });
+          return {
+            text: zone.name,
+            value: { ...zone, districts: customDistricts }
+          };
+        });
+        return { text: region.name, value: { ...region, zones: customZones } };
+      });
       axios
         .post('/graphql', {
           query: `query coordinator($id: ID!) {
@@ -774,21 +881,54 @@ export default {
         // .then(res => console.log(res.data.data.coordinator))
         .then((res) => res.data.data.coordinator)
         .then((coordinator) => {
-          this.coordinator = Object.assign({}, coordinator)
+          this.coordinator = Object.assign({}, coordinator);
           this.coordinatorUser = Object.assign(
             this.coordinatorUser,
             coordinator.user
-          )
-          this.donors = [...this.coordinator.donors]
+          );
+          this.donors = [...this.coordinator.donors];
 
           for (const property in this.coordinatorUser) {
             if (Object.hasOwnProperty.call(this.coordinator, property)) {
-              this.coordinatorUser[property] = coordinator[property]
+              this.coordinatorUser[property] = coordinator[property];
             }
           }
           // console.log('coordinator', this.coordinator);
         })
-        .catch((err) => console.warn(err))
+        .catch((err) => console.warn(err));
+    },
+    async getAllRegions() {
+      try {
+        const res = await axios.post('/graphql', {
+          query: `query {
+                  allRegions {
+                    id
+                    name
+                    zones {
+                      id
+                      name
+                      districts {
+                        id
+                        name
+                        villages {
+                          id
+                          name
+                        }
+                      }
+                    }
+                  }
+                }`
+        });
+        if (res.data.errors?.length) {
+          throw new Error(res.data.errors[0].message.message);
+        }
+        return res.data.data.allRegions;
+      } catch (error) {
+        this.SET_SNACKBAR(true);
+        this.SET_SNACKBAR_COLOR('error');
+        this.SET_SNACKBAR_TEXT('Server error. Reload the page and try again.');
+        console.error(error);
+      }
     },
     getAllOrphans() {
       return axios
@@ -813,7 +953,7 @@ export default {
         }`
         })
         .then((res) => res.data.data.allOrphans)
-        .catch((err) => console.warn(err))
+        .catch((err) => console.warn(err));
     },
     initializeProjects() {
       axios
@@ -859,27 +999,27 @@ export default {
         })
         .then((res) => res.data.data.getProjectsByCoordinatorId)
         .then((projects) => (this.projects = [...projects]))
-        .catch((err) => console.warn(err))
+        .catch((err) => console.warn(err));
     },
     toggleNewOrphanDialog(val) {
-      this.showVillagesSelectionDialog = val
+      this.showVillagesSelectionDialog = val;
     },
     toggleSupportPlanTable(val) {
-      console.log(val)
+      console.log(val);
       // this.showSupportPlanTable = val;
     },
     toggleChangeStatus(val) {
-      this.showStatusChangeSelectionDialog = val
+      this.showStatusChangeSelectionDialog = val;
     },
     toggleOrphanList(val) {
-      this.showOrphans = val
+      this.showOrphans = val;
     },
     toggleShowReport(val) {
-      this.showReport = val
+      this.showReport = val;
     },
     addNewOrphan(newOrphanId) {
-      console.log(`adding new orphan`, newOrphanId)
-      this.selectedOrphanIds.ids.push(parseInt(newOrphanId))
+      console.log(`adding new orphan`, newOrphanId);
+      this.selectedOrphanIds.ids.push(parseInt(newOrphanId));
     },
     // custom search function based on selected columns
     orphanSearchFilter(value, search, item) {
@@ -887,33 +1027,33 @@ export default {
         if (this.orphanFilterValue.length > 0) {
           for (const filterVal of this.orphanFilterValue) {
             if (filterVal === this.headers[0].text) {
-              return item.id.indexOf(search) !== -1
+              return item.id.indexOf(search) !== -1;
             } else if (filterVal === this.headers[1].text) {
               return (
                 this.fullName(item)
                   .toLowerCase()
                   .indexOf(search.toLowerCase()) !== -1
-              )
+              );
             } else if (filterVal === this.headers[2].text) {
               return (
                 this.calcAge(item)
                   .toString()
                   .indexOf(search) !== -1
-              )
+              );
             } else if (filterVal === this.headers[3].text) {
               return (
                 item.gender.toLowerCase().indexOf(search.toLowerCase()) !== -1
-              )
+              );
             } else if (filterVal === this.headers[4].text) {
               return (
                 this.calcSponsorshipStatus(item)
                   .toLowerCase()
                   .indexOf(search.toLowerCase()) !== -1
-              )
+              );
             } else if (filterVal === this.headers[5].text) {
-              return this.calcSponsoredDate(item).indexOf(search) !== -1
+              return this.calcSponsoredDate(item).indexOf(search) !== -1;
             } else {
-              return -1
+              return -1;
             }
           }
         } else {
@@ -924,7 +1064,7 @@ export default {
               .toString()
               .toLowerCase()
               .indexOf(search) !== -1
-          )
+          );
         }
       }
     },
@@ -939,17 +1079,17 @@ export default {
         ` ${item.father.lastName
           .substr(0, 1)
           .toUpperCase()}${item.father.lastName.substr(1)}`
-      )
+      );
     },
     calcAge(item) {
       return (
         new Date().getUTCFullYear() -
         new Date(Date.parse(item.dateOfBirth.toString())).getUTCFullYear()
-      )
+      );
     },
     calcSponsorshipStatus(item) {
       return item.sponsorshipStatuses[item.sponsorshipStatuses.length - 1]
-        .status
+        .status;
     },
     calcSponsoredDate(item) {
       const options = {
@@ -957,74 +1097,76 @@ export default {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
-      }
+      };
       return new Date(
         Date.parse(
           item.sponsorshipStatuses[
             item.sponsorshipStatuses.length - 1
           ].date.toString()
         )
-      ).toLocaleDateString(undefined, options)
+      ).toLocaleDateString(undefined, options);
     },
     chooseVillages() {
       if (this.$refs.villageSelect.validate()) {
-        this.villageChoiceClose()
+        this.villageChoiceClose();
         // don't reset here. coz selectedOrphanVillage is passed as a prop to other components
         // this.villageChoiceReset();
-        this.selectedOrphanVillageOptions = []
-        this.newOrphanDialog = true
+        this.selectedOrphanVillageOptions = [];
+        this.newOrphanDialog = true;
       } else {
         // handle error and show some kind of notification
       }
     },
     cancelVillagesChoice() {
-      this.selectedOrphanVillage = ''
-      this.villageChoiceClose()
-      this.villageChoiceReset()
+      this.villageChoiceClose();
+      this.villageChoiceReset();
     },
     villageChoiceClose() {
-      this.showVillagesSelectionDialog = false
+      this.showVillagesSelectionDialog = false;
     },
     villageChoiceReset() {
-      this.$refs.villageSelect.reset()
+      this.selectedRegion = { zones: [] };
+      this.selectedZone = { districts: [] };
+      this.selectedDistrict = { villages: [] };
+      this.selectedOrphanVillage = { id: null };
     },
 
     async confirmStatusChangeSelection() {
       if (this.$refs.statusSelect.validate()) {
-        const allOrphans = await this.getAllOrphans()
+        const allOrphans = await this.getAllOrphans();
         this.orphans = allOrphans.filter((orphan) => {
-          const statuses = orphan.sponsorshipStatuses
-          return statuses[statuses.length - 1].status === this.currentStatus
-        })
-        this.statusChangeSelectionClose()
-        this.changeStatusOrphanDialog = true
+          const statuses = orphan.sponsorshipStatuses;
+          return statuses[statuses.length - 1].status === this.currentStatus;
+        });
+        this.statusChangeSelectionClose();
+        this.changeStatusOrphanDialog = true;
       } else {
         // handle error and show some kind of notification
       }
     },
     cancelStatusChangeSelection() {
-      this.statusChangeSelectionClose()
-      this.statusChangeSelectionReset()
+      this.statusChangeSelectionClose();
+      this.statusChangeSelectionReset();
     },
     statusChangeSelectionClose() {
-      this.showStatusChangeSelectionDialog = false
+      this.showStatusChangeSelectionDialog = false;
     },
     statusChangeSelectionReset() {
-      this.$refs.statusSelect.reset()
+      this.$refs.statusSelect.reset();
     },
     removeSelectedOrphanFilter(item) {
-      this.orphanFilterValue.splice(this.orphanFilterValue.indexOf(item), 1)
-      this.orphanFilterValue = [...this.orphanFilterValue]
+      this.orphanFilterValue.splice(this.orphanFilterValue.indexOf(item), 1);
+      this.orphanFilterValue = [...this.orphanFilterValue];
     },
     cancelStatusChange(dialog) {
-      dialog.value = false
+      dialog.value = false;
     },
     async confirmStatusChange(dialog) {
       for (const orphan of this.selectedOrphans) {
-        const orphanId = orphan.id
-        await this.createSponsorshipStatus(orphanId, this.changedStatus)
+        const orphanId = orphan.id;
+        await this.createSponsorshipStatus(orphanId, this.changedStatus);
       }
-      dialog.value = false
+      dialog.value = false;
     },
     createSponsorshipStatus(orphanId, status) {
       return axios
@@ -1061,19 +1203,19 @@ export default {
           }
         })
         .then((res) => res.data.data.createSponsorshipStatus)
-        .catch((err) => console.warn(err))
+        .catch((err) => console.warn(err));
     },
 
     openSupportPlanDialog(project) {
-      this.selectedProjectId = project.id
+      this.selectedProjectId = project.id;
 
-      this.showSupportPlanTable = true
+      this.showSupportPlanTable = true;
     },
 
     openProjectActivitiesDialog(project) {
-      this.selectedProjectId = project.id
+      this.selectedProjectId = project.id;
 
-      this.showProjectActivitiesTable = true
+      this.showProjectActivitiesTable = true;
     },
     async createProjectDocuments(documentUrl, documentType, projectId) {
       return axios
@@ -1099,50 +1241,50 @@ export default {
           }
         })
         .then((res) => res.data.data.createProjectDocuments)
-        .catch((err) => console.warn(err))
+        .catch((err) => console.warn(err));
     },
 
     cancelSupportPlan() {
-      this.$refs.supportPlanForm.reset()
+      this.$refs.supportPlanForm.reset();
     },
 
     donorText_Value(item) {
-      return item.nameInitials
+      return item.nameInitials;
     },
     villageText_Value(item) {
-      return item.name
+      return item.name;
     },
 
     handleProjectActivitiesTable() {
-      this.showProjectActivitiesTable = false
+      this.showProjectActivitiesTable = false;
     },
 
     // -------------------------------------
-    // used for the specific edit on orphan name and sponsoreship status
+    // used for the specific edit on orphan name and sponsorship status
     save() {
       // send the edited data to the server after validation via the rule/s prop
-      // maybe impliment a loding functionality
-      this.snack = true
-      this.snackColor = 'success'
-      this.snackText = 'Data saved'
+      // maybe implement a loading functionality
+      this.snack = true;
+      this.snackColor = 'success';
+      this.snackText = 'Data saved';
     },
     cancel() {
       // nothing happens keep the current changes
-      this.snack = true
-      this.snackColor = 'error'
-      this.snackText = 'Canceled'
+      this.snack = true;
+      this.snackColor = 'error';
+      this.snackText = 'Canceled';
     },
     open() {
-      // maybe fireup validation functions
-      this.snack = true
-      this.snackColor = 'info'
-      this.snackText = 'Dialog opened'
+      // maybe fire up validation functions
+      this.snack = true;
+      this.snackColor = 'info';
+      this.snackText = 'Dialog opened';
     },
     close() {
       // this comes at the very last of the process so:
-      // notify the user weither the operation was successful or keep/write to the log functionality
-      console.log('Dialog closed')
+      // notify the user weather the operation was successful or keep/write to the log functionality
+      console.log('Dialog closed');
     }
   }
-}
+};
 </script>
